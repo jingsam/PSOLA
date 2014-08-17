@@ -1,0 +1,4 @@
+*.xml
+*.o
+*.exe*
+makefile
