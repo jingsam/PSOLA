@@ -13,7 +13,9 @@ objs = main.o option.o raster.o \
 
 
 $(program) : $(objs)
-	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $(objs) /usr/local/lib/libgdal.dll.a
+	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $(objs)
+# for cygwin
+#	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $(objs) /usr/local/lib/libgdal.dll.a
 
 .PHONY : clean
 clean :
