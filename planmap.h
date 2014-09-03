@@ -9,7 +9,6 @@ double calc_fitness(Map<int>& scheme);
 
 class Cell;
 class PlanMap;
-class Stats;
 
 enum CellType {
 	kNormalCell = 0,
@@ -17,31 +16,6 @@ enum CellType {
 	kExcludedCell,
 	kDeterminedCell,
 	kMaxCellType
-};
-
-class Stats
-{
-public:
-	Stats() {}
-
-	~Stats() {}
-
-	void reset() {
-		fitness = 0.0;
-		counts.assign(counts.size(), 0);
-	}
-
-	void equalTo(Stats* stats) {
-		this->fitness = stats->fitness;
-		this->counts = stats->counts;
-	}
-
-	bool betterThan(Stats* stats) {
-		return this->fitness > stats->fitness;
-	}
-	
-	double fitness;
-	std::vector<int> counts;
 };
 
 class Cell
@@ -81,7 +55,6 @@ public:
 	PlanMap() {}
 
 	~PlanMap() {
-		delete stats;
 		for (int i = 0; i < this->size(); ++i) {
 		    delete this->at(i);
 		}
@@ -89,35 +62,23 @@ public:
 
 	void updateFitness() {
 		Map<int> map = this->getDataMap();
-		this->stats->fitness = calc_fitness( map );
+		this->fitness = calc_fitness( map );
 	}
 
 	Map<int> getDataMap() {
-		Map<int> map( xsize * ysize, 0 );
-		map.xsize = this->xsize;
-		map.ysize = this->ysize;
-
+		Map<int> map( xsize, ysize, 0 );
 		for (int i = 0; i < this->size(); ++i) {
 		    map.at(i) = this->at(i)->value;
 		}
 
 		return map;
 	}
-	
-	// std::vector<Cell*> getPatch(int x, int y) {
-	// 	std::vector<Cell*> result;
-	// 	std::vector<Cell*> neighbors = this->neighbors4( x, y, 1 );
-	// 	for (int i = 0; i < neighbors.size(); ++i) {
-	// 		if ()
-	// 	}
-	// }
 
 	PlanMap* clone() {
 		PlanMap* map = new PlanMap();
 		map->xsize = this->xsize;
 		map->ysize = this->ysize;
-		map->stats = new Stats();
-		map->stats->equalTo( this->stats );
+		map->fitness = this->fitness;
 
     	for (int i = 0; i < this->size(); ++i) {
     	    Cell* cell = this->at(i)->clone();
@@ -135,12 +96,7 @@ public:
     	}
 	}
 	
-	bool betterThan(PlanMap* map) {
-		return this->stats->betterThan( map->stats );
-	}
-
-
-	Stats* stats;
+	double fitness;
 };
 
 #endif
