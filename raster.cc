@@ -166,9 +166,9 @@ int writeRaster(const std::vector<int>& data, const char *filename)
 	std::copy(data.begin(), data.end(), pData);
 
 	int ret = poBand->RasterIO( GF_Write,
-					0, 0, nXSize, nYSize,
-					pData, nXSize, nYSize,
-					GDT_Int32, 0, 0);
+				0, 0, nXSize, nYSize,
+				pData, nXSize, nYSize,
+				GDT_Int32, 0, 0);
 
 	CPLFree(pData);
 	GDALClose(poDataset);
@@ -194,9 +194,9 @@ int writeRaster(const std::vector<double>& data, const char *filename)
 	std::copy(data.begin(), data.end(), pData);
 
 	int ret = poBand->RasterIO( GF_Write,
-					0, 0, nXSize, nYSize,
-					pData, nXSize, nYSize,
-					GDT_Float64, 0, 0);
+				0, 0, nXSize, nYSize,
+				pData, nXSize, nYSize,
+				GDT_Float64, 0, 0);
 
 	CPLFree(pData);
 	GDALClose(poDataset);
