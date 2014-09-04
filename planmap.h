@@ -89,10 +89,10 @@ public:
 		return map;
 	}
 
-	void assignValue(PlanMap* map) {
-		this->fitness = map->fitness;
+	void assignValue(PlanMap* other) {
+		this->fitness = other->fitness;
 		for (int i = 0; i < this->size(); ++i) {
-			this->at(i)->value = map->at(i)->value;
+			this->at(i)->value = other->at(i)->value;
 		}
 	}
 	
