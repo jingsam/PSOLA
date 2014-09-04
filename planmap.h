@@ -64,6 +64,7 @@ public:
 				this->push_back(cell);
 			}
 		}
+		this->fitness = 0.0;
 	}
 
 	~PlanMap() {
