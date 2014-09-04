@@ -3,10 +3,10 @@
 
 #include "random.h"
 
-void normalize_p(std::vector<double>& p);
+void normalize(std::vector<double>& p);
 
 // return (i + 1)
-int roulette_heel(std::vector<double>& p, Random* rnd);
+int rouletteWheel(std::vector<double>& p, Random* rnd);
 
 
 #endif
