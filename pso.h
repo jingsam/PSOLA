@@ -19,7 +19,7 @@ public:
 
     void updatePbest() {
         if (current->betterThan( pbest )) {
-            pbest->equalTo(current);
+            pbest->assignValue(current);
         }
     }
 
@@ -55,7 +55,7 @@ public:
             }
         }
 
-        gbest->equalTo(best);
+        gbest->assignValue(best);
     }
 
     void updateParticles() {
