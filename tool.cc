@@ -1,6 +1,6 @@
 #include "tool.h"
 
-void normalize_p(std::vector<double> &p)
+void normalize(std::vector<double> &p)
 {
     double sum = 0.0;
     for (int i = 0; i < p.size(); ++i) {
@@ -14,7 +14,7 @@ void normalize_p(std::vector<double> &p)
     }
 }
 
-int roulette_wheel(std::vector<double> &p, Random* rnd)
+int rouletteWheel(std::vector<double> &p, Random* rnd)
 {
     double r = rnd->nextDouble();
     double sum = 0.0;
@@ -23,5 +23,5 @@ int roulette_wheel(std::vector<double> &p, Random* rnd)
         if ( sum >= r && p[i] != 0.0 ) return i + 1;
     }
 
-    return rnd->nextInt( p.size() ) + 1;
+    return 0;
 }
