@@ -11,7 +11,7 @@ Cell* init_cell(int x, int y)
     Cell* cell = new Cell();
     cell->x = x;
     cell->y = y;
-	cell->value = classify_land_use(cell);
+    cell->value = classify_land_use(cell);
     cell->transP.assign(g_max, 1.0 / g_max);
 
     set_cell_type(cell);
@@ -21,13 +21,9 @@ Cell* init_cell(int x, int y)
 
 PlanMap* init_map()
 {
-    PlanMap* map = new PlanMap();
-    map->xsize = g_xsize;
-    map->ysize = g_ysize;
-    map->stats = new Stats();
-	map->stats->counts.assign(g_max, 0);
-    for (int y = 0; y < map->ysize; ++y) {
-        for (int x = 0; x < map->xsize; ++x) {	
+    PlanMap* map = new PlanMap(g_xsize, g_ysize, 0);
+    for (int x = 0; x < g_xsize; ++x) {
+        for (int y = 0; y < g_ysize; ++x) {	
             Cell* cell = init_cell(x, y);
             cell->map = map;
             map->push_back(cell);
