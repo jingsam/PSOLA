@@ -35,10 +35,6 @@ public:
 
 		return cell;
 	}
-	
-	void equalTo(Cell* cell) {
-		this->value = cell->value;
-	}
 
 
 	int x, y;
@@ -89,10 +85,10 @@ public:
     	return map;
 	}
 
-	void equalTo(PlanMap* map) {
-		this->stats->equalTo( map->stats );
+	void assignValue(PlanMap* map) {
+		this->fitness = map->fitness;
     	for (int i = 0; i < this->size(); ++i) {
-        	this->at(i)->equalTo( map->at(i) );
+        	this->at(i)->value = map->at(i)->value;
     	}
 	}
 	
