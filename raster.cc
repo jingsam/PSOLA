@@ -108,9 +108,9 @@ int readRaster(std::vector<int>& data, const char *filename)
 	int* pData;
 	pData = (int*)CPLMalloc(sizeof(int)*nXSize*nYSize);
 	int ret = poBand->RasterIO( GF_Read,
-							0, 0, nXSize, nYSize,
-							pData, nXSize, nYSize,
-							GDT_Int32, 0, 0);
+				0, 0, nXSize, nYSize,
+				pData, nXSize, nYSize,
+				GDT_Int32, 0, 0);
 
 	data.assign(pData, pData + nXSize * nYSize);
 
@@ -136,9 +136,9 @@ int readRaster(std::vector<double>& data, const char *filename)
 	double*	pData;
 	pData = (double*)CPLMalloc(sizeof(double)*nXSize*nYSize);
 	int ret = poBand->RasterIO( GF_Read,
-							0, 0, nXSize, nYSize,
-							pData, nXSize, nYSize,
-							GDT_Float64, 0, 0);
+				0, 0, nXSize, nYSize,
+				pData, nXSize, nYSize,
+				GDT_Float64, 0, 0);
 
 	data.assign(pData, pData + nXSize * nYSize);
 
@@ -166,9 +166,9 @@ int writeRaster(const std::vector<int>& data, const char *filename)
 	std::copy(data.begin(), data.end(), pData);
 
 	int ret = poBand->RasterIO( GF_Write,
-							0, 0, nXSize, nYSize,
-							pData, nXSize, nYSize,
-							GDT_Int32, 0, 0);
+					0, 0, nXSize, nYSize,
+					pData, nXSize, nYSize,
+					GDT_Int32, 0, 0);
 
 	CPLFree(pData);
 	GDALClose(poDataset);
@@ -194,9 +194,9 @@ int writeRaster(const std::vector<double>& data, const char *filename)
 	std::copy(data.begin(), data.end(), pData);
 
 	int ret = poBand->RasterIO( GF_Write,
-							0, 0, nXSize, nYSize,
-							pData, nXSize, nYSize,
-							GDT_Float64, 0, 0);
+					0, 0, nXSize, nYSize,
+					pData, nXSize, nYSize,
+					GDT_Float64, 0, 0);
 
 	CPLFree(pData);
 	GDALClose(poDataset);
@@ -208,10 +208,10 @@ int copyRaster(const char *oldfilename, const char *newfilename)
 {
 	GDALAllRegister();
 
-	// 删除同名文件
+	// delete existed newfile
 	GDALDriver::QuietDelete(newfilename);
 
-	// 复制创建新文件
+	// copy and create newfile, only support GTiff
 	GDALDriver *poDriver = GetGDALDriverManager()->GetDriverByName("GTiff");
 	
 	return poDriver->CopyFiles(newfilename, oldfilename);
