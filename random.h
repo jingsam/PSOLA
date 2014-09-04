@@ -30,6 +30,7 @@ public:
         return (double) this->rand() / M;
     }
 
+    // [0, max)
     size_t nextInt(size_t max) {
         return this->rand() % max;
     }
