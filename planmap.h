@@ -96,10 +96,10 @@ public:
 		}
 	}
 	
-	void assignValue(Map<int>* other) {
-		this->fitness = 0;
+	void assignValue(Map<int>& other) {
+		this->fitness = calc_fitness(other);
 		for (int i = 0; i < this->size(); ++i) {
-			this->at(i)->value = other->at(i);
+			this->at(i)->value = other.at(i);
 		}
 	}
 	
