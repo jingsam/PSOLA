@@ -44,7 +44,6 @@ void Particle::updateCurrent(PlanMap* gbest)
         temp.at(i) = transition(mycell);
     }
     
-    this->current->assignValue(&temp);
-    this->current->updateFitness();
+    this->current->assignValue(temp);
     this->updatePbest();
 }
