@@ -25,7 +25,7 @@ void Particle::updateCurrent(PlanMap* gbest)
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
 		
-		if 		(mycell->type == kBackgroundCell) continue;
+	if (mycell->type == kBackgroundCell) continue;
         else if (mycell->type == kExcludedCell) continue;
         else if (mycell->type == kDeterminedCell) {
             continue;
@@ -34,10 +34,10 @@ void Particle::updateCurrent(PlanMap* gbest)
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))
         for (int j = 0; j < mycell->transP.size(); ++j) {            
-			mycell->transP.at(j) *= m;
+		mycell->transP.at(j) *= m;
         }		
-		mycell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
-		mycell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
+	mycell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
+	mycell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
         normalize(mycell->transP);
 
         // update position
