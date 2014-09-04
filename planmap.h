@@ -76,20 +76,20 @@ public:
 		map->ysize = this->ysize;
 		map->fitness = this->fitness;
 
-    	for (int i = 0; i < this->size(); ++i) {
-    	    Cell* cell = this->at(i)->clone();
-    	    cell->map = map;			
-    	    map->push_back(cell);
-    	}
+		for (int i = 0; i < this->size(); ++i) {
+			Cell* cell = this->at(i)->clone();
+			cell->map = map;			
+			map->push_back(cell);
+		}
 
-    	return map;
+		return map;
 	}
 
 	void assignValue(PlanMap* map) {
 		this->fitness = map->fitness;
-    	for (int i = 0; i < this->size(); ++i) {
-        	this->at(i)->value = map->at(i)->value;
-    	}
+		for (int i = 0; i < this->size(); ++i) {
+			this->at(i)->value = map->at(i)->value;
+		}
 	}
 	
 	double fitness;
