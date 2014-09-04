@@ -56,7 +56,7 @@ public:
 		}
 	}
 	
-	bool betterThan (PlanMap* other) {
+	bool betterThan(PlanMap* other) {
 		return this=>fitness > other->fitness;
 	}
 
@@ -93,6 +93,13 @@ public:
 		this->fitness = other->fitness;
 		for (int i = 0; i < this->size(); ++i) {
 			this->at(i)->value = other->at(i)->value;
+		}
+	}
+	
+	void assignValue(Map<int>* other) {
+		this->fitness = 0;
+		for (int i = 0; i < this->size(); ++i) {
+			this->at(i)->value = other->at(i);
 		}
 	}
 	
