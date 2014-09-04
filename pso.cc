@@ -1,7 +1,7 @@
 #include "pso.h"
 
 
-void normalize_p(std::vector<double> &p);
+void normalize(std::vector<double> &p);
 int transition(Cell* mycell);
 
 
@@ -12,7 +12,9 @@ void Particle::updateCurrent(PlanMap* gbest)
     double c2 = this->swarm->c2;
     Random* r1 = this->swarm->r1;
     Random* r2 = this->swarm->r2;
-    current->stats->reset();
+    int xsize = this->current->xsize;
+    int ysize = this->current->ysize;
+    Map<int> temp(xsize, ysize, 0);
 
     for (int i = 0; i < current->size(); ++i) {
         Cell* mycell = current->at(i);
@@ -26,7 +28,6 @@ void Particle::updateCurrent(PlanMap* gbest)
 		if 		(mycell->type == kBackgroundCell) continue;
         else if (mycell->type == kExcludedCell) continue;
         else if (mycell->type == kDeterminedCell) {
-            current->stats->counts.at(myvalue - 1)++;
             continue;
         }
 
@@ -37,13 +38,13 @@ void Particle::updateCurrent(PlanMap* gbest)
         }		
 		mycell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
 		mycell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
-        normalize_p(mycell->transP);
+        normalize(mycell->transP);
 
         // update position
-        int value = transition(mycell);
-        current->stats->counts.at(value - 1)++;
+        temp.at(i) = transition(mycell);
     }
-
+    
+    this->current->assignValue(temp);
     this->current->updateFitness();
     this->updatePbest();
 }
