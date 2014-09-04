@@ -22,6 +22,12 @@ class Cell
 {
 public:
 	Cell() {}
+	
+	Cell(int x, int y, int value) {
+		this->x = x;
+		this->y = y;
+		this->value = value;
+	}
 
 	~Cell() {}
 
@@ -49,6 +55,16 @@ class PlanMap : public Map<Cell*>
 {
 public:
 	PlanMap() {}
+	
+	PlanMap(int xsize, int ysize, int defaultValue) {
+		for (int x=0; x < xsize; ++x) {
+			for (int y=0; y < ysize; ++y) {
+				Cell* cell = new Cell(x, y, defaultValue);
+				cell->map = this;
+				this->push_back(cell);
+			}
+		}
+	}
 
 	~PlanMap() {
 		for (int i = 0; i < this->size(); ++i) {
