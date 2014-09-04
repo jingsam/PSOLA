@@ -1,8 +1,8 @@
 #include "transition.h"
 #include "option.h"
 
-void normalize_p(std::vector<double>& p);
-int roulette_wheel(std::vector<double>& p, Random* rnd);
+void normalize(std::vector<double>& p);
+int rouletteWheel(std::vector<double>& p, Random* rnd);
 std::vector<int> merge_rule(std::vector<int>& rule1, std::vector<int>& rule2);
 std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p);
 
@@ -48,9 +48,9 @@ std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p)
     return result;
 }
 
-int classify_land_use(Cell* mycell)
+int get_land_use(int x, int y)
 {
-    int land_use = g_land_use_map.atxy(mycell->x, mycell->y);
+    int land_use = g_land_use_map.at(x, y);
     switch (land_use) {
         case 11:  case 12:  case 13:    return 1;
         case 21:  case 22:  case 23:    return 2;
@@ -72,9 +72,9 @@ int classify_land_use(Cell* mycell)
     }  
 }
 
-void set_cell_type(Cell* mycell)
+CellType get_cell_type(int x, int y)
 {
-    int land_use = g_land_use_map.atxy(mycell->x, mycell->y);
+    int land_use = g_land_use_map.at(x, y);
 	if (land_use == g_nodata) {
 		mycell->value = g_nodata;
 		mycell->type = kBackgroundCell;
