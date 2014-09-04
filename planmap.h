@@ -55,6 +55,10 @@ public:
 		    delete this->at(i);
 		}
 	}
+	
+	bool betterThan (PlanMap* other) {
+		return this=>fitness > other->fitness;
+	}
 
 	void updateFitness() {
 		Map<int> map = this->getDataMap();
