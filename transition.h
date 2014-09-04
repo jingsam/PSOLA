@@ -5,8 +5,8 @@
 
 int transition(Cell* mycell);
 
-int classify_land_use(Cell* mycell);
+int get_land_use(Cell* mycell);
 
-void set_cell_type(Cell* mycell);
+CellType get_cell_type(Cell* mycell);
 
 #endif
