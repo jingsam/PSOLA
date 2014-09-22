@@ -68,7 +68,7 @@ const Arg_parser::Option options[] = {
 
     { 'N', "deme",              Arg_parser::yes },
     { 'n', "size",              Arg_parser::yes },
-	{ 'M', "max",               Arg_parser::yes },	
+    { 'M', "max",               Arg_parser::yes },	
     { 's', "seed",              Arg_parser::yes },
     { 'm', "momentum",          Arg_parser::yes },
     { 'c', "c1",                Arg_parser::yes },
@@ -91,7 +91,7 @@ const Arg_parser::Option options[] = {
     { 256, "slope-map",         Arg_parser::yes },
     { 257, "road-map",          Arg_parser::yes },    
     { 'Q', "land-use-struct",   Arg_parser::yes },
-	{ 'w', "obj-weights",       Arg_parser::yes },
+    { 'w', "obj-weights",       Arg_parser::yes },
 
     { 299, "xml-file",          Arg_parser::yes },
     { 300, "xml-string",        Arg_parser::yes },
@@ -107,15 +107,15 @@ void show_help()
     std::printf( "%s - Particle Swarm Optimization for Land-use Allocation.\n", program_name );
     std::printf( "Usage: %s [options]\n", invocation_name );
     std::printf( "  -h, --help                   display this help and exit\n"
-                 "  -v, --version                output version information and exit\n"
+                 "  -v, --version                display version information and exit\n"
                  "  -d, --display                display your configuration\n"
 
                  "\noptions for PSO:\n"                 
                  "  -N, --deme=<arg>             number of demes\n"
-                 "  -n, --size=<arg>             number of particles\n"
-				 "  -M, --max=<arg>              value range [1, max]\n"
-                 "  -s, --seed=<arg>             general random seed (default: 0)\n"
-                 "  -m, --momentum=<arg>         coefficient of keep status\n"
+                 "  -n, --size=<arg>             number of particles in a deme\n"
+		 "  -M, --max=<arg>              value range [1, max]\n"
+                 "  -s, --seed=<arg>             general random seed\n"
+                 "  -m, --momentum=<arg>         coefficient of keep current status\n"
                  "  -c, --c1=<arg>               coefficient of move to Pbest\n"
                  "  -C, --c2=<arg>               coefficient of move to Gbest\n"
                  "  -r, --r1=<arg>               random seed 1 of PSO\n"
@@ -136,7 +136,7 @@ void show_help()
                  "  -V, --rural-suit-map=<arg>   suitability map of rural land-use\n"
                  "      --slope-map=<arg>        slope map (unit: degree)\n"
                  "      --road-map=<arg>         road map (unit: meter)\n"
-				 "  -Q, --land-use-struct=<arg>  land-use structure (splited by comma)\n"
+		 "  -Q, --land-use-struct=<arg>  land-use structure (splited by comma)\n"
                  "  -w, --obj-weights=<arg>      weights of objectives (splited by comma)\n"                 
 
                  "\nyou can use xml configuration :\n"
