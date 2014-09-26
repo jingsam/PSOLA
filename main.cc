@@ -18,40 +18,31 @@ int main( int argc, char *argv[] )
     MPI_Comm_size( MPI_COMM_WORLD, &size );
     MPI_Comm_rank( MPI_COMM_WORLD, &rank );
 
-if (rank==0) {
-    std::printf("\n--------------Parse configuration-------------\n");
-}
-    clock_t t1 = clock();
-
+    if (rank==0) {
+        std::printf("\n--------------Parse configuration-------------\n");
+    }
+    
+    double t1 = MPI_Wtime();
     parse_option(argc, argv);
+    double t2 = MPI_Wtime();
+    
+    if (rank==0) {
+        std::printf("\nAccomplished: %.2f S\n", t2 - t1);
+        std::printf("\n--------------Initialize components-----------\n");
+    }
 
-    clock_t t2 = clock();
-if (rank==0) {
-    std::printf("\nAccomplished: %.2f S\n",
-        (double)(t2-t1) / CLOCKS_PER_SEC);
-}
-
-
-if (rank==0) {
-    std::printf("\n--------------Initialize components-----------\n");
-}
-    clock_t t3 = clock();
-
+    double t3 = MPI_Wtime();
     Swarm* swarm = init_swarm( (g_size + size - 1) / size, rank );
-if (rank==0) init_output();
+    if (rank==0) init_output();
+    double t4 = MPI_Wtime();
+    
+    if (rank==0) {
+        std::printf("\nAccomplished: %.2f S\n", t4 - t3);
+        std::printf("\n--------------Start optimization--------------\n");
+    }
 
-    clock_t t4 = clock();
-if (rank==0) {
-    std::printf("\nAccomplished: %.2f S\n",
-        (double)(t4-t3) / CLOCKS_PER_SEC);
-}
 
-
-if (rank==0) {
-    std::printf("\n--------------Start optimization--------------\n");
-}
-    clock_t t5 = clock();
-
+    double t5 = MPI_Wtime();
     MPI_Datatype ctype;
     new_type( &ctype );
 
@@ -77,35 +68,30 @@ if (rank==0) {
             swarm->gbest->at(k)->value = ((int*)recvbuff)[k+1];
         }
 
-if (rank==0) std::printf("%d, %f\n", i, swarm->gbest->stats->fitness);
-
-if (rank==0) {
-        // ouptut middle result
-        if (g_interval != 0 && (i % g_interval) == 0) {
-            char buffer[50];
-            std::sprintf(buffer, "%d", i);
-            std::string filename = g_output + "/" + g_prefix + buffer + ".tif";
-            outputImage(swarm->gbest->getDataMap(), filename.c_str());
-            logStatus(doc, i, swarm->gbest->stats->fitness,
-                (g_prefix + buffer + ".tif").c_str());
+        if (rank==0) {
+    	    std::printf("%d, %f\n", i, swarm->gbest->fitness);
+    	    // ouptut middle result
+            if (g_interval != 0 && (i % g_interval) == 0) {
+                char buffer[50];
+                std::sprintf(buffer, "%d", i);
+                std::string filename = g_output + "/" + g_prefix + buffer + ".tif";
+                outputImage(swarm->gbest->getDataMap(), filename.c_str());
+                logStatus(doc, i, swarm->gbest->fitness,
+                    (g_prefix + buffer + ".tif").c_str());
         } else {
-            logStatus(doc, i, swarm->gbest->stats->fitness);
+            logStatus(doc, i, swarm->gbest->fitness);
         }
-}
 
         MPI_Barrier( MPI_COMM_WORLD );
     }
+    double t6 = MPI_Wtime();
+    
+    if (rank==0) {
+        std::printf("Accomplished: %.2f S\n", t6 - t5);
+        std::printf("\n--------------Output final results------------\n");
+    }
 
-    clock_t t6 = clock();
-if (rank==0) {
-    std::printf("Accomplished: %.2f S\n",
-        (double)(t6-t5) / CLOCKS_PER_SEC);
-}
-
-if (rank==0) {
-    std::printf("\n--------------Output final results------------\n");
-    clock_t t7 = clock();
-
+    double t7 = MPI_Wtime();
     std::string log = g_output + "/" + g_prefix + "log.xml";
     if (doc->SaveFile(log.c_str())) {
         std::printf("Failed save log to %s", log.c_str());
@@ -113,28 +99,20 @@ if (rank==0) {
 
     std::string output = g_output + "/" + g_prefix + "result.tif";
     outputImage(swarm->gbest->getDataMap(), output.c_str());
-
-    clock_t t8 = clock();
-    std::printf("\nAccomplished: %.2f S\n",
-        (double)(t8-t7) / CLOCKS_PER_SEC);
-
-	std::printf("\n----------------------------------------------\n");
-	std::printf("\nTotal: %.2f S\n",
-        (double)(t8-t1) / CLOCKS_PER_SEC);
+    double t8 = MPI_Wtime();
+    
+    std::printf("\nAccomplished: %.2f S\n", t8 - t7);
+    std::printf("\n----------------------------------------------\n");
+    std::printf("\nTotal: %.2f S\n", t8 - t1);
 }
 
-	clean_option();
+    clean_option();
     MPI_Type_free( &ctype );
     MPI_Op_free( &myop );
     MPI_Finalize();
     return 0;
 
 }
-
-// typedef struct {
-//     float fitness;
-//     int map[g_xsize * g_ysize];
-// } Message;
 
 void new_type(MPI_Datatype* ctype)
 {
