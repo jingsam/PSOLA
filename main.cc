@@ -89,22 +89,21 @@ int main( int argc, char *argv[] )
     if (rank==0) {
         std::printf("Accomplished: %.2f S\n", t6 - t5);
         std::printf("\n--------------Output final results------------\n");
-    }
 
-    double t7 = MPI_Wtime();
-    std::string log = g_output + "/" + g_prefix + "log.xml";
-    if (doc->SaveFile(log.c_str())) {
-        std::printf("Failed save log to %s", log.c_str());
-    }
+        double t7 = MPI_Wtime();
+        std::string log = g_output + "/" + g_prefix + "log.xml";
+        if (doc->SaveFile(log.c_str())) {
+            std::printf("Failed save log to %s", log.c_str());
+        }
 
-    std::string output = g_output + "/" + g_prefix + "result.tif";
-    outputImage(swarm->gbest->getDataMap(), output.c_str());
-    double t8 = MPI_Wtime();
+        std::string output = g_output + "/" + g_prefix + "result.tif";
+        outputImage(swarm->gbest->getDataMap(), output.c_str());
+        double t8 = MPI_Wtime();
     
-    std::printf("\nAccomplished: %.2f S\n", t8 - t7);
-    std::printf("\n----------------------------------------------\n");
-    std::printf("\nTotal: %.2f S\n", t8 - t1);
-}
+        std::printf("\nAccomplished: %.2f S\n", t8 - t7);
+        std::printf("\n----------------------------------------------\n");
+        std::printf("\nTotal: %.2f S\n", t8 - t1);
+    }
 
     clean_option();
     MPI_Type_free( &ctype );
