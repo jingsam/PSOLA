@@ -10,14 +10,6 @@ double calc_fitness(Map<int>& scheme);
 class Cell;
 class PlanMap;
 
-enum CellType {
-	kNormalCell = 0,
-	kBackgroundCell,
-	kExcludedCell,
-	kDeterminedCell,
-	kMaxCellType
-};
-
 class Cell
 {
 public:
@@ -45,7 +37,7 @@ public:
 
 	int x, y;
 	int value;
-	CellType type;
+	int type;  // 0-invariable, 1-variable
 	std::vector<double> transP;
 	PlanMap* map;
 
