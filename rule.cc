@@ -42,14 +42,14 @@ std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p)
     for (int i = 0; i < p.size(); ++i) {
         if (rule.at(i) == 0) result.at(i) = 0;
     }
-    normalize_p(result);
+    normalize(result);
 
     return result;
 }
 
 void int_cell(Cell* cell)
 {
-    int land_use = g_land_use_map.at(x, y);
+    int land_use = g_land_use_map.at(cell->x, cell->y);
     cell->value = land_use;
     mycell->type = 1;
     cell->transP.assign(g_max, 1.0 / g_max);
@@ -61,7 +61,10 @@ void int_cell(Cell* cell)
 	
     switch (land_use) {
         case 1:
-            grain_for_green(cell);
+            rule_grain_for_green(cell);
+            break;
+        case 4:
+            rule_soil_conservation(cell);
             break;
         case 5:  case 7:  case 8:  case 9: 
             cell->type = 0;
@@ -69,30 +72,33 @@ void int_cell(Cell* cell)
      }
 }
 
-void grain_for_green(Cell* cell)
+void rule_grain_for_green(Cell* cell)
 {
     double slope = g_slope_map.at(cell->x, cell->y);
     if (slope >= 25.0) {
-        mycell->value = 3;
-        mycell->type = 0;
+        cell->value = 3;
+        cell->type = 0;
     }
 }
 
-void quantity_constraint(Cell* cell) {
-    std::vector<int> counts = cell->map->stats->counts;
-    std::vector<int> flags( counts.size(), 0 );
-    for (int i = 0; i < counts.size(); ++i) {
-        if (counts.at(i) < g_land_use_struct.at(i)) {
-            flags.at(i) = 1;
+void rule_soil_conservation(Cell* cell)
+{
+    int land_use = g_land_use_map.at(cell->x, cell->y);
+    std::vector<int> neighbors = g_land_use_map.neighbors(cell->x, cell->y, 2);
+    for (int i=0; i < neighbors.size(); ++i) {
+        if (neighbors.at(i) == 8) {
+            cell->type = 0;
         }
     }
-
-    return flags;
 }
 
-void farming_radius(Cell* cell) {
-    std::vector<int> flags( cell->transP.size(), 1 );
+void rule_quantity_constraint(Cell* cell) 
+{
+    
+}
 
+void rule_farming_radius(Cell* cell) 
+{
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, 40);
     for (int i=0; i < neighbors.size(); ++i) {
     	if (neighbors.at(i)->value == 6) return;
@@ -100,3 +106,13 @@ void farming_radius(Cell* cell) {
 
     cell->transP.at(0) = 0.0;
 }
+
+void rule_transportation(Cell* cell) 
+{
+    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, 20);
+    for (int i=0; i < neighbors.size(); ++i) {
+    	if (neighbors.at(i)->value == 7) return;
+    }
+}
+
+
