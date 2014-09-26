@@ -7,14 +7,14 @@ std::vector<int> merge_rule(std::vector<int>& rule1, std::vector<int>& rule2);
 std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p);
 
 
-void grain_for_green(Cell* mycell);
-std::vector<int> quantity_constraint(Cell* mycell);
+void grain_for_green(Cell* cell);
+std::vector<int> quantity_constraint(Cell* cell);
 
 
-int transition(Cell* mycell)
+int transition(Cell* cell)
 {
     // rules
-    std::vector<int> rule1 = quantity_constraint( mycell );
+    std::vector<int> rule1 = quantity_constraint( cell );
 
     // transition
     std::vector<double> p = take_rule( rule1, mycell->transP );
@@ -78,8 +78,8 @@ void grain_for_green(Cell* cell)
     }
 }
 
-std::vector<int> quantity_constraint(Cell* mycell) {
-    std::vector<int> counts = mycell->map->stats->counts;
+void quantity_constraint(Cell* cell) {
+    std::vector<int> counts = cell->map->stats->counts;
     std::vector<int> flags( counts.size(), 0 );
     for (int i = 0; i < counts.size(); ++i) {
         if (counts.at(i) < g_land_use_struct.at(i)) {
@@ -90,10 +90,13 @@ std::vector<int> quantity_constraint(Cell* mycell) {
     return flags;
 }
 
-std::vector<int> farming_radius(Cell* mycell) {
-    std::vector<int> flags( mycell->transP.size(), 1 );
+void farming_radius(Cell* cell) {
+    std::vector<int> flags( cell->transP.size(), 1 );
 
-    //std::vector<Cell*> neighbors = mycell->map->
+    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, 40);
+    for (int i=0; i < neighbors.size(); ++i) {
+    	if (neighbors.at(i)->value == 6) return;
+    }
 
-    return flags;
+    cell->transP.at(0) = 0.0;
 }
