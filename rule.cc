@@ -1,4 +1,4 @@
-#include "transition.h"
+#include "rule.h"
 #include "option.h"
 
 void normalize(std::vector<double>& p);
@@ -9,7 +9,6 @@ std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p);
 
 void grain_for_green(Cell* mycell);
 std::vector<int> quantity_constraint(Cell* mycell);
-
 
 
 int transition(Cell* mycell)
@@ -48,51 +47,30 @@ std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p)
     return result;
 }
 
-int get_land_use(int x, int y)
+void int_cell(Cell* cell)
 {
     int land_use = g_land_use_map.at(x, y);
-    switch (land_use) {
-        case 11:  case 12:  case 13:    return 1;
-        case 21:  case 22:  case 23:    return 2;
-        case 31:  case 32:  case 33:    return 3;
-        case 41:  case 42:  case 43:    return 4;
-        case 201: case 202: case 204: 
-        case 205:                       return 5;
-        case 203:                       return 6;
-        case 101: case 102: case 103:
-        case 104: case 105: case 106:
-        case 107:                       return 7;
-        case 111: case 112: case 113:
-        case 114: case 115: case 116:
-        case 117: case 118: case 119:   return 8;
-        case 121: case 122: case 123:
-        case 124: case 125: case 126:
-        case 127:                       return 9;
-        default:                        return g_nodata;
-    }  
-}
-
-CellType get_cell_type(int x, int y)
-{
-    int land_use = g_land_use_map.at(x, y);
+    cell->value = land_use;
+    cell->transP.assign(g_max, 1.0 / g_max);
+    
 	if (land_use == g_nodata) {
-		mycell->value = g_nodata;
 		mycell->type = kBackgroundCell;
 		return;
 	}
 	
     switch (land_use) {
-        case 11:  case 12:  case 13:
+        case 1:
             grain_for_green(mycell);
             break;
-        case 201: case 202: case 204:
-        case 205:
-            mycell->value = 5;
-            mycell->type = kDeterminedCell;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            cell->value = 5;
+            cell->type = kDeterminedCell;
             break;
-        case 101: case 102: case 103:
-        case 104: case 105: case 106:
-        case 107:
+        case 6:
+        case 7:
             mycell->value = 7;
             mycell->type = kExcludedCell;
             break;    
@@ -108,21 +86,17 @@ CellType get_cell_type(int x, int y)
             mycell->value = 9;
             mycell->type = kExcludedCell;
             break;
-        default:
-            mycell->type = kNormalCell;
-            break;
     }
     
 }
 
-void grain_for_green(Cell* mycell)
+void grain_for_green(Cell* cell)
 {
-    double slope = g_slope_map.atxy(mycell->x, mycell->y);
+    double slope = g_slope_map.at(cell->x, cell->y);
     if (slope >= 25.0) {
         mycell->value = 3;
         mycell->type = kDeterminedCell;
     }
-
 }
 
 std::vector<int> quantity_constraint(Cell* mycell) {
