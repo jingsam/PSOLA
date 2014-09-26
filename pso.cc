@@ -15,29 +15,30 @@ void Particle::updateCurrent(PlanMap* gbest)
     Random* r2 = this->swarm->r2;
     int xsize = this->current->xsize;
     int ysize = this->current->ysize;
+    
     Map<int> temp(xsize, ysize, 0);
     std::map<int,int> stats;
 
     for (int i = 0; i < current->size(); ++i) {
-        Cell* mycell = current->at(i);
+        Cell* cell = current->at(i);
         Cell* pbest_cell = pbest->at(i);
         Cell* gbest_cell = gbest->at(i);
 
-        int myvalue = mycell->value;
+        int value = cell->value;
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
 
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))
-        for (int j = 0; j < mycell->transP.size(); ++j) {            
-		mycell->transP.at(j) *= m;
-        }		
-	mycell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
-	mycell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
-        normalize(mycell->transP);
+        for (int j = 0; j < cell->transP.size(); ++j) {
+            cell->transP.at(j) *= m;
+        }
+	cell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
+	cell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
+        normalize(cell->transP);
 
         // update position
-        temp.at(i) = transition(mycell);
+        temp.at(i) = transition(cell);
         stats.at( temp.at(i) ) += 1;
     }
     
