@@ -2,8 +2,7 @@
 #include "init.h"
 #include "option.h"
 
-int get_land_use(int x, int y);
-CellType get_cell_type(int x, int y);
+void int_cell(Cell* cell);
 
 
 PlanMap* init_map()
@@ -12,9 +11,7 @@ PlanMap* init_map()
     for (int y = 0; y < g_ysize; ++y) {
         for (int x = 0; x < g_xsize; ++x) {	
             Cell* cell = map->at(x, y);
-            cell->value = get_land_use(x, y);
-            cell->type = get_cell_type(x, y)
-            cell->transP.assign(g_max, 1.0 / g_max);
+            int_cell( cell );
         }
     }
     map->updateFitness();
