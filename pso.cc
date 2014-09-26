@@ -1,3 +1,4 @@
+#include <map>
 #include "pso.h"
 
 
@@ -15,6 +16,7 @@ void Particle::updateCurrent(PlanMap* gbest)
     int xsize = this->current->xsize;
     int ysize = this->current->ysize;
     Map<int> temp(xsize, ysize, 0);
+    std::map<int,int> stats;
 
     for (int i = 0; i < current->size(); ++i) {
         Cell* mycell = current->at(i);
@@ -24,12 +26,6 @@ void Particle::updateCurrent(PlanMap* gbest)
         int myvalue = mycell->value;
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
-		
-	if (mycell->type == kBackgroundCell) continue;
-        else if (mycell->type == kExcludedCell) continue;
-        else if (mycell->type == kDeterminedCell) {
-            continue;
-        }
 
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))
@@ -42,6 +38,7 @@ void Particle::updateCurrent(PlanMap* gbest)
 
         // update position
         temp.at(i) = transition(mycell);
+        stats.at( temp.at(i) ) += 1;
     }
     
     this->current->assignValue(temp);
