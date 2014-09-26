@@ -51,43 +51,22 @@ void int_cell(Cell* cell)
 {
     int land_use = g_land_use_map.at(x, y);
     cell->value = land_use;
+    mycell->type = 1;
     cell->transP.assign(g_max, 1.0 / g_max);
     
-	if (land_use == g_nodata) {
-		mycell->type = kBackgroundCell;
-		return;
-	}
+    if (land_use == g_nodata) {
+	    mycell->type = 0;
+	    return;
+    }
 	
     switch (land_use) {
         case 1:
-            grain_for_green(mycell);
+            grain_for_green(cell);
             break;
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-            cell->value = 5;
-            cell->type = kDeterminedCell;
+        case 5:  case 7:  case 8:  case 9: 
+            cell->type = 0;
             break;
-        case 6:
-        case 7:
-            mycell->value = 7;
-            mycell->type = kExcludedCell;
-            break;    
-        case 111: case 112: case 113:
-        case 114: case 115: case 116:
-        case 117: case 118: case 119:
-            mycell->value = 8;
-            mycell->type = kExcludedCell;
-            break;
-        case 121: case 122: case 123:
-        case 124: case 125: case 126:
-        case 127:
-            mycell->value = 9;
-            mycell->type = kExcludedCell;
-            break;
-    }
-    
+     }
 }
 
 void grain_for_green(Cell* cell)
@@ -95,7 +74,7 @@ void grain_for_green(Cell* cell)
     double slope = g_slope_map.at(cell->x, cell->y);
     if (slope >= 25.0) {
         mycell->value = 3;
-        mycell->type = kDeterminedCell;
+        mycell->type = 0;
     }
 }
 
