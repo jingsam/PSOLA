@@ -2,8 +2,6 @@
 #define DATAMAP_H
 
 #include <cstdlib>
-#include "gdal/gdal_priv.h"
-#include "gdal/cpl_conv.h"
 
 
 template<class T>
