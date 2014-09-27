@@ -56,14 +56,14 @@ int main( int argc, char *argv[] )
     for (int i = 0; i <= g_generation; ++i) {
         swarm->updateParticles();
 
-        ((float*)sendbuff)[0] = (float)swarm->gbest->stats->fitness;
+        ((float*)sendbuff)[0] = (float)swarm->gbest->fitness;
         for (int j = 0; j < g_xsize * g_ysize; ++j) {
             ((int*)sendbuff)[j+1] = (int)swarm->gbest->at(j)->value;
         }
 
         MPI_Allreduce( sendbuff, recvbuff, 1, ctype, myop, MPI_COMM_WORLD );
 
-        swarm->gbest->stats->fitness = ((float*)recvbuff)[0];
+        swarm->gbest->fitness = ((float*)recvbuff)[0];
         for (int k = 0; k < g_xsize * g_ysize; ++k) {
             swarm->gbest->at(k)->value = ((int*)recvbuff)[k+1];
         }
