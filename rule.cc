@@ -2,38 +2,8 @@
 #include "option.h"
 
 void normalize(std::vector<double>& p);
-int rouletteWheel(std::vector<double>& p, Random* rnd);
+int roulette_wheel(std::vector<double>& p, Random* rnd);
 
-
-int transition(Cell* cell)
-{
-    return roulette_wheel(cell->transP, RND);
-}
-
-void int_cell(Cell* cell)
-{
-    int land_use = g_land_use_map.atxy(cell->x, cell->y);
-    cell->value = land_use;
-    mycell->type = 1;
-    cell->transP.assign(g_max, 1.0 / g_max);
-    
-    if (land_use == g_nodata) {
-	    mycell->type = 0;
-	    return;
-    }
-	
-    switch (land_use) {
-        case 1:
-            rule_grain_for_green(cell);
-            break;
-        case 4:
-            rule_soil_conservation(cell);
-            break;
-        case 5:  case 7:  case 8:  case 9: 
-            cell->type = 0;
-            break;
-     }
-}
 
 void rule_grain_for_green(Cell* cell)
 {
@@ -78,4 +48,32 @@ void rule_transportation(Cell* cell)
     }
 }
 
+int transition(Cell* cell)
+{
+    return roulette_wheel(cell->transP, RND);
+}
 
+void int_cell(Cell* cell)
+{
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
+    cell->value = land_use;
+    mycell->type = 1;
+    cell->transP.assign(g_max, 1.0 / g_max);
+    
+    if (land_use == g_nodata) {
+	    mycell->type = 0;
+	    return;
+    }
+	
+    switch (land_use) {
+        case 1:
+            rule_grain_for_green(cell);
+            break;
+        case 4:
+            rule_soil_conservation(cell);
+            break;
+        case 5:  case 7:  case 8:  case 9: 
+            cell->type = 0;
+            break;
+     }
+}
