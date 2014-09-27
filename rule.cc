@@ -3,48 +3,11 @@
 
 void normalize(std::vector<double>& p);
 int rouletteWheel(std::vector<double>& p, Random* rnd);
-std::vector<int> merge_rule(std::vector<int>& rule1, std::vector<int>& rule2);
-std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p);
-
-
-void grain_for_green(Cell* cell);
-std::vector<int> quantity_constraint(Cell* cell);
 
 
 int transition(Cell* cell)
 {
-    // rules
-    std::vector<int> rule1 = quantity_constraint( cell );
-
-    // transition
-    std::vector<double> p = take_rule( rule1, mycell->transP );
-    // mycell->value = roulette_wheel(p, &RND);
-
-    mycell->value = roulette_wheel(mycell->transP, RND);
-
-    return mycell->value;
-}
-
-
-std::vector<int> merge_rule(std::vector<int>& rule1, std::vector<int>& rule2)
-{
-    std::vector<int> result = rule1;
-    for (int i = 0; i < result.size(); ++i) {
-        if (rule2.at(i) == 0) result.at(i) = 0;
-    }
-
-    return result;
-}
-
-std::vector<double> take_rule(std::vector<int>& rule, std::vector<double>& p) 
-{
-    std::vector<double> result = p;
-    for (int i = 0; i < p.size(); ++i) {
-        if (rule.at(i) == 0) result.at(i) = 0;
-    }
-    normalize(result);
-
-    return result;
+    return roulette_wheel(cell->transP, RND);
 }
 
 void int_cell(Cell* cell)
