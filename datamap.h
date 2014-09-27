@@ -19,19 +19,11 @@ public:
 
     virtual ~Map() {}
 
-    T& at(int i) {
-        return this->at(i);
-    }
-
-    const T& at(int i) const {
-        return this->at(i);
-    }
-
-    T& at(int x, int y) {
+    T& atxy(int x, int y) {
         return this->at(x + y * xsize);
     }
 
-    const T& at(int x, int y) const {
+    const T& atxy(int x, int y) const {
         return this->at(x + y * xsize);
     }
 
@@ -44,7 +36,7 @@ public:
                 if (i < 0 || i > xsize) continue;
                 if (i == x && j == y) continue;
 
-                neighbors.push_back( this->at(i,j) );
+                neighbors.push_back( this->atxy(i,j) );
             }
         }
 
@@ -63,7 +55,7 @@ public:
                 int dx = abs(i - x);
                 int dy = abs(j - y);
                 if ( (dx + dy) <= level ) {
-                    neighbors.push_back( this->at(i,j) );
+                    neighbors.push_back( this->atxy(i,j) );
                 }            
             }
         }
