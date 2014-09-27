@@ -66,7 +66,7 @@ public:
 	}
 	
 	bool betterThan(PlanMap* other) {
-		return this=>fitness > other->fitness;
+		return this->fitness > other->fitness;
 	}
 
 	void updateFitness() {
