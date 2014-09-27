@@ -12,7 +12,7 @@ int transition(Cell* cell)
 
 void int_cell(Cell* cell)
 {
-    int land_use = g_land_use_map.at(cell->x, cell->y);
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
     cell->value = land_use;
     mycell->type = 1;
     cell->transP.assign(g_max, 1.0 / g_max);
@@ -37,7 +37,7 @@ void int_cell(Cell* cell)
 
 void rule_grain_for_green(Cell* cell)
 {
-    double slope = g_slope_map.at(cell->x, cell->y);
+    double slope = g_slope_map.atxy(cell->x, cell->y);
     if (slope >= 25.0) {
         cell->value = 3;
         cell->type = 0;
@@ -46,7 +46,7 @@ void rule_grain_for_green(Cell* cell)
 
 void rule_soil_conservation(Cell* cell)
 {
-    int land_use = g_land_use_map.at(cell->x, cell->y);
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
     std::vector<int> neighbors = g_land_use_map.neighbors(cell->x, cell->y, 2);
     for (int i=0; i < neighbors.size(); ++i) {
         if (neighbors.at(i) == 8) {
