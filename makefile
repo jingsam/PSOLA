@@ -4,7 +4,7 @@ CXX = mpicxx
 CPPFLAGS = 
 CXXFLAGS = -Wall -W -g -Wno-sign-compare
 INC =
-LDFLAGS = 
+LDFLAGS = -L/usr/local/lib
 LIBS = -lgdal
 
 objs = main.o option.o raster.o \
