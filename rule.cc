@@ -61,7 +61,7 @@ void int_cell(Cell* cell)
     cell->transP.assign(g_max, 1.0 / g_max);
     
     if (land_use == g_nodata) {
-	    mycell->type = 0;
+	    cell->type = 0;
 	    return;
     }
 	
