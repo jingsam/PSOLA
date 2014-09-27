@@ -6,7 +6,7 @@
 void normalize(std::vector<double>& p);
 
 // return (i + 1)
-int rouletteWheel(std::vector<double>& p, Random* rnd);
+int roulette_wheel(std::vector<double>& p, Random* rnd);
 
 
 #endif
