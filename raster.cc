@@ -1,8 +1,8 @@
 #include <vector>
 #include <algorithm>
 
-#include "gdal_priv.h"
-#include "cpl_conv.h"
+#include "gdal/gdal_priv.h"
+#include "gdal/cpl_conv.h"
 #include "datamap.h"
 #include "raster.h"
 

@@ -7,7 +7,7 @@
 #include "output.h"
 #include "planmap.h"
 #include "pso.h"
-#include "transition.h"
+#include "rule.h"
 #include "init.h"
 #include "raster.h"
 #include "datamap.h"

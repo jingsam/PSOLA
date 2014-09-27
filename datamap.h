@@ -2,8 +2,8 @@
 #define DATAMAP_H
 
 #include <cstdlib>
-#include "gdal_priv.h"
-#include "cpl_conv.h"
+#include "gdal/gdal_priv.h"
+#include "gdal/cpl_conv.h"
 
 
 template<class T>
@@ -18,6 +18,14 @@ public:
     }
 
     virtual ~Map() {}
+
+    T& at(int i) {
+        return this->at(i);
+    }
+
+    const T& at(int i) const {
+        return this->at(i);
+    }
 
     T& at(int x, int y) {
         return this->at(x + y * xsize);

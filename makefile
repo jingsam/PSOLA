@@ -3,9 +3,9 @@ program = psola
 CXX = mpicxx
 CPPFLAGS = 
 CXXFLAGS = -Wall -W -g -Wno-sign-compare
-LDFLAGS = -L/usr/local/lib
+INC =
+LDFLAGS = 
 LIBS = -lgdal
-INC = -I/usr/include/gdal
 
 objs = main.o option.o raster.o \
 	arg/arg_parser.o xml/tinyxml2.o \
