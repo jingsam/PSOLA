@@ -57,7 +57,7 @@ void int_cell(Cell* cell)
 {
     int land_use = g_land_use_map.atxy(cell->x, cell->y);
     cell->value = land_use;
-    mycell->type = 1;
+    cell->type = 1;
     cell->transP.assign(g_max, 1.0 / g_max);
     
     if (land_use == g_nodata) {
