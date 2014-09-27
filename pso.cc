@@ -33,8 +33,8 @@ void Particle::updateCurrent(PlanMap* gbest)
         for (int j = 0; j < cell->transP.size(); ++j) {
             cell->transP.at(j) *= m;
         }
-	cell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
-	cell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
+        cell->transP.at(pbest_value - 1) += c1 * r1->nextDouble();
+        cell->transP.at(gbest_value - 1) += c2 * r2->nextDouble();
         normalize(cell->transP);
 
         // update position

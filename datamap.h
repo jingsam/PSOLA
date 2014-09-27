@@ -2,7 +2,7 @@
 #define DATAMAP_H
 
 #include <cstdlib>
-
+#include <vector>
 
 template<class T>
 class Map : public std::vector<T>
