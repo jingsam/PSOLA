@@ -78,8 +78,9 @@ int main( int argc, char *argv[] )
                 outputImage(swarm->gbest->getDataMap(), filename.c_str());
                 logStatus(doc, i, swarm->gbest->fitness,
                     (g_prefix + buffer + ".tif").c_str());
-        } else {
-            logStatus(doc, i, swarm->gbest->fitness);
+            } else {
+                logStatus(doc, i, swarm->gbest->fitness);
+            }
         }
 
         MPI_Barrier( MPI_COMM_WORLD );
@@ -110,7 +111,6 @@ int main( int argc, char *argv[] )
     MPI_Op_free( &myop );
     MPI_Finalize();
     return 0;
-
 }
 
 void new_type(MPI_Datatype* ctype)
