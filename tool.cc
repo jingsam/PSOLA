@@ -14,7 +14,7 @@ void normalize(std::vector<double> &p)
     }
 }
 
-int rouletteWheel(std::vector<double> &p, Random* rnd)
+int roulette_wheel(std::vector<double> &p, Random* rnd)
 {
     double r = rnd->nextDouble();
     double sum = 0.0;
