@@ -12,19 +12,17 @@
 
 /*************** global variable initialization *************/
 Random* RND;
-int g_deme                        = 1; 
 int g_size                        = 50;
-int g_max                         = 6;  
+int g_max                         = 9;  
 int g_seed                        = 0;
 double g_momentum                 = 1.0;
 double g_c1                       = 2.0;
 double g_c2                       = 2.0;
 int g_r1                          = 100;
 int g_r2                          = 200;
-int g_generation                  = 100;
+int g_generation                  = 50;
 std::string g_output              = "result";
-std::string g_prefix              = "";
-int g_interval                    = 0;
+int g_interval                    = 10;
 
 int g_xsize                       = 0; 
 int g_ysize                       = 0; 
@@ -66,8 +64,7 @@ const Arg_parser::Option options[] = {
     { 'v', "version",           Arg_parser::no  },
     { 'd', "display",           Arg_parser::no  },
 
-    { 'N', "deme",              Arg_parser::yes },
-    { 'n', "size",              Arg_parser::yes },
+    { 'N', "size",              Arg_parser::yes },
     { 'M', "max",               Arg_parser::yes },	
     { 's', "seed",              Arg_parser::yes },
     { 'm', "momentum",          Arg_parser::yes },
@@ -94,7 +91,6 @@ const Arg_parser::Option options[] = {
     { 'w', "obj-weights",       Arg_parser::yes },
 
     { 299, "xml-file",          Arg_parser::yes },
-    { 300, "xml-string",        Arg_parser::yes },
 
     // end of options
     {   0, 0,                   Arg_parser::no  } };
@@ -110,9 +106,8 @@ void show_help()
                  "  -v, --version                display version information and exit\n"
                  "  -d, --display                display your configuration\n"
 
-                 "\noptions for PSO:\n"                 
-                 "  -N, --deme=<arg>             number of demes\n"
-                 "  -n, --size=<arg>             number of particles in a deme\n"
+                 "\noptions for PSO:\n"
+                 "  -N, --size=<arg>             number of particles in a deme\n"
 		 "  -M, --max=<arg>              value range [1, max]\n"
                  "  -s, --seed=<arg>             general random seed\n"
                  "  -m, --momentum=<arg>         coefficient of keep current status\n"
@@ -122,7 +117,6 @@ void show_help()
                  "  -R, --r2=<arg>               random seed 2 of PSO\n"
                  "  -g, --generation=<arg>       total number of iterations\n"
                  "  -o, --output=<arg>           output directory\n"
-                 "  -p, --prefix=<arg>           output filename prefix\n"
                  "  -i, --interval=<arg>         frequency of output\n"
 
                  "\noptions for land-use allocation:\n"
@@ -141,7 +135,6 @@ void show_help()
 
                  "\nyou can use xml configuration :\n"
                  "      --xml-file=<arg>         xml file for configuration\n"
-                 "      --xml-string=<arg>       xml string for configuration\n" );
     std::exit( 0 );
 }
 
@@ -192,9 +185,8 @@ int parse_option(const int argc, const char * const argv[])
             case 'v': show_version();               return 0;
             case 'd': display_config = true;        break;
 
-            case 'N': set_deme( arg );              break;
-            case 'n': set_size( arg );              break;
-			case 'M': set_max( arg );               break;
+            case 'N': set_size( arg );              break;
+	    case 'M': set_max( arg );               break;
             case 's': set_seed( arg );              break;
             case 'm': set_momentum( arg );          break;
             case 'c': set_c1( arg );                break;
@@ -217,15 +209,12 @@ int parse_option(const int argc, const char * const argv[])
             case 256: set_slope_map( arg );         break;
             case 257: set_road_map( arg );          break;            
             case 'Q': set_land_use_struct( arg );   break;
-			case 'w': set_obj_weights( arg );       break;
+	    case 'w': set_obj_weights( arg );       break;
 
             case 299: parse_xml_file( arg );        break;
-            case 300: parse_xml_string( arg );      break;           
             default : break;
         }
     }
-
-    check_option();
 
     if (display_config) show_option(); 
 
@@ -234,8 +223,8 @@ int parse_option(const int argc, const char * const argv[])
 
 void set_option(const std::string& opt, const std::string& arg)
 {
-    if      (opt == "deme")                 set_deme(arg);
-	else if (opt == "size")                 set_size(arg);
+
+    if      (opt == "size")                 set_size(arg);
     else if (opt == "max")                  set_max(arg);
     else if (opt == "seed")                 set_seed(arg);
     else if (opt == "momentum")             set_momentum(arg);
@@ -245,7 +234,6 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "r2")                   set_r2(arg);
     else if (opt == "generation")           set_generation(arg);
     else if (opt == "output")               set_output(arg);
-    else if (opt == "prefix")               set_prefix(arg);
     else if (opt == "interval")             set_interval(arg);
 
     else if (opt == "region-map")           set_region_map(arg);
@@ -258,22 +246,17 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "rural-suit-map")       set_rural_suit_map(arg);
     else if (opt == "slope-map")            set_slope_map(arg);
     else if (opt == "road-map")             set_road_map(arg);    
-	else if (opt == "land-use-struct")      set_land_use_struct(arg);
-	else if (opt == "obj-weights")          set_obj_weights(arg);
+    else if (opt == "land-use-struct")      set_land_use_struct(arg);
+    else if (opt == "obj-weights")          set_obj_weights(arg);
 
     else if (opt == "xml-file")             parse_xml_file(arg);
-    else if (opt == "xml-string")           parse_xml_string(arg);
 }
 
-int check_option() {
-    return 0;
-}
 
 void show_option() {
     std::printf("\nConfiguration for PSO:\n");
-    std::printf("deme:                    %d\n", g_deme);
     std::printf("size:                    %d\n", g_size);
-	std::printf("range:                   [1,%d]\n", g_max);
+    std::printf("max:                     %d\n", g_max);
     std::printf("seed:                    %d\n", g_seed);
     std::printf("momentum:                %f\n", g_momentum);
     std::printf("c1:                      %f\n", g_c1);
@@ -282,7 +265,6 @@ void show_option() {
     std::printf("r2:                      %d\n", g_r2);
     std::printf("generation:              %d\n", g_generation);
     std::printf("output:                  %s\n", g_output.c_str());
-    std::printf("prefix:                  %s\n", g_prefix.c_str());
     std::printf("interval:                %d\n", g_interval);
 
     std::printf("\nConfiguration for land-use allocation:\n");
@@ -307,7 +289,7 @@ void show_option() {
     std::printf("road-map:                %s (%d, %d)\n", 
         road_map.c_str(),         g_slope_map.xsize,        g_slope_map.ysize);
 	
-	std::printf("land-use-struct:         ");
+    std::printf("land-use-struct:         ");
     for (int i = 0; i < g_land_use_struct.size(); ++i) {
         std::printf("%d ", g_land_use_struct.at(i));
     }
@@ -324,11 +306,6 @@ void clean_option() {
 	delete RND;
 }
 
-
-
-void set_deme(const std::string& arg) {
-    g_deme = std::atoi( arg.c_str() );
-}
 
 void set_size(const std::string& arg) {
     g_size = std::atoi( arg.c_str() );
@@ -368,16 +345,12 @@ void set_generation(const std::string& arg) {
 
 void set_output(const std::string& arg) {
     g_output = arg;
-} 
-
-void set_prefix(const std::string& arg) {
-    g_prefix = arg;
-}   
+}
 
 void set_interval(const std::string& arg) {
     g_interval = std::atoi( arg.c_str() );
 }
-  
+
 template <typename T>
 void set_map(const std::string& filename, Map<T>& map) {
     int xsize = getRasterXSize( filename.c_str() );
@@ -395,7 +368,7 @@ void set_region_map(const std::string& arg) {
     g_ysize = getRasterYSize( arg.c_str() );
     g_nodata = (int)getRasterNoDataValue( arg.c_str() );
 	
-	g_region = arg;
+    g_region = arg;
 }
 
 void set_land_use_map(const std::string& arg) {
@@ -499,13 +472,4 @@ void parse_xml_file(const std::string& arg) {
     doc.LoadFile( arg.c_str() );
 
     parse_xml(&doc);
-}       
-
-void parse_xml_string(const std::string& arg) {
-    tinyxml2::XMLDocument doc;
-    doc.Parse( arg.c_str() );
-
-    parse_xml(&doc);
 }
-
-
