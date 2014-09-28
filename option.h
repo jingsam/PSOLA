@@ -42,7 +42,6 @@ void show_error(const char * const msg);
 void init_option();
 int  parse_option(const int argc, const char * const argv[]);
 void set_option(const std::string& opt, const std::string& arg);
-int  check_option();
 void show_option();
 void clean_option();
 
