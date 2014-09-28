@@ -74,10 +74,9 @@ int main( int argc, char *argv[] )
             if (g_interval != 0 && (i % g_interval) == 0) {
                 char buffer[50];
                 std::sprintf(buffer, "%d", i);
-                std::string filename = g_output + "/" + g_prefix + buffer + ".tif";
+                std::string filename = g_output + "/" + buffer + ".tif";
                 outputImage(swarm->gbest->getDataMap(), filename.c_str());
-                logStatus(doc, i, swarm->gbest->fitness,
-                    (g_prefix + buffer + ".tif").c_str());
+                logStatus(doc, i, swarm->gbest->fitness, (buffer + ".tif").c_str());
             } else {
                 logStatus(doc, i, swarm->gbest->fitness);
             }
