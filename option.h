@@ -7,7 +7,6 @@
 #include "datamap.h"
 
 extern Random* RND;                             // 全局随机数生成器
-extern int g_deme;                              // 子种群个数
 extern int g_size;                              // 种群粒子数
 extern int g_max;                               // 取值区间[1,max]
 extern int g_seed;                              // 随机数种子
@@ -18,7 +17,6 @@ extern int g_r1;                                // 随机数种子1
 extern int g_r2;                                // 随机数种子2
 extern int g_generation;                        // 迭代次数
 extern std::string g_output;                    // 输出文件夹
-extern std::string g_prefix;                    // 输出文件前缀
 extern int g_interval;                          // 输出间隔
 
 extern std::string g_region;                    // 优化区域
@@ -48,7 +46,6 @@ int  check_option();
 void show_option();
 void clean_option();
 
-void set_deme(const std::string& arg);
 void set_size(const std::string& arg);
 void set_max(const std::string& arg);
 void set_seed(const std::string& arg);
@@ -59,7 +56,6 @@ void set_r1(const std::string& arg);
 void set_r2(const std::string& arg);
 void set_generation(const std::string& arg);
 void set_output(const std::string& arg);
-void set_prefix(const std::string& arg);
 void set_interval(const std::string& arg);
 
 void set_region_map(const std::string& arg);
@@ -76,7 +72,6 @@ void set_land_use_struct(const std::string& arg);
 void set_obj_weights(const std::string& arg);
 
 void parse_xml_file(const std::string& arg);
-void parse_xml_string(const std::string& arg);
 
 
 #endif // OPTION_H
