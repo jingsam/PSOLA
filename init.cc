@@ -30,7 +30,7 @@ Particle* init_particle()
 
 Swarm* init_swarm(int size, int id)
 {
-    RND = new Random( g_seed + id );
+    g_RND = new Random( g_seed + id );
 
     Swarm* swarm = new Swarm();
     swarm->momentum = g_momentum;
