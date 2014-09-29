@@ -3,7 +3,6 @@ program = psola
 CXX = mpicxx
 CPPFLAGS = 
 CXXFLAGS = -Wall -W -g -Wno-sign-compare
-INC =
 LDFLAGS = -L/usr/local/lib
 LIBS = -lgdal
 
@@ -14,9 +13,9 @@ objs = main.o option.o raster.o \
 
 
 $(program) : $(objs)
-	$(CXX) $(INC) $(LDFLAGS) $(LIBS) -o $@ $(objs)
+	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $(objs)
 # for cygwin
-#	$(CXX) $(INC) $(LDFLAGS) $(LIBS) -o $@ $(objs) /usr/local/lib/libgdal.dll.a
+#	$(CXX) $(LDFLAGS) $(LIBS) -o $@ $(objs) /usr/local/lib/libgdal.dll.a
 
 .PHONY : clean
 clean :
