@@ -106,7 +106,6 @@ int main( int argc, char *argv[] )
         std::printf("\nTotal: %.2f S\n", t8 - t1);
     }
 
-    clean_option();
     MPI_Type_free( &ctype );
     MPI_Op_free( &myop );
     MPI_Finalize();

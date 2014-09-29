@@ -6,18 +6,18 @@
 #include "random.h"
 #include "datamap.h"
 
-extern Random* RND;                             // 全局随机数生成器
-extern int g_size;                              // 种群粒子数
-extern int g_max;                               // 取值区间[1,max]
-extern int g_seed;                              // 随机数种子
-extern double g_momentum;                       // 惯性权重
-extern double g_c1;                             // 认知系数
-extern double g_c2;                             // 社会系数
-extern int g_r1;                                // 随机数种子1
-extern int g_r2;                                // 随机数种子2
-extern int g_generation;                        // 迭代次数
-extern std::string g_output;                    // 输出文件夹
-extern int g_interval;                          // 输出间隔
+extern Random* g_RND;                           // general random generator 
+extern int g_size;                              // number of particles
+extern int g_max;                               // max value
+extern int g_seed;                              // general random seed
+extern double g_momentum;                       // cofficient of keep current speed
+extern double g_c1;                             // cofficient of move to Pbest
+extern double g_c2;                             // cofficient of move to Gbest
+extern int g_r1;                                // random seed 1 of PSO
+extern int g_r2;                                // random seed 2 of PSO
+extern int g_generation;                        // total number of iterations
+extern std::string g_output;                    // output directoy
+extern int g_interval;                          // frequency of output
 
 extern std::string g_region;                    // 优化区域
 extern int g_xsize;                             // 地图的宽度（列数）
@@ -39,11 +39,9 @@ extern std::vector<double> g_obj_weights;       // 目标函数权重
 void show_help();
 void show_version();
 void show_error(const char * const msg);
-void init_option();
 int  parse_option(const int argc, const char * const argv[]);
 void set_option(const std::string& opt, const std::string& arg);
 void show_option();
-void clean_option();
 
 void set_size(const std::string& arg);
 void set_max(const std::string& arg);

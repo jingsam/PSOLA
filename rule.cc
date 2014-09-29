@@ -47,10 +47,26 @@ void rule_transportation(Cell* cell)
     	if (neighbors.at(i)->value == 7) return;
     }
 }
+/*
+void rule_edge_cell(Cell* cell)
+{
+    bool is_edge_cell = false;
+    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, g_depth);
+    for (int i=0; i < neighbors.size(); ++i) {
+    	if (neighbors.at(i)->value == cell->value) {
+            is_edge_cell = true;
+            break;
+        }
+    }
 
+    if (is_edge_cell) {
+        
+    }
+}
+*/
 int transition(Cell* cell)
 {
-    return roulette_wheel(cell->transP, RND);
+    return roulette_wheel(cell->transP, g_RND);
 }
 
 void int_cell(Cell* cell)

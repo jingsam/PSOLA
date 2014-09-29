@@ -11,7 +11,7 @@
 #include "raster.h"
 
 /*************** global variable initialization *************/
-Random* RND;
+Random* g_RND;
 int g_size                        = 50;
 int g_max                         = 9;  
 int g_seed                        = 0;
@@ -108,7 +108,7 @@ void show_help()
 
                  "\noptions for PSO:\n"
                  "  -N, --size=<arg>             number of particles in a deme\n"
-		 "  -M, --max=<arg>              value range [1, max]\n"
+		         "  -M, --max=<arg>              value range [1, max]\n"
                  "  -s, --seed=<arg>             general random seed\n"
                  "  -m, --momentum=<arg>         coefficient of keep current status\n"
                  "  -c, --c1=<arg>               coefficient of move to Pbest\n"
@@ -130,7 +130,7 @@ void show_help()
                  "  -V, --rural-suit-map=<arg>   suitability map of rural land-use\n"
                  "      --slope-map=<arg>        slope map (unit: degree)\n"
                  "      --road-map=<arg>         road map (unit: meter)\n"
-		 "  -Q, --land-use-struct=<arg>  land-use structure (splited by comma)\n"
+		         "  -Q, --land-use-struct=<arg>  land-use structure (splited by comma)\n"
                  "  -w, --obj-weights=<arg>      weights of objectives (splited by comma)\n"                 
 
                  "\nyou can use xml configuration :\n"
@@ -145,7 +145,6 @@ void show_version()
     std::exit( 0 );
 }
 
-
 void show_error(const char * const msg)
 {
     if( msg && msg[0] ) {
@@ -153,11 +152,6 @@ void show_error(const char * const msg)
       std::fprintf( stderr, "Try '%s --help' for more information.\n", 
         invocation_name );
     }
-}
-
-void init_option()
-{
-
 }
 
 int parse_option(const int argc, const char * const argv[])
@@ -172,8 +166,6 @@ int parse_option(const int argc, const char * const argv[])
         show_error( parser.error().c_str());
         std::exit(1);
     }
-
-    init_option();
 
     for( int argind = 0; argind < parser.arguments(); ++argind )
     {
@@ -299,10 +291,6 @@ void show_option() {
         std::printf("%.2f ", g_obj_weights.at(i));
     }
     std::printf("\n");
-}
-
-void clean_option() {
-	delete RND;
 }
 
 
