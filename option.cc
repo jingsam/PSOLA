@@ -134,7 +134,7 @@ void show_help()
                  "  -w, --obj-weights=<arg>      weights of objectives (splited by comma)\n"                 
 
                  "\nyou can use xml configuration :\n"
-                 "      --xml-file=<arg>         xml file for configuration\n"
+                 "      --xml-file=<arg>         xml file for configuration\n" );
     std::exit( 0 );
 }
 
@@ -195,7 +195,6 @@ int parse_option(const int argc, const char * const argv[])
             case 'R': set_r2( arg );                break;
             case 'g': set_generation( arg );        break;
             case 'o': set_output( arg );            break;
-            case 'p': set_prefix( arg );            break;
             case 'i': set_interval( arg );          break;
 
             case 'z': set_region_map( arg );        break;

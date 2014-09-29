@@ -2,6 +2,7 @@
 #include <cstdio>   // printf()
 #include <ctime>    // clock()
 #include <cstring>  // memcpy()
+#include <sstream> // ostringstream
 #include "mpi.h"
 #include "psola.h"
 
@@ -72,11 +73,11 @@ int main( int argc, char *argv[] )
     	    std::printf("%d, %f\n", i, swarm->gbest->fitness);
     	    // ouptut middle result
             if (g_interval != 0 && (i % g_interval) == 0) {
-                char buffer[50];
-                std::sprintf(buffer, "%d", i);
-                std::string filename = g_output + "/" + buffer + ".tif";
-                outputImage(swarm->gbest->getDataMap(), filename.c_str());
-                logStatus(doc, i, swarm->gbest->fitness, (buffer + ".tif").c_str());
+                std::ostringstream oss;
+                oss << i << ".tif" << std::endl;
+                std::string file = oss.str();
+                outputImage(swarm->gbest->getDataMap(), (g_output + file).c_str());
+                logStatus(doc, i, swarm->gbest->fitness, file.c_str());
             } else {
                 logStatus(doc, i, swarm->gbest->fitness);
             }
@@ -91,12 +92,12 @@ int main( int argc, char *argv[] )
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
-        std::string log = g_output + "/" + g_prefix + "log.xml";
+        std::string log = g_output + "/log.xml";
         if (doc->SaveFile(log.c_str())) {
             std::printf("Failed save log to %s", log.c_str());
         }
 
-        std::string output = g_output + "/" + g_prefix + "result.tif";
+        std::string output = g_output + "/result.tif";
         outputImage(swarm->gbest->getDataMap(), output.c_str());
         double t8 = MPI_Wtime();
     
