@@ -25,12 +25,12 @@ void rule_soil_conservation(Cell* cell)
     }
 }
 
-void rule_quantity_constraint(Cell* cell) 
+void rule_quantity_constraint(Cell* cell)
 {
-    
+
 }
 
-void rule_farming_radius(Cell* cell) 
+void rule_farming_radius(Cell* cell)
 {
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, 40);
     for (int i=0; i < neighbors.size(); ++i) {
@@ -40,7 +40,7 @@ void rule_farming_radius(Cell* cell)
     cell->transP.at(0) = 0.0;
 }
 
-void rule_transportation(Cell* cell) 
+void rule_transportation(Cell* cell)
 {
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, 20);
     for (int i=0; i < neighbors.size(); ++i) {
@@ -60,7 +60,7 @@ void rule_edge_cell(Cell* cell)
     }
 
     if (is_edge_cell) {
-        
+
     }
 }
 */
@@ -75,12 +75,12 @@ void int_cell(Cell* cell)
     cell->value = land_use;
     cell->type = 1;
     cell->transP.assign(g_max, 1.0 / g_max);
-    
+
     if (land_use == g_nodata) {
 	    cell->type = 0;
 	    return;
     }
-	
+
     switch (land_use) {
         case 1:
             rule_grain_for_green(cell);
@@ -88,7 +88,10 @@ void int_cell(Cell* cell)
         case 4:
             rule_soil_conservation(cell);
             break;
-        case 5:  case 7:  case 8:  case 9: 
+        case 5:
+        case 7:
+        case 8:
+        case 9:
             cell->type = 0;
             break;
      }
