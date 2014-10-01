@@ -1,4 +1,3 @@
-#include <map>
 #include "pso.h"
 
 
@@ -17,7 +16,7 @@ void Particle::updateCurrent(PlanMap* gbest)
     int ysize = this->current->ysize;
     
     Map<int> temp(xsize, ysize, 0);
-    std::map<int,int> stats;
+    current->stats.clear();
 
     for (int i = 0; i < current->size(); ++i) {
         Cell* cell = current->at(i);
@@ -39,7 +38,7 @@ void Particle::updateCurrent(PlanMap* gbest)
 
         // update position
         temp.at(i) = transition(cell);
-        stats.at( temp.at(i) ) += 1;
+        current->stats.at( temp.at(i) ) += 1;
     }
     
     this->current->assignValue(temp);

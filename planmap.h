@@ -2,6 +2,7 @@
 #define PLANMAP_H
 
 #include <vector>
+#include <map>
 #include "datamap.h"	// class Map<T>
 
 
@@ -88,6 +89,7 @@ public:
 		map->xsize = this->xsize;
 		map->ysize = this->ysize;
 		map->fitness = this->fitness;
+		map->stats = this->stats;
 
 		for (int i = 0; i < this->size(); ++i) {
 			Cell* cell = this->at(i)->clone();
@@ -100,6 +102,7 @@ public:
 
 	void assignValue(PlanMap* other) {
 		this->fitness = other->fitness;
+		this->stats = other->stats;
 		for (int i = 0; i < this->size(); ++i) {
 			this->at(i)->value = other->at(i)->value;
 		}
@@ -113,6 +116,7 @@ public:
 	}
 	
 	double fitness;
+	std::map<int, int> stats;
 };
 
 #endif
