@@ -140,4 +140,3 @@ void new_op(MPI_Op* op)
 
     MPI_Op_create( func, commute, op );
 }
-
