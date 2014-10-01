@@ -91,7 +91,7 @@ public:
 
 		for (int i = 0; i < this->size(); ++i) {
 			Cell* cell = this->at(i)->clone();
-			cell->map = map;			
+			cell->map = map;
 			map->push_back(cell);
 		}
 
