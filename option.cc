@@ -13,7 +13,7 @@
 /*************** global variable initialization *************/
 Random* g_RND;
 int g_size                        = 50;
-int g_max                         = 9;  
+int g_max                         = 9;
 int g_seed                        = 0;
 double g_momentum                 = 1.0;
 double g_c1                       = 2.0;
@@ -24,9 +24,13 @@ int g_generation                  = 50;
 std::string g_output              = "result";
 int g_interval                    = 10;
 
-int g_xsize                       = 0; 
-int g_ysize                       = 0; 
-int g_nodata                      = 255; 
+double g_core                     = 1.0;
+double g_edge                     = 1.0;
+int g_edge_depth                  = 1;
+
+int g_xsize                       = 0;
+int g_ysize                       = 0;
+int g_nodata                      = 255;
 Map<int> g_region_map;
 Map<int> g_land_use_map;
 Map<double> g_arable_suit_map;
@@ -65,7 +69,7 @@ const Arg_parser::Option options[] = {
     { 'd', "display",           Arg_parser::no  },
 
     { 'N', "size",              Arg_parser::yes },
-    { 'M', "max",               Arg_parser::yes },	
+    { 'M', "max",               Arg_parser::yes },
     { 's', "seed",              Arg_parser::yes },
     { 'm', "momentum",          Arg_parser::yes },
     { 'c', "c1",                Arg_parser::yes },
@@ -77,7 +81,7 @@ const Arg_parser::Option options[] = {
     { 'p', "prefix",            Arg_parser::yes },
     { 'i', "interval",          Arg_parser::yes },
 
-    { 'z', "region-map",        Arg_parser::yes }, 
+    { 'z', "region-map",        Arg_parser::yes },
     { 'l', "land-use-map",      Arg_parser::yes },
     { 'A', "arable-suit-map",   Arg_parser::yes },
     { 'O', "orchard-suit-map",  Arg_parser::yes },
@@ -86,7 +90,7 @@ const Arg_parser::Option options[] = {
     { 'U', "urban-suit-map",    Arg_parser::yes },
     { 'V', "rural-suit-map",    Arg_parser::yes },
     { 256, "slope-map",         Arg_parser::yes },
-    { 257, "road-map",          Arg_parser::yes },    
+    { 257, "road-map",          Arg_parser::yes },
     { 'Q', "land-use-struct",   Arg_parser::yes },
     { 'w', "obj-weights",       Arg_parser::yes },
 
@@ -131,7 +135,7 @@ void show_help()
                  "      --slope-map=<arg>        slope map (unit: degree)\n"
                  "      --road-map=<arg>         road map (unit: meter)\n"
 		         "  -Q, --land-use-struct=<arg>  land-use structure (splited by comma)\n"
-                 "  -w, --obj-weights=<arg>      weights of objectives (splited by comma)\n"                 
+                 "  -w, --obj-weights=<arg>      weights of objectives (splited by comma)\n"
 
                  "\nyou can use xml configuration :\n"
                  "      --xml-file=<arg>         xml file for configuration\n" );
@@ -149,7 +153,7 @@ void show_error(const char * const msg)
 {
     if( msg && msg[0] ) {
       std::fprintf( stderr, "%s: %s\n", program_name, msg );
-      std::fprintf( stderr, "Try '%s --help' for more information.\n", 
+      std::fprintf( stderr, "Try '%s --help' for more information.\n",
         invocation_name );
     }
 }
@@ -162,7 +166,7 @@ int parse_option(const int argc, const char * const argv[])
 
     const Arg_parser parser( argc, argv, options );
 
-    if( parser.error().size() ) { 
+    if( parser.error().size() ) {
         show_error( parser.error().c_str());
         std::exit(1);
     }
@@ -173,7 +177,7 @@ int parse_option(const int argc, const char * const argv[])
         std::string arg = parser.argument( argind );
         if( !code ) break;
         switch( code ) {
-            case 'h': show_help();                  return 0;    
+            case 'h': show_help();                  return 0;
             case 'v': show_version();               return 0;
             case 'd': display_config = true;        break;
 
@@ -198,7 +202,7 @@ int parse_option(const int argc, const char * const argv[])
             case 'U': set_urban_suit_map( arg );    break;
             case 'V': set_rural_suit_map( arg );    break;
             case 256: set_slope_map( arg );         break;
-            case 257: set_road_map( arg );          break;            
+            case 257: set_road_map( arg );          break;
             case 'Q': set_land_use_struct( arg );   break;
 	    case 'w': set_obj_weights( arg );       break;
 
@@ -207,7 +211,7 @@ int parse_option(const int argc, const char * const argv[])
         }
     }
 
-    if (display_config) show_option(); 
+    if (display_config) show_option();
 
     return 0;
 }
@@ -236,7 +240,7 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "urban-suit-map")       set_urban_suit_map(arg);
     else if (opt == "rural-suit-map")       set_rural_suit_map(arg);
     else if (opt == "slope-map")            set_slope_map(arg);
-    else if (opt == "road-map")             set_road_map(arg);    
+    else if (opt == "road-map")             set_road_map(arg);
     else if (opt == "land-use-struct")      set_land_use_struct(arg);
     else if (opt == "obj-weights")          set_obj_weights(arg);
 
@@ -259,33 +263,33 @@ void show_option() {
     std::printf("interval:                %d\n", g_interval);
 
     std::printf("\nConfiguration for land-use allocation:\n");
-    std::printf("region-map:              %s (%d, %d)\n", 
+    std::printf("region-map:              %s (%d, %d)\n",
         g_region.c_str(),  		  g_region_map.xsize,       g_region_map.ysize);
-    std::printf("land-use-map:            %s (%d, %d)\n", 
+    std::printf("land-use-map:            %s (%d, %d)\n",
         land_use_map.c_str(),     g_land_use_map.xsize,     g_land_use_map.ysize);
-    std::printf("arable-suit-map:         %s (%d, %d)\n", 
+    std::printf("arable-suit-map:         %s (%d, %d)\n",
         arable_suit_map.c_str(),  g_arable_suit_map.xsize,  g_arable_suit_map.ysize);
-    std::printf("orchard-suit-map:        %s (%d, %d)\n", 
+    std::printf("orchard-suit-map:        %s (%d, %d)\n",
         orchard_suit_map.c_str(), g_orchard_suit_map.xsize, g_orchard_suit_map.ysize);
-    std::printf("forest-suit-map:         %s (%d, %d)\n", 
+    std::printf("forest-suit-map:         %s (%d, %d)\n",
         forest_suit_map.c_str(),  g_forest_suit_map.xsize,  g_forest_suit_map.ysize);
-    std::printf("grass-suit-map:          %s (%d, %d)\n", 
+    std::printf("grass-suit-map:          %s (%d, %d)\n",
         grass_suit_map.c_str(),   g_grass_suit_map.xsize,   g_grass_suit_map.ysize);
-    std::printf("urban-suit-map:          %s (%d, %d)\n", 
+    std::printf("urban-suit-map:          %s (%d, %d)\n",
         urban_suit_map.c_str(),   g_urban_suit_map.xsize,   g_urban_suit_map.ysize);
-    std::printf("rural-suit-map:          %s (%d, %d)\n", 
+    std::printf("rural-suit-map:          %s (%d, %d)\n",
         rural_suit_map.c_str(),   g_rural_suit_map.xsize,   g_rural_suit_map.ysize);
-    std::printf("slope-map:               %s (%d, %d)\n", 
+    std::printf("slope-map:               %s (%d, %d)\n",
         slope_map.c_str(),        g_road_map.xsize,         g_road_map.ysize);
-    std::printf("road-map:                %s (%d, %d)\n", 
+    std::printf("road-map:                %s (%d, %d)\n",
         road_map.c_str(),         g_slope_map.xsize,        g_slope_map.ysize);
-	
+
     std::printf("land-use-struct:         ");
     for (int i = 0; i < g_land_use_struct.size(); ++i) {
         std::printf("%d ", g_land_use_struct.at(i));
     }
     std::printf("\n");
-	
+
     std::printf("obj-weights:             ");
     for (int i = 0; i < g_obj_weights.size(); ++i) {
         std::printf("%.2f ", g_obj_weights.at(i));
@@ -303,16 +307,16 @@ void set_max(const std::string& arg) {
 }
 
 void set_seed(const std::string& arg) {
-    g_seed = std::atoi( arg.c_str() );    
-} 
+    g_seed = std::atoi( arg.c_str() );
+}
 
 void set_momentum(const std::string& arg) {
     g_momentum = std::atof( arg.c_str() );
-}  
+}
 
 void set_c1(const std::string& arg) {
     g_c1 = std::atof( arg.c_str() );
-}  
+}
 
 void set_c2(const std::string& arg) {
     g_c2 = std::atof( arg.c_str() );
@@ -320,15 +324,15 @@ void set_c2(const std::string& arg) {
 
 void set_r1(const std::string& arg) {
     g_r1 = std::atof( arg.c_str() );
-}  
+}
 
 void set_r2(const std::string& arg) {
     g_r2 = std::atof( arg.c_str() );
-}  
+}
 
 void set_generation(const std::string& arg) {
     g_generation = std::atoi( arg.c_str() );
-} 
+}
 
 void set_output(const std::string& arg) {
     g_output = arg;
@@ -354,7 +358,7 @@ void set_region_map(const std::string& arg) {
     g_xsize = getRasterXSize( arg.c_str() );
     g_ysize = getRasterYSize( arg.c_str() );
     g_nodata = (int)getRasterNoDataValue( arg.c_str() );
-	
+
     g_region = arg;
 }
 
@@ -362,52 +366,52 @@ void set_land_use_map(const std::string& arg) {
     set_map( arg, g_land_use_map );
 
     land_use_map = arg;
-} 
+}
 
 void set_arable_suit_map(const std::string& arg) {
     set_map( arg, g_arable_suit_map );
 
     arable_suit_map = arg;
-}   
+}
 
 void set_orchard_suit_map(const std::string& arg) {
     set_map( arg, g_orchard_suit_map );
 
     orchard_suit_map = arg;
-}  
+}
 
 void set_forest_suit_map(const std::string& arg) {
     set_map( arg, g_forest_suit_map );
 
     forest_suit_map = arg;
-}  
+}
 
 void set_grass_suit_map(const std::string& arg) {
     set_map( arg, g_grass_suit_map );
 
     grass_suit_map = arg;
-}   
+}
 
 void set_urban_suit_map(const std::string& arg) {
     set_map( arg, g_urban_suit_map );
 
     urban_suit_map = arg;
-}   
+}
 
 void set_rural_suit_map(const std::string& arg) {
-    set_map( arg, g_rural_suit_map );   
+    set_map( arg, g_rural_suit_map );
 
     rural_suit_map = arg;
-}   
+}
 
 void set_slope_map(const std::string& arg) {
     set_map( arg, g_slope_map );
 
     slope_map = arg;
-}        
+}
 
 void set_road_map(const std::string& arg) {
-    set_map( arg, g_road_map );    
+    set_map( arg, g_road_map );
 
     road_map = arg;
 }
@@ -448,7 +452,7 @@ void parse_xml(tinyxml2::XMLDocument *doc) {
     while (entry) {
         const char *opt = entry->Attribute("key");
         const char *arg = entry->GetText();
-        if (opt != NULL && arg != NULL) set_option(opt, arg);        
+        if (opt != NULL && arg != NULL) set_option(opt, arg);
 
         entry = entry->NextSiblingElement();
     }

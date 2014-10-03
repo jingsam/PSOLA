@@ -6,7 +6,7 @@
 #include "random.h"
 #include "datamap.h"
 
-extern Random* g_RND;                           // general random generator 
+extern Random* g_RND;                           // general random generator
 extern int g_size;                              // number of particles
 extern int g_max;                               // max value
 extern int g_seed;                              // general random seed
@@ -18,6 +18,10 @@ extern int g_r2;                                // random seed 2 of PSO
 extern int g_generation;                        // total number of iterations
 extern std::string g_output;                    // output directoy
 extern int g_interval;                          // frequency of output
+
+extern double g_core;
+extern double g_edge;
+extern int g_edge_depth;
 
 extern std::string g_region;                    // 优化区域
 extern int g_xsize;                             // 地图的宽度（列数）
