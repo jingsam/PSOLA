@@ -25,7 +25,7 @@ void rule_soil_conservation(Cell* cell)
     }
 }
 
-void rule_quantity_constraint(Cell* cell)
+void rule_quantity_arableland(Cell* cell)
 {
 
 }
