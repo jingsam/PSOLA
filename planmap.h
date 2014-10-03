@@ -15,7 +15,7 @@ class Cell
 {
 public:
 	Cell() {}
-	
+
 	Cell(int x, int y, int value) {
 		this->x = x;
 		this->y = y;
@@ -48,7 +48,7 @@ class PlanMap : public Map<Cell*>
 {
 public:
 	PlanMap() {}
-	
+
 	PlanMap(int xsize, int ysize, int defaultValue) {
 		for (int y=0; y < ysize; ++y) {
 			for (int x=0; x < xsize; ++x) {
@@ -65,7 +65,7 @@ public:
 		    delete this->at(i);
 		}
 	}
-	
+
 	bool betterThan(PlanMap* other) {
 		return this->fitness > other->fitness;
 	}
@@ -89,7 +89,7 @@ public:
 		map->xsize = this->xsize;
 		map->ysize = this->ysize;
 		map->fitness = this->fitness;
-		map->stats = this->stats;
+		map->counts = this->counts;
 
 		for (int i = 0; i < this->size(); ++i) {
 			Cell* cell = this->at(i)->clone();
@@ -102,21 +102,21 @@ public:
 
 	void assignValue(PlanMap* other) {
 		this->fitness = other->fitness;
-		this->stats = other->stats;
+		this->counts = other->counts;
 		for (int i = 0; i < this->size(); ++i) {
 			this->at(i)->value = other->at(i)->value;
 		}
 	}
-	
+
 	void assignValue(Map<int>& other) {
 		this->fitness = calc_fitness(other);
 		for (int i = 0; i < this->size(); ++i) {
 			this->at(i)->value = other.at(i);
 		}
 	}
-	
+
 	double fitness;
-	std::map<int, int> stats;
+	std::map<int, int> counts;
 };
 
 #endif

@@ -14,9 +14,9 @@ void Particle::updateCurrent(PlanMap* gbest)
     Random* r2 = this->swarm->r2;
     int xsize = this->current->xsize;
     int ysize = this->current->ysize;
-    
+
     Map<int> temp(xsize, ysize, 0);
-    current->stats.clear();
+    current->counts.clear();
 
     for (int i = 0; i < current->size(); ++i) {
         Cell* cell = current->at(i);
@@ -38,9 +38,9 @@ void Particle::updateCurrent(PlanMap* gbest)
 
         // update position
         temp.at(i) = transition(cell);
-        current->stats.at( temp.at(i) ) += 1;
+        current->counts.at( temp.at(i) ) += 1;
     }
-    
+
     this->current->assignValue(temp);
     this->updatePbest();
 }
