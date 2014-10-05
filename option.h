@@ -22,6 +22,9 @@ extern int g_interval;                          // frequency of output
 extern double g_core;
 extern double g_edge;
 extern int g_edge_depth;
+extern int g_num_arable;
+extern int g_num_urban;
+extern Map<double> g_soil_depth_map;
 
 extern std::string g_region;                    // 优化区域
 extern int g_xsize;                             // 地图的宽度（列数）

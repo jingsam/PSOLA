@@ -27,6 +27,9 @@ int g_interval                    = 10;
 double g_core                     = 1.0;
 double g_edge                     = 1.0;
 int g_edge_depth                  = 1;
+int g_num_arable;
+int g_num_urban;
+Map<double> g_soil_depth_map;
 
 int g_xsize                       = 0;
 int g_ysize                       = 0;

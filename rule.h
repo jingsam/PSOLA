@@ -5,6 +5,6 @@
 
 int transition(Cell* cell);
 
-int init_cell(Cell* cell);
+void init_cell(Cell* cell);
 
 #endif

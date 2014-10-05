@@ -2,16 +2,16 @@
 #include "init.h"
 #include "option.h"
 
-void int_cell(Cell* cell);
+void init_cell(Cell* cell);
 
 
 PlanMap* init_map()
 {
     PlanMap* map = new PlanMap(g_xsize, g_ysize, 0);
     for (int y = 0; y < g_ysize; ++y) {
-        for (int x = 0; x < g_xsize; ++x) {	
+        for (int x = 0; x < g_xsize; ++x) {
             Cell* cell = map->atxy(x, y);
-            int_cell( cell );
+            init_cell( cell );
         }
     }
     map->updateFitness();
