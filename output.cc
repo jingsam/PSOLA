@@ -40,7 +40,7 @@ tinyxml2::XMLDocument* createLogDocument()
     return doc;
 }
 
-void logStatus(tinyxml2::XMLDocument* doc, 
+void logStatus(tinyxml2::XMLDocument* doc,
     int generation, double fitness, const char *filename)
 {
     /*      <iter>
@@ -65,13 +65,13 @@ void logStatus(tinyxml2::XMLDocument* doc,
     gen->InsertEndChild(doc->NewText(buffer));
     std::sprintf(buffer, "%f", fitness);
     fit->InsertEndChild(doc->NewText(buffer));
-    if (filename) file->InsertEndChild(doc->NewText(filename));   
+    if (filename) file->InsertEndChild(doc->NewText(filename));
 }
 
 int outputImage(const std::vector<int>& data, const char *filename)
 {
-    if (copyRaster(g_region.c_str(), filename)) {
-        std::printf("Failed copy %s to %s\n", g_region.c_str(), filename);
+    if (copyRaster(land_use_map.c_str(), filename)) {
+        std::printf("Failed copy %s to %s\n", land_use_map.c_str(), filename);
     }
 
     if (writeRaster(data, filename)) {

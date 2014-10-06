@@ -24,24 +24,23 @@ extern double g_edge;
 extern int g_edge_depth;
 extern int g_num_arable;
 extern int g_num_urban;
-extern Map<double> g_soil_depth_map;
+extern double g_weight_suit;
+extern double g_weight_prox;
+extern double g_weight_unchange;
 
-extern std::string g_region;                    // 优化区域
-extern int g_xsize;                             // 地图的宽度（列数）
-extern int g_ysize;                             // 地图的高度（行数）
-extern int g_nodata;                            // nodata值
-extern Map<int> g_region_map;                   // 优化区域图
-extern Map<int> g_land_use_map;                 // 土地利用现状图
-extern Map<double> g_arable_suit_map;           // 耕地适宜性图
-extern Map<double> g_orchard_suit_map;          // 园地适宜性图
-extern Map<double> g_forest_suit_map;           // 林地适宜性图
-extern Map<double> g_grass_suit_map;            // 草地适宜性图
-extern Map<double> g_urban_suit_map;            // 城镇用地适宜性图
-extern Map<double> g_rural_suit_map;            // 农村用地适宜性图
-extern Map<double> g_slope_map;                 // 坡度图
-extern Map<double> g_road_map;                  // 道路图
-extern std::vector<int> g_land_use_struct;      // 土地利用结构
-extern std::vector<double> g_obj_weights;       // 目标函数权重
+extern int g_xsize;                             // columns
+extern int g_ysize;                             // rows
+extern int g_nodata;                            // nodata
+extern std::string land_use_map;
+extern Map<int> g_land_use_map;                 // land use map
+extern Map<double> g_arable_suit_map;           // suitability map of arableland
+extern Map<double> g_orchard_suit_map;          // suitability map of orchard
+extern Map<double> g_forest_suit_map;           // suitability map of forest
+extern Map<double> g_grass_suit_map;            // suitability map of grassland
+extern Map<double> g_build_suit_map;            // suitability map of construction
+extern Map<double> g_slope_map;                 // slope map
+extern Map<double> g_road_map;                  // road map
+extern Map<double> g_soil_depth_map;            // soil depth map
 
 void show_help();
 void show_version();
@@ -62,20 +61,16 @@ void set_generation(const std::string& arg);
 void set_output(const std::string& arg);
 void set_interval(const std::string& arg);
 
-void set_region_map(const std::string& arg);
 void set_land_use_map(const std::string& arg);
 void set_arable_suit_map(const std::string& arg);
 void set_orchard_suit_map(const std::string& arg);
 void set_forest_suit_map(const std::string& arg);
 void set_grass_suit_map(const std::string& arg);
-void set_urban_suit_map(const std::string& arg);
-void set_rural_suit_map(const std::string& arg);
+void set_build_suit_map(const std::string& arg);
 void set_slope_map(const std::string& arg);
 void set_road_map(const std::string& arg);
-void set_land_use_struct(const std::string& arg);
-void set_obj_weights(const std::string& arg);
 
-void parse_xml_file(const std::string& arg);
+void parse_xml(const std::string& arg);
 
 
 #endif // OPTION_H
