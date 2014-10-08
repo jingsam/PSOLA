@@ -287,7 +287,6 @@ void set_road_map(const std::string& arg) {
 
 void set_option(const std::string& opt, const std::string& arg)
 {
-
     if      (opt == "size")                 set_size(arg);
     else if (opt == "max")                  set_max(arg);
     else if (opt == "seed")                 set_seed(arg);
@@ -301,6 +300,14 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "output")               set_output(arg);
     else if (opt == "land-use")             set_land_use(arg);
     else if (opt == "xml")                  parse_xml(arg);
+
+    else if (opt == "arable-suit-map")      set_arable_suit_map(arg);
+    else if (opt == "orchard-suit-map")     set_orchard_suit_map(arg);
+    else if (opt == "forest-suit-map")      set_forest_suit_map(arg);
+    else if (opt == "grass-suit-map")       set_grass_suit_map(arg);
+    else if (opt == "build-suit-map")       set_build_suit_map(arg);
+    else if (opt == "slope-map")            set_slope_map(arg);
+    else if (opt == "road-map")             set_road_map(arg);
 }
 
 void parse_xml(const std::string& arg) {

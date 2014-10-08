@@ -25,6 +25,7 @@ void init_cell(Cell* cell)
         case 1:
             init_grain_for_green(cell);
             break;
+        case 3:
         case 4:
             init_soil_conservation(cell);
             break;
@@ -32,6 +33,7 @@ void init_cell(Cell* cell)
         case 7:
         case 8:
         case 9:
+        case 10:
             cell->type = 0;
             break;
      }
@@ -48,10 +50,9 @@ void init_grain_for_green(Cell* cell)
 
 void init_soil_conservation(Cell* cell)
 {
-    int land_use = g_land_use_map.atxy(cell->x, cell->y);
     std::vector<int> neighbors = g_land_use_map.neighbors(cell->x, cell->y, 2);
     for (int i=0; i < neighbors.size(); ++i) {
-        if (neighbors.at(i) == 8) {
+        if (neighbors.at(i) == 9) {
             cell->type = 0;
         }
     }
@@ -69,18 +70,15 @@ bool rule_transportation(Cell* cell);
 
 int transition(Cell* cell)
 {
-    if (!(rule_cell_type(cell) ||
-        rule_edge_cell(cell)))
-    {
-        return cell->value;
-    }
+    if ( !rule_cell_type(cell) ) return cell->value;
+    if ( !rule_edge_cell(cell) ) return cell->value;
 
+    bool is_rule_success = false;
     int new_value = roulette_wheel(cell->transP, g_RND);
     switch (new_value) {
         case 1:
-            rule_quantity(cell, 1, g_num_arable);
-            rule_soil_condition(cell);
-            rule_farming_radius(cell);
+            is_rule_success = rule_soil_condition(cell) &&
+                rule_farming_radius(cell);
             break;
         case 2:
             break;
@@ -89,7 +87,6 @@ int transition(Cell* cell)
         case 4:
             break;
         case 5:
-            rule_quantity(cell, 5, g_num_urban);
             break;
         case 6:
             break;
@@ -101,7 +98,7 @@ int transition(Cell* cell)
             break;
     }
 
-    return new_value;
+    return is_rule_success ? new_value : cell->value;
 }
 
 bool rule_quantity(Cell* cell, int value, int max)
@@ -159,7 +156,9 @@ bool rule_farming_radius(Cell* cell)
     return rule_neighbors_has(cell, 40, 6);
 }
 
-bool rule_transportation(Cell* cell)
+bool rule_road_access(Cell* cell, double distance)
 {
-    return rule_neighbors_has(cell, 20, 7);
+    double road = g_road_map.atxy(cell->x, cell->y);
+
+    return road >= distance;
 }
