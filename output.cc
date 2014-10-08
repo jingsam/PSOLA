@@ -70,8 +70,8 @@ void logStatus(tinyxml2::XMLDocument* doc,
 
 int outputImage(const std::vector<int>& data, const char *filename)
 {
-    if (copyRaster(land_use_map.c_str(), filename)) {
-        std::printf("Failed copy %s to %s\n", land_use_map.c_str(), filename);
+    if (copyRaster(g_land_use.c_str(), filename)) {
+        std::printf("Failed copy %s to %s\n", g_land_use.c_str(), filename);
     }
 
     if (writeRaster(data, filename)) {

@@ -1,6 +1,5 @@
 #include <cstdlib>  // calloc()
 #include <cstdio>   // printf()
-#include <ctime>    // clock()
 #include <cstring>  // memcpy()
 #include <sstream> // ostringstream
 #include "mpi.h"
@@ -22,12 +21,13 @@ int main( int argc, char *argv[] )
     if (rank==0) {
         std::printf("\n--------------Parse configuration-------------\n");
     }
-    
+
     double t1 = MPI_Wtime();
     parse_option(argc, argv);
     double t2 = MPI_Wtime();
-    
+
     if (rank==0) {
+        show_option();
         std::printf("\nAccomplished: %.2f S\n", t2 - t1);
         std::printf("\n--------------Initialize components-----------\n");
     }
@@ -36,7 +36,7 @@ int main( int argc, char *argv[] )
     Swarm* swarm = init_swarm( (g_size + size - 1) / size, rank );
     if (rank==0) init_output();
     double t4 = MPI_Wtime();
-    
+
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t4 - t3);
         std::printf("\n--------------Start optimization--------------\n");
@@ -86,7 +86,7 @@ int main( int argc, char *argv[] )
         MPI_Barrier( MPI_COMM_WORLD );
     }
     double t6 = MPI_Wtime();
-    
+
     if (rank==0) {
         std::printf("Accomplished: %.2f S\n", t6 - t5);
         std::printf("\n--------------Output final results------------\n");
@@ -100,7 +100,7 @@ int main( int argc, char *argv[] )
         std::string output = g_output + "/result.tif";
         outputImage(swarm->gbest->getDataMap(), output.c_str());
         double t8 = MPI_Wtime();
-    
+
         std::printf("\nAccomplished: %.2f S\n", t8 - t7);
         std::printf("\n----------------------------------------------\n");
         std::printf("\nTotal: %.2f S\n", t8 - t1);

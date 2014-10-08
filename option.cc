@@ -13,7 +13,7 @@
 /*************** global variable initialization *************/
 Random* g_RND;
 int g_size                        = 50;
-int g_max                         = 9;
+int g_max                         = 10;
 int g_seed                        = 0;
 double g_momentum                 = 1.0;
 double g_c1                       = 2.0;
@@ -21,8 +21,12 @@ double g_c2                       = 2.0;
 int g_r1                          = 100;
 int g_r2                          = 200;
 int g_generation                  = 50;
-std::string g_output              = "result";
 int g_interval                    = 10;
+std::string g_output              = "result";
+std::string g_land_use;
+int g_xsize                       = 0;
+int g_ysize                       = 0;
+int g_nodata                      = 255;
 
 double g_core                     = 1.0;
 double g_edge                     = 1.0;
@@ -33,12 +37,7 @@ double g_weight_suit;
 double g_weight_prox;
 double g_weight_unchange;
 
-
-int g_xsize                       = 0;
-int g_ysize                       = 0;
-int g_nodata                      = 255;
-std::string land_use_map;
-Map<int> g_land_use_map;
+Map<int>    g_land_use_map;
 Map<double> g_arable_suit_map;
 Map<double> g_orchard_suit_map;
 Map<double> g_forest_suit_map;
@@ -48,13 +47,27 @@ Map<double> g_slope_map;
 Map<double> g_road_map;
 Map<double> g_soil_depth_map;
 
+void set_size(const std::string& arg);
+void set_max(const std::string& arg);
+void set_seed(const std::string& arg);
+void set_momentum(const std::string& arg);
+void set_c1(const std::string& arg);
+void set_c2(const std::string& arg);
+void set_r1(const std::string& arg);
+void set_r2(const std::string& arg);
+void set_generation(const std::string& arg);
+void set_interval(const std::string& arg);
+void set_output(const std::string& arg);
+void set_land_use(const std::string& arg);
+void parse_xml(const std::string& arg);
+
 
 const char * const program_name = "PSOLA";
 const char * const program_year = "2013";
 const char * const program_version = "2.0";
 const char * const program_author = "abc@whu.edu.cn";
 const char *       invocation_name = 0;
-bool               display_config = false;
+
 
 const Arg_parser::Option options[] = {
     { 'h', "help",              Arg_parser::no  },
@@ -70,8 +83,9 @@ const Arg_parser::Option options[] = {
     { 'r', "r1",                Arg_parser::yes },
     { 'R', "r2",                Arg_parser::yes },
     { 'g', "generation",        Arg_parser::yes },
-    { 'o', "output",            Arg_parser::yes },
     { 'i', "interval",          Arg_parser::yes },
+    { 'o', "output",            Arg_parser::yes },
+    { 'l', "land-use",          Arg_parser::yes },
     { 'x', "xml",               Arg_parser::yes },
 
     // end of options
@@ -85,8 +99,7 @@ void show_help()
     std::printf( "%s - Particle Swarm Optimization for Land-use Allocation.\n", program_name );
     std::printf( "Usage: %s [options]\n", invocation_name );
     std::printf( "  -h, --help                   display this help and exit\n"
-                 "  -v, --version                display version information and exit\n"
-                 "  -d, --display                display your configuration\n\n"
+                 "  -v, --version                display version information and exit\n\n"
 
                  "  -N, --size=<arg>             number of particles in a deme\n"
 		         "  -M, --max=<arg>              value range [1, max]\n"
@@ -97,9 +110,10 @@ void show_help()
                  "  -r, --r1=<arg>               random seed 1 of PSO\n"
                  "  -R, --r2=<arg>               random seed 2 of PSO\n"
                  "  -g, --generation=<arg>       total number of iterations\n"
-                 "  -o, --output=<arg>           output directory\n"
                  "  -i, --interval=<arg>         frequency of output\n"
-                 "  -x, --xml-file=<arg>         xml file for configuration\n" );
+                 "  -o, --output=<arg>           output directory\n"
+                 "  -l, --land-use=<arg>         land use map\n"
+                 "  -x, --xml=<arg>              xml file for configuration\n" );
     std::exit( 0 );
 }
 
@@ -140,7 +154,6 @@ int parse_option(const int argc, const char * const argv[])
         switch( code ) {
             case 'h': show_help();                  return 0;
             case 'v': show_version();               return 0;
-            case 'd': display_config = true;        break;
 
             case 'N': set_size( arg );              break;
 	        case 'M': set_max( arg );               break;
@@ -151,48 +164,33 @@ int parse_option(const int argc, const char * const argv[])
             case 'r': set_r1( arg );                break;
             case 'R': set_r2( arg );                break;
             case 'g': set_generation( arg );        break;
-            case 'o': set_output( arg );            break;
             case 'i': set_interval( arg );          break;
+            case 'o': set_output( arg );            break;
+            case 'l': set_land_use( arg );          break;
             case 'x': parse_xml( arg );             break;
-            default : break;
         }
     }
-
-    if (display_config) show_option();
 
     return 0;
 }
 
-void set_option(const std::string& opt, const std::string& arg)
+void show_option()
 {
-
-    if      (opt == "size")                 set_size(arg);
-    else if (opt == "max")                  set_max(arg);
-    else if (opt == "seed")                 set_seed(arg);
-    else if (opt == "momentum")             set_momentum(arg);
-    else if (opt == "c1")                   set_c1(arg);
-    else if (opt == "c2")                   set_c2(arg);
-    else if (opt == "r1")                   set_r1(arg);
-    else if (opt == "r2")                   set_r2(arg);
-    else if (opt == "generation")           set_generation(arg);
-    else if (opt == "output")               set_output(arg);
-    else if (opt == "interval")             set_interval(arg);
-    else if (opt == "xml")                  parse_xml(arg);
-}
-
-
-void show_option() {
-    std::printf("size:                    %d\n", g_size);
-    std::printf("max:                     %d\n", g_max);
-    std::printf("seed:                    %d\n", g_seed);
-    std::printf("momentum:                %f\n", g_momentum);
-    std::printf("c1:                      %f\n", g_c1);
-    std::printf("c2:                      %f\n", g_c2);
-    std::printf("r1:                      %d\n", g_r1);
-    std::printf("r2:                      %d\n", g_r2);
-    std::printf("generation:              %d\n", g_generation);
-    std::printf("output:                  %s\n", g_output.c_str());
-    std::printf("interval:                %d\n", g_interval);
+    std::printf("size:          %d\n", g_size);
+    std::printf("max:           %d\n", g_max);
+    std::printf("seed:          %d\n", g_seed);
+    std::printf("momentum:      %f\n", g_momentum);
+    std::printf("c1:            %f\n", g_c1);
+    std::printf("c2:            %f\n", g_c2);
+    std::printf("r1:            %d\n", g_r1);
+    std::printf("r2:            %d\n", g_r2);
+    std::printf("generation:    %d\n", g_generation);
+    std::printf("interval:      %d\n", g_interval);
+    std::printf("output:        %s\n", g_output.c_str());
+    std::printf("land use map:  %s\n", g_land_use.c_str());
+    std::printf("xsize:         %d\n", g_xsize);
+    std::printf("ysize:         %d\n", g_ysize);
+    std::printf("nodata:        %d\n", g_nodata);
     std::printf("\n");
 }
 
@@ -233,12 +231,12 @@ void set_generation(const std::string& arg) {
     g_generation = std::atoi( arg.c_str() );
 }
 
-void set_output(const std::string& arg) {
-    g_output = arg;
-}
-
 void set_interval(const std::string& arg) {
     g_interval = std::atoi( arg.c_str() );
+}
+
+void set_output(const std::string& arg) {
+    g_output = arg;
 }
 
 template <typename T>
@@ -248,16 +246,15 @@ void set_map(const std::string& filename, Map<T>& map) {
     readRaster( map, filename.c_str() );
     map.xsize = xsize;
     map.ysize = ysize;
-
 }
 
-void set_land_use_map(const std::string& arg) {
-    set_map( arg, g_land_use_map );
-
+void set_land_use(const std::string& arg) {
+    g_land_use = arg;
     g_xsize = getRasterXSize( arg.c_str() );
     g_ysize = getRasterYSize( arg.c_str() );
     g_nodata = (int)getRasterNoDataValue( arg.c_str() );
-    land_use_map = arg;
+
+    set_map( arg, g_land_use_map );
 }
 
 void set_arable_suit_map(const std::string& arg) {
@@ -288,8 +285,29 @@ void set_road_map(const std::string& arg) {
     set_map( arg, g_road_map );
 }
 
-void parse_xml(tinyxml2::XMLDocument *doc) {
-    tinyxml2::XMLElement *root = doc->RootElement();
+void set_option(const std::string& opt, const std::string& arg)
+{
+
+    if      (opt == "size")                 set_size(arg);
+    else if (opt == "max")                  set_max(arg);
+    else if (opt == "seed")                 set_seed(arg);
+    else if (opt == "momentum")             set_momentum(arg);
+    else if (opt == "c1")                   set_c1(arg);
+    else if (opt == "c2")                   set_c2(arg);
+    else if (opt == "r1")                   set_r1(arg);
+    else if (opt == "r2")                   set_r2(arg);
+    else if (opt == "generation")           set_generation(arg);
+    else if (opt == "interval")             set_interval(arg);
+    else if (opt == "output")               set_output(arg);
+    else if (opt == "land-use")             set_land_use(arg);
+    else if (opt == "xml")                  parse_xml(arg);
+}
+
+void parse_xml(const std::string& arg) {
+    tinyxml2::XMLDocument doc;
+    doc.LoadFile( arg.c_str() );
+
+    tinyxml2::XMLElement *root = doc.RootElement();
     tinyxml2::XMLElement *entry = root->FirstChildElement();
     while (entry) {
         const char *opt = entry->Attribute("key");
@@ -298,11 +316,4 @@ void parse_xml(tinyxml2::XMLDocument *doc) {
 
         entry = entry->NextSiblingElement();
     }
-}
-
-void parse_xml(const std::string& arg) {
-    tinyxml2::XMLDocument doc;
-    doc.LoadFile( arg.c_str() );
-
-    parse_xml(&doc);
 }

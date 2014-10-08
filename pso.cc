@@ -1,5 +1,5 @@
 #include "pso.h"
-
+#include "option.h"
 
 void normalize(std::vector<double> &p);
 int transition(Cell* mycell);
@@ -15,7 +15,7 @@ void Particle::updateCurrent(PlanMap* gbest)
     int xsize = this->current->xsize;
     int ysize = this->current->ysize;
 
-    Map<int> temp(xsize, ysize, 0);
+    Map<int> temp(xsize, ysize, g_nodata);
     current->counts.clear();
 
     for (int i = 0; i < current->size(); ++i) {
@@ -26,6 +26,8 @@ void Particle::updateCurrent(PlanMap* gbest)
         int value = cell->value;
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
+
+        if (value == g_nodata) continue;
 
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))
