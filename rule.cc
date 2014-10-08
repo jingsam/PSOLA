@@ -148,7 +148,7 @@ bool rule_soil_condition(Cell* cell)
     double soil_depth = g_soil_depth_map.atxy(cell->x, cell->y);
     double slope = g_slope_map.atxy(cell->x, cell->y);
 
-    return soil_depth >= 0.3 && soil_depth < 25;
+    return soil_depth >= 0.3 && slope < 25;
 }
 
 bool rule_farming_radius(Cell* cell)
