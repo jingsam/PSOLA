@@ -26,9 +26,9 @@ void init_cell(Cell* cell)
             init_grain_for_green(cell);
             break;
         case 3:
-        case 4:
             init_soil_conservation(cell);
             break;
+        case 4:
         case 5:
         case 7:
         case 8:
@@ -66,8 +66,8 @@ bool rule_quantity(Cell* cell, int value, int max);
 bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_soil_condition(Cell* cell);
 bool rule_farming_radius(Cell* cell, int radius);
-bool rule_road_access(Cell* cell, double distance);
-bool rule_suitability(Cell* cell, int value, double threshold);
+bool rule_road_access(Cell* cell, double max_distance);
+bool rule_suitability(Cell* cell, int value, double min_suit);
 
 int transition(Cell* cell)
 {
@@ -93,17 +93,9 @@ int transition(Cell* cell)
             is_rule_success =
                 rule_quantity(cell, 3, g_forest);
             break;
-        case 4:
-            break;
         case 5:
             break;
         case 6:
-            break;
-        case 7:
-            break;
-        case 8:
-            break;
-        case 9:
             break;
     }
 
@@ -165,14 +157,14 @@ bool rule_farming_radius(Cell* cell, int radius)
     return rule_neighbors_has(cell, radius, 6);
 }
 
-bool rule_road_access(Cell* cell, double distance)
+bool rule_road_access(Cell* cell, double max_distance)
 {
-    double dist = g_road_map.atxy(cell->x, cell->y);
+    double distance = g_road_map.atxy(cell->x, cell->y);
 
-    return dist <= distance;
+    return distance <= max_distance;
 }
 
-bool rule_suitability(Cell* cell, int value, double threshold)
+bool rule_suitability(Cell* cell, int value, double min_suit)
 {
     double suit = 0.0;
     switch (value)
@@ -192,6 +184,6 @@ bool rule_suitability(Cell* cell, int value, double threshold)
             break;
     }
 
-    return suit >= threshold;
+    return suit >= min_suit;
 
 }
