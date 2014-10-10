@@ -31,8 +31,12 @@ int g_nodata                      = 255;
 double g_core                     = 1.0;
 double g_edge                     = 1.0;
 int g_edge_depth                  = 1;
-int g_num_arable;
-int g_num_urban;
+
+int g_arable;
+int g_orchard;
+int g_forest;
+int g_construction;
+
 double g_weight_suit;
 double g_weight_prox;
 double g_weight_unchange;
@@ -42,7 +46,7 @@ Map<double> g_arable_suit_map;
 Map<double> g_orchard_suit_map;
 Map<double> g_forest_suit_map;
 Map<double> g_grass_suit_map;
-Map<double> g_build_suit_map;
+Map<double> g_construction_suit_map;
 Map<double> g_slope_map;
 Map<double> g_road_map;
 Map<double> g_soil_depth_map;
@@ -269,12 +273,8 @@ void set_forest_suit_map(const std::string& arg) {
     set_map( arg, g_forest_suit_map );
 }
 
-void set_grass_suit_map(const std::string& arg) {
-    set_map( arg, g_grass_suit_map );
-}
-
-void set_build_suit_map(const std::string& arg) {
-    set_map( arg, g_build_suit_map );
+void set_construction_suit_map(const std::string& arg) {
+    set_map( arg, g_construction_suit_map );
 }
 
 void set_slope_map(const std::string& arg) {
@@ -304,8 +304,7 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "arable-suit-map")      set_arable_suit_map(arg);
     else if (opt == "orchard-suit-map")     set_orchard_suit_map(arg);
     else if (opt == "forest-suit-map")      set_forest_suit_map(arg);
-    else if (opt == "grass-suit-map")       set_grass_suit_map(arg);
-    else if (opt == "build-suit-map")       set_build_suit_map(arg);
+    else if (opt == "construction-suit-map")set_construction_suit_map(arg);
     else if (opt == "slope-map")            set_slope_map(arg);
     else if (opt == "road-map")             set_road_map(arg);
 }

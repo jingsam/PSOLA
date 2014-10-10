@@ -60,13 +60,14 @@ void init_soil_conservation(Cell* cell)
 
 
 int transition(Cell* cell);
-bool rule_quantity(Cell* cell, int value, int max);
-bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_cell_type(Cell* cell);
 bool rule_edge_cell(Cell* cell);
+bool rule_quantity(Cell* cell, int value, int max);
+bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_soil_condition(Cell* cell);
-bool rule_farming_radius(Cell* cell);
-bool rule_transportation(Cell* cell);
+bool rule_farming_radius(Cell* cell, int radius);
+bool rule_road_access(Cell* cell, double distance);
+bool rule_suitability(Cell* cell, int value, double threshold);
 
 int transition(Cell* cell)
 {
@@ -77,12 +78,20 @@ int transition(Cell* cell)
     int new_value = roulette_wheel(cell->transP, g_RND);
     switch (new_value) {
         case 1:
-            is_rule_success = rule_soil_condition(cell) &&
-                rule_farming_radius(cell);
+            is_rule_success =
+                rule_quantity(cell, 1, g_arable) &&
+                rule_suitability(cell, 1, 0.3) &&
+                rule_soil_condition(cell) &&
+                rule_farming_radius(cell, 40);
             break;
         case 2:
+            is_rule_success =
+                rule_quantity(cell, 2, g_orchard) &&
+                rule_road_access(cell, 500);
             break;
         case 3:
+            is_rule_success =
+                rule_quantity(cell, 3, g_forest);
             break;
         case 4:
             break;
@@ -151,14 +160,38 @@ bool rule_soil_condition(Cell* cell)
     return soil_depth >= 0.3 && slope < 25;
 }
 
-bool rule_farming_radius(Cell* cell)
+bool rule_farming_radius(Cell* cell, int radius)
 {
-    return rule_neighbors_has(cell, 40, 6);
+    return rule_neighbors_has(cell, radius, 6);
 }
 
 bool rule_road_access(Cell* cell, double distance)
 {
-    double road = g_road_map.atxy(cell->x, cell->y);
+    double dist = g_road_map.atxy(cell->x, cell->y);
 
-    return road >= distance;
+    return dist <= distance;
+}
+
+bool rule_suitability(Cell* cell, int value, double threshold)
+{
+    double suit = 0.0;
+    switch (value)
+    {
+        case 1:
+            suit = g_arable_suit_map.atxy(cell->x, cell->y);
+            break;
+        case 2:
+            suit = g_orchard_suit_map.atxy(cell->x, cell->y);
+            break;
+        case 3:
+            suit = g_forest_suit_map.atxy(cell->x, cell->y);
+            break;
+        case 5:
+        case 6:
+            suit = g_construction_suit_map.atxy(cell->x, cell->y);
+            break;
+    }
+
+    return suit >= threshold;
+
 }

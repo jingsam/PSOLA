@@ -30,12 +30,11 @@ double suitability(Map<int>& scheme)
         if (value == g_nodata) continue;
 
         switch (value) {
-            case 1: sum += g_arable_suit_map.at(i);   count++;    break;
-            case 2: sum += g_orchard_suit_map.at(i);  count++;    break;
-            case 3: sum += g_forest_suit_map.at(i);   count++;    break;
-            case 4: sum += g_grass_suit_map.at(i);    count++;    break;
+            case 1: sum += g_arable_suit_map.at(i);       count++; break;
+            case 2: sum += g_orchard_suit_map.at(i);      count++; break;
+            case 3: sum += g_forest_suit_map.at(i);       count++; break;
             case 5:
-            case 6: sum += g_build_suit_map.at(i);    count++;    break;
+            case 6: sum += g_construction_suit_map.at(i); count++; break;
         }
     }
 
