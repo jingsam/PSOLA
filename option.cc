@@ -11,10 +11,10 @@
 #include "raster.h"
 
 /*************** global variable initialization *************/
-Random* g_RND;
 int g_size                        = 50;
 int g_max                         = 10;
 int g_seed                        = 0;
+Random* g_RND;
 double g_momentum                 = 1.0;
 double g_c1                       = 2.0;
 double g_c2                       = 2.0;

@@ -6,10 +6,11 @@
 #include "random.h"
 #include "datamap.h"
 
-extern Random* g_RND;                           // general random generator
+
 extern int g_size;                              // number of particles
 extern int g_max;                               // max value
 extern int g_seed;                              // general random seed
+extern Random* g_RND;                           // general random generator
 extern double g_momentum;                       // cofficient of keep current speed
 extern double g_c1;                             // cofficient of move to Pbest
 extern double g_c2;                             // cofficient of move to Gbest
