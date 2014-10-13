@@ -1,7 +1,7 @@
 #ifndef FITNESS_H
 #define FITNESS_H
 
-#include "datamap.h"
+#include "psola.h"
 
 double calc_fitness(Map<int>& scheme);
 

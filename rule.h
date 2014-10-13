@@ -1,7 +1,7 @@
 #ifndef TRANSITION_H
 #define TRANSITION_H
 
-#include "planmap.h"
+#include "psola.h"
 
 int transition(Cell* cell);
 

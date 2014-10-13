@@ -1,9 +1,6 @@
 #include <cstdlib>
 #include "fitness.h"
-#include "option.h"
-#include "parameter.h"
-#include "datamap.h"
-#include "tool.h"
+
 
 double calc_fitness(Map<int>& scheme);
 double suitability(Map<int>& scheme);
