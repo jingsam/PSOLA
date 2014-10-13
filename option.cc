@@ -11,21 +11,21 @@
 
 void set_parameter(const std::string& opt, const std::string& arg);
 
-int g_size                        = 50;
-int g_max                         = 10;
-int g_seed                        = 0;
-double g_momentum                 = 1.0;
-double g_c1                       = 2.0;
-double g_c2                       = 2.0;
-int g_r1                          = 100;
-int g_r2                          = 200;
-int g_generation                  = 50;
-int g_interval                    = 10;
-std::string g_output              = "result";
+int g_size                    = 50;
+int g_max                     = 10;
+int g_seed                    = 0;
+double g_momentum             = 1.0;
+double g_c1                   = 2.0;
+double g_c2                   = 2.0;
+int g_r1                      = 100;
+int g_r2                      = 200;
+int g_generation              = 50;
+int g_interval                = 10;
+std::string g_output          = "result";
 std::string g_land_use;
-int g_xsize                       = 0;
-int g_ysize                       = 0;
-int g_nodata                      = 255;
+int g_xsize                   = 0;
+int g_ysize                   = 0;
+int g_nodata                  = 255;
 
 Random* g_RND;
 Map<int> g_land_use_map;
