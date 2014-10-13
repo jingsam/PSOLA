@@ -4,17 +4,16 @@
 #include <string>
 #include <cstring>
 #include <ctime>
-
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
-#include "option.h"
 #include "raster.h"
+#include "option.h"
 
-/*************** global variable initialization *************/
+void set_parameter(const std::string& opt, const std::string& arg);
+
 int g_size                        = 50;
 int g_max                         = 10;
 int g_seed                        = 0;
-Random* g_RND;
 double g_momentum                 = 1.0;
 double g_c1                       = 2.0;
 double g_c2                       = 2.0;
@@ -28,28 +27,8 @@ int g_xsize                       = 0;
 int g_ysize                       = 0;
 int g_nodata                      = 255;
 
-double g_core                     = 1.0;
-double g_edge                     = 1.0;
-int g_edge_depth                  = 1;
-
-int g_arable;
-int g_orchard;
-int g_forest;
-int g_construction;
-
-double g_weight_suit;
-double g_weight_prox;
-double g_weight_unchange;
-
-Map<int>    g_land_use_map;
-Map<double> g_arable_suit_map;
-Map<double> g_orchard_suit_map;
-Map<double> g_forest_suit_map;
-Map<double> g_grass_suit_map;
-Map<double> g_construction_suit_map;
-Map<double> g_slope_map;
-Map<double> g_road_map;
-Map<double> g_soil_depth_map;
+Random* g_RND;
+Map<int> g_land_use_map;
 
 void set_size(const std::string& arg);
 void set_max(const std::string& arg);
@@ -65,13 +44,11 @@ void set_output(const std::string& arg);
 void set_land_use(const std::string& arg);
 void parse_xml(const std::string& arg);
 
-
 const char * const program_name = "PSOLA";
 const char * const program_year = "2013";
 const char * const program_version = "2.0";
 const char * const program_author = "abc@whu.edu.cn";
 const char *       invocation_name = 0;
-
 
 const Arg_parser::Option options[] = {
     { 'h', "help",              Arg_parser::no  },
@@ -94,8 +71,6 @@ const Arg_parser::Option options[] = {
 
     // end of options
     {   0, 0,                   Arg_parser::no  } };
-
-/*************** end variable initialization *************/
 
 
 void show_help()
@@ -258,31 +233,9 @@ void set_land_use(const std::string& arg) {
     g_ysize = getRasterYSize( arg.c_str() );
     g_nodata = (int)getRasterNoDataValue( arg.c_str() );
 
-    set_map( arg, g_land_use_map );
-}
-
-void set_arable_suit_map(const std::string& arg) {
-    set_map( arg, g_arable_suit_map );
-}
-
-void set_orchard_suit_map(const std::string& arg) {
-    set_map( arg, g_orchard_suit_map );
-}
-
-void set_forest_suit_map(const std::string& arg) {
-    set_map( arg, g_forest_suit_map );
-}
-
-void set_construction_suit_map(const std::string& arg) {
-    set_map( arg, g_construction_suit_map );
-}
-
-void set_slope_map(const std::string& arg) {
-    set_map( arg, g_slope_map );
-}
-
-void set_road_map(const std::string& arg) {
-    set_map( arg, g_road_map );
+    readRaster( g_land_use_map, arg.c_str() );
+    g_land_use_map.xsize = g_xsize;
+    g_land_use_map.ysize = g_ysize;
 }
 
 void set_option(const std::string& opt, const std::string& arg)
@@ -301,12 +254,7 @@ void set_option(const std::string& opt, const std::string& arg)
     else if (opt == "land-use")             set_land_use(arg);
     else if (opt == "xml")                  parse_xml(arg);
 
-    else if (opt == "arable-suit-map")      set_arable_suit_map(arg);
-    else if (opt == "orchard-suit-map")     set_orchard_suit_map(arg);
-    else if (opt == "forest-suit-map")      set_forest_suit_map(arg);
-    else if (opt == "construction-suit-map")set_construction_suit_map(arg);
-    else if (opt == "slope-map")            set_slope_map(arg);
-    else if (opt == "road-map")             set_road_map(arg);
+    else set_parameter( opt, arg );
 }
 
 void parse_xml(const std::string& arg) {

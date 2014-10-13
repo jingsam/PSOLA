@@ -1,5 +1,6 @@
 #include "rule.h"
 #include "option.h"
+#include "parameter.h"
 
 void normalize(std::vector<double>& p);
 int roulette_wheel(std::vector<double>& p, Random* rnd);

@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include "fitness.h"
 #include "option.h"
+#include "parameter.h"
 #include "datamap.h"
 #include "tool.h"
 
