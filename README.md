@@ -11,10 +11,10 @@ Particle Swarm Optimization for Land-use Allocation
 * MPI
 
 ### Build from source
-* On Linux  
+* Linux or Mac OS
 Just `make` it!
 
-* On Windows
+* Windows
 
 ### How to use it
 ```bash
