@@ -11,7 +11,7 @@ Particle Swarm Optimization for Land-use Allocation
 * MPI
 
 ### Build from source
-* Linux  
+* Linux or Mac OS  
 Just `make` it!
 
 * Windows
@@ -20,3 +20,5 @@ Just `make` it!
 ```bash
 mpiexec -np 4 ./psola -xml=config-gq.xml
 ```
+
+### Development
