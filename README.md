@@ -21,4 +21,4 @@ Just `make` it!
 mpiexec -np 4 ./psola -xml=config-gq.xml
 ```
 
-### Developing
+### Development
