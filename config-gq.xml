@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
     <entry key="size">32</entry>
-    <entry key="max">6</entry>
+    <entry key="max">10</entry>
     <entry key="seed">0</entry>
     <entry key="momentum">1.0</entry>
     <entry key="c1">2.0</entry>
@@ -9,9 +9,9 @@
     <entry key="r1">100</entry>
     <entry key="r2">200</entry>
     <entry key="generation">50</entry>
-    <entry key="interval">1</entry>
+    <entry key="interval">5</entry>
     <entry key="output">result</entry>
-    <entry key="land-use-map">data/DLTB.tif</entry>
+    <entry key="land-use">data/DLTB.tif</entry>
 
     <entry key="core">0.0</entry>
     <entry key="edge">1.0</entry>
@@ -20,8 +20,8 @@
     <entry key="arable">29600</entry>
     <entry key="orchard">8960</entry>
     <entry key="forest">10800</entry>
-    <entry key="urban">400</entry>
-    <entry key="rural">14144</entry>
+    <entry key="urban">3280</entry>
+    <entry key="rural">11264</entry>
 
     <entry key="weight-suit">0.4</entry>
     <entry key="weight-prox">0.3</entry>

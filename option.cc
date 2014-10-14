@@ -166,7 +166,7 @@ void show_option()
     std::printf("generation:    %d\n", g_generation);
     std::printf("interval:      %d\n", g_interval);
     std::printf("output:        %s\n", g_output.c_str());
-    std::printf("land use map:  %s\n", g_land_use.c_str());
+    std::printf("land-use:      %s\n", g_land_use.c_str());
     std::printf("xsize:         %d\n", g_xsize);
     std::printf("ysize:         %d\n", g_ysize);
     std::printf("nodata:        %d\n", g_nodata);

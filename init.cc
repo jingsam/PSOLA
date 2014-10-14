@@ -22,7 +22,7 @@ PlanMap* init_map()
 Particle* init_particle()
 {
     Particle* particle = new Particle();
-    particle->current = init_map();
+    //particle->current = init_map();
     particle->pbest = particle->current->clone();
 
     return particle;
@@ -40,9 +40,9 @@ Swarm* init_swarm(int size, int id)
     swarm->r2 = new Random( g_r2 + id );
 
     for (int i = 0; i < size; ++i) {
-        Particle* particle = init_particle();
-        particle->swarm = swarm;
-        swarm->particles.push_back(particle);
+        //Particle* particle = init_particle();
+        //particle->swarm = swarm;
+        //swarm->particles.push_back(particle);
     }
 
     swarm->gbest = swarm->particles[0]->current->clone();
