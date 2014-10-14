@@ -20,3 +20,5 @@ Just `make` it!
 ```bash
 mpiexec -np 4 ./psola -xml=config-gq.xml
 ```
+
+### Developing
