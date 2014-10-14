@@ -11,8 +11,22 @@
     <entry key="generation">50</entry>
     <entry key="interval">1</entry>
     <entry key="output">result</entry>
-
     <entry key="land-use-map">data/DLTB.tif</entry>
+
+    <entry key="core">0.0</entry>
+    <entry key="edge">1.0</entry>
+    <entry key="edge-depth">1</entry>
+
+    <entry key="arable">29600</entry>
+    <entry key="orchard">8960</entry>
+    <entry key="forest">10800</entry>
+    <entry key="urban">400</entry>
+    <entry key="rural">14144</entry>
+
+    <entry key="weight-suit">0.4</entry>
+    <entry key="weight-prox">0.3</entry>
+    <entry key="weight-unchange">0.3</entry>
+
     <entry key="arable-suit-map">data/GDSYX.tif</entry>
     <entry key="orchard-suit-map">data/YDSYX.tif</entry>
     <entry key="forest-suit-map">data/LDSYX.tif</entry>

@@ -14,7 +14,8 @@ extern int g_edge_depth;
 extern int g_arable;
 extern int g_orchard;
 extern int g_forest;
-extern int g_construction;
+extern int g_urban;
+extern int g_rural;
 
 // weights of objectives
 extern double g_weight_suit;

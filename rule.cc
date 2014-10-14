@@ -86,15 +86,19 @@ int transition(Cell* cell)
         case 2:
             is_rule_success =
                 rule_quantity(cell, 2, g_orchard) &&
-                rule_road_access(cell, 500);
+                rule_road_access(cell, 500.0);
             break;
         case 3:
             is_rule_success =
                 rule_quantity(cell, 3, g_forest);
             break;
         case 5:
+            is_rule_success =
+                rule_quantity(cell, 3, g_urban);
             break;
         case 6:
+            is_rule_success =
+                rule_quantity(cell, 3, g_rural);
             break;
     }
 
@@ -104,6 +108,18 @@ int transition(Cell* cell)
 bool rule_quantity(Cell* cell, int value, int max)
 {
     int count = cell->map->counts.at(value);
+    return count < max;
+}
+
+bool rule_quantity(Cell* cell, std::vector<int> values, int max)
+{
+    int count = 0;
+    for (int i = 0; i < values.size(); ++i)
+    {
+        int value = values.at(i);
+        count+= cell->map->counts.at(value);
+    }
+
     return count < max;
 }
 

@@ -1,14 +1,15 @@
 #include "parameter.h"
 #include "raster.h"
 
-double g_core = 1.0;
+double g_core = 0.0;
 double g_edge = 1.0;
 int g_edge_depth = 1;
 
 int g_arable;
 int g_orchard;
 int g_forest;
-int g_construction;
+int g_urban;
+int g_rural;
 
 double g_weight_suit;
 double g_weight_prox;
@@ -17,7 +18,6 @@ double g_weight_unchange;
 Map<double> g_arable_suit_map;
 Map<double> g_orchard_suit_map;
 Map<double> g_forest_suit_map;
-Map<double> g_grass_suit_map;
 Map<double> g_construction_suit_map;
 Map<double> g_slope_map;
 Map<double> g_road_map;
@@ -57,8 +57,12 @@ void set_forest(const std::string& arg) {
     g_forest = std::atoi( arg.c_str() );
 }
 
-void set_construction(const std::string& arg) {
-    g_construction = std::atoi( arg.c_str() );
+void set_urban(const std::string& arg) {
+    g_urban = std::atoi( arg.c_str() );
+}
+
+void set_rural(const std::string& arg) {
+    g_rural = std::atoi( arg.c_str() );
 }
 
 void set_weight_suit(const std::string& arg) {
@@ -110,7 +114,8 @@ void set_parameter(const std::string& opt, const std::string& arg)
     else if (opt == "arable")                   set_arable(arg);
     else if (opt == "orchard")                  set_orchard(arg);
     else if (opt == "forest")                   set_forest(arg);
-    else if (opt == "construction")             set_construction(arg);
+    else if (opt == "urban")                    set_urban(arg);
+    else if (opt == "rural")                    set_rural(arg);
 
     else if (opt == "weight-suit")              set_weight_suit(arg);
     else if (opt == "weight-prox")              set_weight_prox(arg);
