@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
-    <entry key="size">32</entry>
+    <entry key="size">8</entry>
     <entry key="max">10</entry>
     <entry key="seed">0</entry>
     <entry key="momentum">1.0</entry>
@@ -8,7 +8,7 @@
     <entry key="c2">2.0</entry>
     <entry key="r1">100</entry>
     <entry key="r2">200</entry>
-    <entry key="generation">50</entry>
+    <entry key="generation">10</entry>
     <entry key="interval">5</entry>
     <entry key="output">result</entry>
     <entry key="land-use">data/DLTB.tif</entry>

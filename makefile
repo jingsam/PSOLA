@@ -13,7 +13,7 @@ objs = main.o option.o raster.o \
 
 
 $(program) : $(objs)
-	$(CXX) -o $@ $(objs)  $(LDFLAGS) $(LIBS)
+	$(CXX) -o $@ $(objs) $(LDFLAGS) $(LIBS)
 
 .PHONY : clean
 clean :

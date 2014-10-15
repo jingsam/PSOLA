@@ -32,14 +32,14 @@ public:
 };
 
 
-class Swarm
+class Swarm : public std::vector<Particle*>
 {
 public:
     Swarm() {}
 
     ~Swarm() {
-        for (int i = 0; i < particles.size(); ++i) {
-            delete particles.at(i);
+        for (int i = 0; i < this->size(); ++i) {
+            delete this->at(i);
         }
         delete r1;
         delete r2;
@@ -47,9 +47,9 @@ public:
     }
 
     void updateGbest() {
-        PlanMap* best = particles[0]->current;
-        for (int i = 0; i < particles.size(); ++i) {
-            PlanMap* map = particles.at(i)->current;
+        PlanMap* best = this->at(0)->current;
+        for (int i = 0; i < this->size(); ++i) {
+            PlanMap* map = this->at(i)->current;
             if (map->betterThan( best )) {
                 best = map;
             }
@@ -59,8 +59,8 @@ public:
     }
 
     void updateParticles() {
-        for (int i = 0; i < particles.size(); ++i) {
-            particles.at(i)->updateCurrent( this->gbest );
+        for (int i = 0; i < this->size(); ++i) {
+            this->at(i)->updateCurrent( this->gbest );
         }
 
         this->updateGbest();
@@ -69,7 +69,6 @@ public:
     double momentum, c1, c2;
     Random *r1, *r2;
     PlanMap* gbest;
-    std::vector<Particle*> particles;
 };
 
 
