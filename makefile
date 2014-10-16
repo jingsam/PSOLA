@@ -2,7 +2,7 @@ program = psola
 
 CXX = mpicxx
 CPPFLAGS =
-CXXFLAGS = -Wall -W -g -Wno-sign-compare
+CXXFLAGS = -Wall -W -Wno-sign-compare
 LDFLAGS = -L/usr/local/lib
 LIBS = -lgdal
 

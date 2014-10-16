@@ -9,7 +9,7 @@
     <entry key="r1">100</entry>
     <entry key="r2">200</entry>
     <entry key="generation">10</entry>
-    <entry key="interval">5</entry>
+    <entry key="interval">0</entry>
     <entry key="output">result</entry>
     <entry key="land-use">data/DLTB.tif</entry>
 
@@ -33,6 +33,6 @@
     <entry key="construction-suit-map">data/JSSYX.tif</entry>
     <entry key="slope-map">data/SLOPE.tif</entry>
     <entry key="road-map">data/ROAD.tif</entry>
-    <entry key="soli-depth-map">data/DEPTH.tif</entry>
+    <entry key="soil-depth-map">data/DEPTH.tif</entry>
 
 </psola>

@@ -27,7 +27,6 @@ void Particle::updateCurrent(PlanMap* gbest)
         int value = cell->value;
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
-        //std::cout << i << " : " << value << "," << pbest_value << "," << gbest_value << std::endl;
 
         if (value == g_nodata) continue;
 

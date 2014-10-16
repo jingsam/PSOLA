@@ -121,10 +121,10 @@ void set_parameter(const std::string& opt, const std::string& arg)
     else if (opt == "weight-prox")              set_weight_prox(arg);
     else if (opt == "weight-unchange")          set_weight_unchange(arg);
 
-    else if (opt == "arable_suit_map")          set_arable_suit_map(arg);
-    else if (opt == "orchard_suit_map")         set_orchard_suit_map(arg);
-    else if (opt == "forest_suit_map")          set_forest_suit_map(arg);
-    else if (opt == "construction_suit_map")    set_construction_suit_map(arg);
+    else if (opt == "arable-suit-map")          set_arable_suit_map(arg);
+    else if (opt == "orchard-suit-map")         set_orchard_suit_map(arg);
+    else if (opt == "forest-suit-map")          set_forest_suit_map(arg);
+    else if (opt == "construction-suit-map")    set_construction_suit_map(arg);
     else if (opt == "slope-map")                set_slope_map(arg);
     else if (opt == "road-map")                 set_road_map(arg);
     else if (opt == "soil-depth-map")           set_soil_depth_map(arg);

@@ -14,7 +14,7 @@ PlanMap* init_map()
             init_cell( cell );
         }
     }
-    //map->updateFitness();
+    map->updateFitness();
 
     return map;
 }

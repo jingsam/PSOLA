@@ -54,7 +54,7 @@ int main( int argc, char *argv[] )
     void* recvbuff = calloc( 1 + g_xsize * g_ysize, sizeof(int) );
     tinyxml2::XMLDocument* doc = createLogDocument();
 
-    for (int i = 1; i <= g_generation; ++i) {
+    for (int i = 0; i <= g_generation; ++i) {
         swarm->updateParticles();
 
         ((float*)sendbuff)[0] = (float)swarm->gbest->fitness;
@@ -74,7 +74,7 @@ int main( int argc, char *argv[] )
     	    // ouptut middle result
             if (g_interval != 0 && (i % g_interval) == 0) {
                 std::ostringstream oss;
-                oss << i << ".tif" << std::endl;
+                oss << i << ".tif";
                 std::string file = oss.str();
                 outputImage(swarm->gbest->getDataMap(), (g_output + "/" + file).c_str());
                 logStatus(doc, i, swarm->gbest->fitness, file.c_str());
