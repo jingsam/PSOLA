@@ -25,7 +25,7 @@ void init_cell(Cell* cell)
             init_grain_for_green(cell);
             break;
         case 3:
-            init_soil_conservation(cell);
+            //init_soil_conservation(cell);
             break;
         case 4:
         case 5:
@@ -69,7 +69,7 @@ bool rule_road_access(Cell* cell, double max_distance);
 bool rule_suitability(Cell* cell, int value, double min_suit);
 
 int transition(Cell* cell)
-{
+{   return 1;
     if ( !rule_cell_type(cell) ) return cell->value;
     if ( !rule_edge_cell(cell) ) return cell->value;
 
@@ -107,19 +107,7 @@ int transition(Cell* cell)
 
 bool rule_quantity(Cell* cell, int value, int max)
 {
-    int count = cell->map->counts.at(value);
-    return count < max;
-}
-
-bool rule_quantity(Cell* cell, std::vector<int> values, int max)
-{
-    int count = 0;
-    for (int i = 0; i < values.size(); ++i)
-    {
-        int value = values.at(i);
-        count+= cell->map->counts.at(value);
-    }
-
+    int count = cell->map->counts[value];
     return count < max;
 }
 

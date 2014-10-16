@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
-    <entry key="size">8</entry>
+    <entry key="size">2</entry>
     <entry key="max">10</entry>
     <entry key="seed">0</entry>
     <entry key="momentum">1.0</entry>
@@ -31,7 +31,8 @@
     <entry key="orchard-suit-map">data/YDSYX.tif</entry>
     <entry key="forest-suit-map">data/LDSYX.tif</entry>
     <entry key="construction-suit-map">data/JSSYX.tif</entry>
-    <entry key="slope-map">data/slope.tif</entry>
-    <entry key="road-map">data/road.tif</entry>
+    <entry key="slope-map">data/SLOPE.tif</entry>
+    <entry key="road-map">data/ROAD.tif</entry>
+    <entry key="soli-depth-map">data/DEPTH.tif</entry>
 
 </psola>

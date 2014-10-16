@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include "fitness.h"
-
+#include <iostream>
 
 double calc_fitness(Map<int>& scheme);
 double suitability(Map<int>& scheme);
@@ -9,6 +9,7 @@ double unchange_ratio(Map<int>& scheme);
 
 double calc_fitness(Map<int>& scheme)
 {
+    return suitability(scheme);
     double suit = suitability(scheme);
     double prox = proximity(scheme);
     double unchange = unchange_ratio(scheme);
@@ -22,6 +23,11 @@ double suitability(Map<int>& scheme)
 {
     int count = 0;
     double sum = 0.0;
+    std::cout<<scheme.size()<<std::endl;
+    std::cout<<g_orchard_suit_map.size()<<std::endl;
+    std::cout<<g_forest_suit_map.size()<<std::endl;
+    std::cout<<g_construction_suit_map.size()<<std::endl;
+
 
     for (int i = 0; i < scheme.size(); ++i) {
         int value = scheme.at(i);

@@ -1,5 +1,6 @@
 #include "pso.h"
 #include "option.h"
+#include <iostream>
 
 void normalize(std::vector<double> &p);
 int transition(Cell* mycell);
@@ -26,6 +27,7 @@ void Particle::updateCurrent(PlanMap* gbest)
         int value = cell->value;
         int pbest_value = pbest_cell->value;
         int gbest_value = gbest_cell->value;
+        //std::cout << i << " : " << value << "," << pbest_value << "," << gbest_value << std::endl;
 
         if (value == g_nodata) continue;
 
@@ -40,7 +42,7 @@ void Particle::updateCurrent(PlanMap* gbest)
 
         // update position
         temp.at(i) = transition(cell);
-        current->counts.at( temp.at(i) ) += 1;
+        current->counts[temp.at(i)] += 1;
     }
 
     this->current->assignValue(temp);

@@ -11,7 +11,7 @@ PlanMap* init_map()
     for (int y = 0; y < g_ysize; ++y) {
         for (int x = 0; x < g_xsize; ++x) {
             Cell* cell = map->atxy(x, y);
-            //init_cell( cell );
+            init_cell( cell );
         }
     }
     //map->updateFitness();
