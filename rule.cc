@@ -35,7 +35,7 @@ void init_cell(Cell* cell)
         case 10:
             cell->type = 0;
             break;
-     }
+    }
 }
 
 void init_grain_for_green(Cell* cell)

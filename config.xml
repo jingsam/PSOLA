@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
-    <entry key="size">2</entry>
+    <entry key="size">16</entry>
     <entry key="max">10</entry>
     <entry key="seed">0</entry>
     <entry key="momentum">1.0</entry>
