@@ -18,7 +18,7 @@ Just `make` it!
 
 ### How to use it
 ```bash
-mpiexec -np 4 ./psola -xml=config-gq.xml
+mpiexec -np 4 ./psola --xml=config.xml
 ```
 
 ### Development
