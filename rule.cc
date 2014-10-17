@@ -71,7 +71,7 @@ bool rule_suitability(Cell* cell, int value, double min_suit);
 int transition(Cell* cell)
 {
     if ( !rule_cell_type(cell) ) return cell->value;
-    //if ( !rule_edge_cell(cell) ) return cell->value;
+    if ( !rule_edge_cell(cell) ) return cell->value;
 
     bool is_rule_success = false;
     int new_value = roulette_wheel(cell->transP, g_RND);
@@ -139,9 +139,9 @@ bool rule_edge_cell(Cell* cell)
 
     double p = g_RND->nextDouble();
     if (is_edge_cell) {
-        if (p >= g_edge) return true;
+        if (p <= g_edge) return true;
     } else {
-        if (p >= g_core) return true;
+        if (p <= g_core) return true;
     }
 
     return false;
