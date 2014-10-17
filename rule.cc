@@ -94,11 +94,13 @@ int transition(Cell* cell)
             break;
         case 5:
             is_rule_success =
-                rule_quantity(cell, 5, g_urban);
+                rule_quantity(cell, 5, g_urban) &&
+                rule_neighbors_has(cell, 1, 5);
             break;
         case 6:
             is_rule_success =
-                rule_quantity(cell, 6, g_rural);
+                rule_quantity(cell, 6, g_rural) &&
+                rule_neighbors_has(cell, 1, 6);
             break;
     }
 
