@@ -13,10 +13,6 @@ tinyxml2::XMLDocument* createLogDocument()
 {
     /*      <?xml version="1.0" encoding="UTF-8"?>
      *      <result>
-     *          <map>
-     *              <row>546</row>
-     *              <col>546</col>
-     *          </map>
      *      </result>
      */
     tinyxml2::XMLDocument* doc = new tinyxml2::XMLDocument();
@@ -24,18 +20,6 @@ tinyxml2::XMLDocument* createLogDocument()
     doc->InsertEndChild(declr);
     tinyxml2::XMLElement* root = doc->NewElement("result");
     doc->InsertEndChild(root);
-    tinyxml2::XMLElement* map = doc->NewElement("map");
-    root->InsertEndChild(map);
-    tinyxml2::XMLElement* row = doc->NewElement("row");
-    map->InsertEndChild(row);
-    tinyxml2::XMLElement* col = doc->NewElement("col");
-    map->InsertEndChild(col);
-
-    char buffer[50];
-    std::sprintf(buffer, "%d", g_ysize);
-    row->InsertEndChild(doc->NewText(buffer));
-    std::sprintf(buffer, "%d", g_xsize);
-    col->InsertEndChild(doc->NewText(buffer));
 
     return doc;
 }
