@@ -29,6 +29,7 @@ void Particle::updateCurrent(PlanMap* gbest)
         int gbest_value = gbest_cell->value;
 
         if (value == g_nodata) continue;
+        if (cell->type == 0) continue;
 
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))

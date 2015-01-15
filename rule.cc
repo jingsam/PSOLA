@@ -70,8 +70,8 @@ bool rule_suitability(Cell* cell, int value, double min_suit);
 
 int transition(Cell* cell)
 {
-    if ( !rule_cell_type(cell) ) return cell->value;
-    if ( !rule_edge_cell(cell) ) return cell->value;
+    if (!rule_cell_type(cell)) return cell->value;
+    if (!rule_edge_cell(cell)) return cell->value;
 
     bool is_rule_success = false;
     int new_value = roulette_wheel(cell->transP, g_RND);
@@ -131,7 +131,7 @@ bool rule_cell_type(Cell* cell)
 bool rule_edge_cell(Cell* cell)
 {
     bool is_edge_cell = false;
-    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, g_edge_depth);
+    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, g_depth_of_edge);
     for (int i=0; i < neighbors.size(); ++i) {
         if (neighbors.at(i)->value != cell->value) {
             is_edge_cell = true;

@@ -1,26 +1,16 @@
 #ifndef RASTER_H
 #define RASTER_H
 
-#include <vector>
+#include "datamapmap.h" // class Map<T>
 
 
-int getRasterXSize(const char *filename);
+int readRaster(Map<int>& datamap, const char *filename);
 
-int getRasterYSize(const char *filename);
+int readRaster(Map<double>& datamap, const char *filename);
 
-double getRasterMaximum(const char *filename);
+int writeRaster(const Map<int>& datamap, const char *filename);
 
-double getRasterMinimum(const char *filename);
-
-double getRasterNoDataValue(const char *filename);
-
-int readRaster(std::vector<int>& data, const char *filename);
-
-int readRaster(std::vector<double>& data, const char *filename);
-
-int writeRaster(const std::vector<int>& data, const char *filename);
-
-int writeRaster(const std::vector<double>& data, const char *filename);
+int writeRaster(const Map<double>& datamap, const char *filename);
 
 int copyRaster(const char *oldfilename, const char *newfilename);
 

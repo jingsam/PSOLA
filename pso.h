@@ -18,7 +18,7 @@ public:
     }
 
     void updatePbest() {
-        if (current->betterThan( pbest )) {
+        if (current->betterThan(pbest)) {
             pbest->assignValue(current);
         }
     }
@@ -43,6 +43,7 @@ public:
         }
         delete r1;
         delete r2;
+        delete RND;
         delete gbest;
     }
 
@@ -50,7 +51,7 @@ public:
         PlanMap* best = this->at(0)->current;
         for (int i = 0; i < this->size(); ++i) {
             PlanMap* map = this->at(i)->current;
-            if (map->betterThan( best )) {
+            if (map->betterThan(best)) {
                 best = map;
             }
         }
@@ -60,14 +61,14 @@ public:
 
     void updateParticles() {
         for (int i = 0; i < this->size(); ++i) {
-            this->at(i)->updateCurrent( this->gbest );
+            this->at(i)->updateCurrent(this->gbest);
         }
 
         this->updateGbest();
     }
 
     double momentum, c1, c2;
-    Random *r1, *r2;
+    Random *r1, *r2, *RND;
     PlanMap* gbest;
 };
 

@@ -20,7 +20,7 @@ int roulette_wheel(std::vector<double> &p, Random* rnd)
     double sum = 0.0;
     for (int i = 0; i < p.size(); ++i) {
         sum += p[i];
-        if ( sum >= r && p[i] != 0.0 ) return i + 1;
+        if (sum >= r && p[i] != 0.0) return i + 1;
     }
 
     return 0;

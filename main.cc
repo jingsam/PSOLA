@@ -1,7 +1,8 @@
 #include <cstdlib>  // calloc()
 #include <cstdio>   // printf()
 #include <cstring>  // memcpy()
-#include <sstream> // ostringstream
+#include <string>   // to_string()
+#include <sstream>  // ostringstream
 #include "mpi.h"
 #include "psola.h"
 
@@ -10,13 +11,13 @@ void myOp(void* in, void* inout, int *len, MPI_Datatype* ctype);
 void new_op(MPI_Op* op);
 
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
     int size, rank;
     // MPI_Status status;
-    MPI_Init( &argc, &argv );
-    MPI_Comm_size( MPI_COMM_WORLD, &size );
-    MPI_Comm_rank( MPI_COMM_WORLD, &rank );
+    MPI_Init(&argc, &argv);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     if (rank==0) {
         std::printf("\n--------------Parse configuration-------------\n");
@@ -33,7 +34,8 @@ int main( int argc, char *argv[] )
     }
 
     double t3 = MPI_Wtime();
-    Swarm* swarm = init_swarm( (g_size + size - 1) / size, rank );
+    int population = std::stoi(g_option["population"])
+    Swarm* swarm = init_swarm((population + size - 1) / size, rank);
     if (rank==0) init_output();
     double t4 = MPI_Wtime();
 
@@ -45,13 +47,13 @@ int main( int argc, char *argv[] )
 
     double t5 = MPI_Wtime();
     MPI_Datatype ctype;
-    new_type( &ctype );
+    new_type(&ctype);
 
     MPI_Op myop;
-    new_op( &myop );
+    new_op(&myop);
 
-    void* sendbuff = calloc( 1 + g_xsize * g_ysize, sizeof(int) );
-    void* recvbuff = calloc( 1 + g_xsize * g_ysize, sizeof(int) );
+    void* sendbuff = calloc(1 + g_xsize * g_ysize, sizeof(int));
+    void* recvbuff = calloc(1 + g_xsize * g_ysize, sizeof(int));
     tinyxml2::XMLDocument* doc = createLogDocument();
 
     for (int i = 0; i <= g_generation; ++i) {
@@ -62,7 +64,7 @@ int main( int argc, char *argv[] )
             ((int*)sendbuff)[j+1] = (int)swarm->gbest->at(j)->value;
         }
 
-        MPI_Allreduce( sendbuff, recvbuff, 1, ctype, myop, MPI_COMM_WORLD );
+        MPI_Allreduce(sendbuff, recvbuff, 1, ctype, myop, MPI_COMM_WORLD);
 
         swarm->gbest->fitness = ((float*)recvbuff)[0];
         for (int k = 0; k < g_xsize * g_ysize; ++k) {
@@ -83,7 +85,7 @@ int main( int argc, char *argv[] )
             }
         }
 
-        MPI_Barrier( MPI_COMM_WORLD );
+        MPI_Barrier(MPI_COMM_WORLD);
     }
     double t6 = MPI_Wtime();
 
@@ -106,8 +108,8 @@ int main( int argc, char *argv[] )
         std::printf("\nTotal: %.2f S\n", t8 - t1);
     }
 
-    MPI_Type_free( &ctype );
-    MPI_Op_free( &myop );
+    MPI_Type_free(&ctype);
+    MPI_Op_free(&myop);
     MPI_Finalize();
     return 0;
 }
@@ -119,8 +121,8 @@ void new_type(MPI_Datatype* ctype)
     MPI_Aint offsets[] = { 0, sizeof(float) };
     MPI_Datatype oldtypes[] = { MPI_FLOAT, MPI_INT };
 
-    MPI_Type_create_struct( count, blockcounts, offsets, oldtypes, ctype );
-    MPI_Type_commit( ctype );
+    MPI_Type_create_struct(count, blockcounts, offsets, oldtypes, ctype);
+    MPI_Type_commit(ctype);
 }
 
 void myOp(void* in, void* inout, int *len, MPI_Datatype* ctype)
@@ -129,7 +131,7 @@ void myOp(void* in, void* inout, int *len, MPI_Datatype* ctype)
     float fitness2 = ((float*)inout)[0];
 
     if (fitness1 > fitness2) {
-        memcpy( inout, in, *len );
+        memcpy(inout, in, *len);
     }
 }
 
@@ -138,5 +140,5 @@ void new_op(MPI_Op* op)
     MPI_User_function* func = (MPI_User_function*)myOp;
     int commute = 1;
 
-    MPI_Op_create( func, commute, op );
+    MPI_Op_create(func, commute, op);
 }

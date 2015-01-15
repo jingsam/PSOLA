@@ -1,20 +1,24 @@
-#include <cstdlib>
 #include "init.h"
+#include <string>   // stoi(), stod()
 #include "option.h"
-
-void init_cell(Cell* cell);
 
 
 PlanMap* init_map()
 {
-    PlanMap* map = new PlanMap(g_xsize, g_ysize, 0);
-    for (int y = 0; y < g_ysize; ++y) {
-        for (int x = 0; x < g_xsize; ++x) {
+    int xsize = g_land_use_map.xsize;
+    int ysize = g_land_use_map.ysize;
+    int max = std::stoi(g_option["max"]);
+
+    PlanMap* map = new PlanMap(xsize, ysize, 0);
+    for (int y = 0; y < ysize; ++y) {
+        for (int x = 0; x < xsize; ++x) {
             Cell* cell = map->atxy(x, y);
-            init_cell( cell );
+            cell->value = g_land_use_map.atxy(x, y);
+            cell->type = 1;
+            cell->transP.assign(max, 1.0 / max);
         }
     }
-    map->updateFitness();
+    map->updateStats();
 
     return map;
 }
@@ -30,14 +34,20 @@ Particle* init_particle()
 
 Swarm* init_swarm(int size, int id)
 {
-    g_RND = new Random( g_seed + id );
+    double momentum = std::stod(g_option["momentum"]);
+    double c1 = std::stod(g_option["c1"]);
+    double c2 = std::stod(g_option["c2"]);
+    int r1 = std::stoi(g_option["r1"]);
+    int r2 = std::stoi(g_option["r2"]);
+    int seed = std::stoi(g_option["seed"]);
 
     Swarm* swarm = new Swarm();
-    swarm->momentum = g_momentum;
-    swarm->c1 = g_c1;
-    swarm->c2 = g_c2;
-    swarm->r1 = new Random( g_r1 + id );
-    swarm->r2 = new Random( g_r2 + id );
+    swarm->momentum = momentum;
+    swarm->c1 = c1;
+    swarm->c2 = c2;
+    swarm->r1 = new Random(r1 + id);
+    swarm->r2 = new Random(r2 + id);
+    g_RND = new Random(seed + id);
 
     for (int i = 0; i < size; ++i) {
         Particle* particle = init_particle();

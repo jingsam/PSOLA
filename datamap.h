@@ -10,9 +10,10 @@ class Map : public std::vector<T>
 public:
     Map() {}
 
-    Map(int xsize, int ysize, const T& value) : std::vector<T>(xsize * ysize, value) {
+    Map(int xsize, int ysize, double nodata, const T& value) : std::vector<T>(xsize * ysize, value) {
         this->xsize = xsize;
         this->ysize = ysize;
+        this->nodata = nodata
     }
 
     virtual ~Map() {}
@@ -34,7 +35,7 @@ public:
                 if (i < 0 || i >= xsize) continue;
                 if (i == x && j == y) continue;
 
-                neighbors.push_back( this->atxy(i,j) );
+                neighbors.push_back(this->atxy(i,j));
             }
         }
 
@@ -52,8 +53,8 @@ public:
 
                 int dx = abs(i - x);
                 int dy = abs(j - y);
-                if ( (dx + dy) <= level ) {
-                    neighbors.push_back( this->atxy(i,j) );
+                if ((dx + dy) <= level) {
+                    neighbors.push_back(this->atxy(i,j));
                 }
             }
         }
@@ -63,6 +64,7 @@ public:
 
 
     int xsize, ysize;
+    double nodata;
 };
 
 #endif

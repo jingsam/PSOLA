@@ -8,7 +8,7 @@
 // core cell and edge cell
 extern double g_core;
 extern double g_edge;
-extern int g_edge_depth;
+extern int g_depth_of_edge;
 
 // quantities of land-use
 extern int g_arable;

@@ -2,13 +2,13 @@ program = psola
 
 CXX = mpicxx
 CPPFLAGS =
-CXXFLAGS = -Wall -W -O2 -Wno-sign-compare
+CXXFLAGS = -std=c++11 -Wall -W -O2 -Wno-sign-compare
 LDFLAGS = -L/usr/local/lib
 LIBS = -lgdal
 
 objs = main.o option.o raster.o \
 	arg/arg_parser.o xml/tinyxml2.o \
-	pso.o fitness.o rule.o \
+	pso.o stats.o rule.o \
 	init.o tool.o output.o parameter.o
 
 

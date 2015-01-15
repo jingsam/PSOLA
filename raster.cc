@@ -1,116 +1,33 @@
 #include "raster.h"
-#include <vector>
-#include <algorithm>
 #include "gdal_priv.h"
 #include "cpl_conv.h"
 
 
-int getRasterXSize(const char *filename)
+int readRaster(Map<int>& datamap, const char *filename)
 {
     GDALAllRegister();
 
     GDALDataset* poDataset;
     poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 0;
-
-    GDALRasterBand* poBand;
-    poBand = poDataset->GetRasterBand(1);
-    int nXSize = poBand->GetXSize();
-
-    GDALClose(poDataset);
-
-    return nXSize;
-}
-
-int getRasterYSize(const char *filename)
-{
-    GDALAllRegister();
-
-    GDALDataset* poDataset;
-    poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 0;
-
-    GDALRasterBand* poBand;
-    poBand = poDataset->GetRasterBand(1);
-    int nYSize = poBand->GetYSize();
-
-    GDALClose(poDataset);
-
-    return nYSize;
-}
-
-double getRasterMaximum(const char *filename)
-{
-    GDALAllRegister();
-
-    GDALDataset* poDataset;
-    poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 0.0;
-
-    GDALRasterBand* poBand;
-    poBand = poDataset->GetRasterBand(1);
-    double max = poBand->GetMaximum();
-
-    GDALClose(poDataset);
-
-    return max;
-}
-
-double getRasterMinimum(const char *filename)
-{
-    GDALAllRegister();
-
-    GDALDataset* poDataset;
-    poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 0.0;
-
-    GDALRasterBand* poBand;
-    poBand = poDataset->GetRasterBand(1);
-    double min = poBand->GetMinimum();
-
-    GDALClose(poDataset);
-
-    return min;
-}
-
-double getRasterNoDataValue(const char *filename)
-{
-    GDALAllRegister();
-
-    GDALDataset* poDataset;
-    poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 0.0;
-
-    GDALRasterBand* poBand;
-    poBand = poDataset->GetRasterBand(1);
-    int nodata = poBand->GetNoDataValue();
-
-    GDALClose(poDataset);
-
-    return nodata;
-}
-
-int readRaster(std::vector<int>& data, const char *filename)
-{
-    GDALAllRegister();
-
-    GDALDataset* poDataset;
-    poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 3;
+    if (!poDataset) return 3;
 
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand(1);
     int nXSize = poBand->GetXSize();
     int nYSize = poBand->GetYSize();
+    double nodata = poBand->GetNoDataValue();
+    datamap.xsize = nXSize;
+    datamap.ysize = nYSize;
+    datamap.nodata = nodata;
 
     int* pData;
     pData = (int*)CPLMalloc(sizeof(int)*nXSize*nYSize);
-    int ret = poBand->RasterIO( GF_Read,
+    int ret = poBand->RasterIO(GF_Read,
                 0, 0, nXSize, nYSize,
                 pData, nXSize, nYSize,
                 GDT_Int32, 0, 0);
 
-    data.assign(pData, pData + nXSize * nYSize);
+    datamap.assign(pData, pData + nXSize * nYSize);
 
     CPLFree(pData);
     GDALClose(poDataset);
@@ -118,27 +35,31 @@ int readRaster(std::vector<int>& data, const char *filename)
     return ret;
 }
 
-int readRaster(std::vector<double>& data, const char *filename)
+int readRaster(Map<double>& datamap, const char *filename)
 {
     GDALAllRegister();
 
     GDALDataset* poDataset;
     poDataset = (GDALDataset*) GDALOpen(filename, GA_ReadOnly);
-    if ( !poDataset ) return 3;
+    if (!poDataset) return 3;
 
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand(1);
     int nXSize = poBand->GetXSize();
     int nYSize = poBand->GetYSize();
+    double nodata = poBand->GetNoDataValue();
+    datamap.xsize = nXSize;
+    datamap.ysize = nYSize;
+    datamap.nodata = nodata;
 
-    double*    pData;
+    double* pData;
     pData = (double*)CPLMalloc(sizeof(double)*nXSize*nYSize);
-    int ret = poBand->RasterIO( GF_Read,
+    int ret = poBand->RasterIO(GF_Read,
                 0, 0, nXSize, nYSize,
                 pData, nXSize, nYSize,
                 GDT_Float64, 0, 0);
 
-    data.assign(pData, pData + nXSize * nYSize);
+    datamap.assign(pData, pData + nXSize * nYSize);
 
     CPLFree(pData);
     GDALClose(poDataset);
@@ -146,24 +67,25 @@ int readRaster(std::vector<double>& data, const char *filename)
     return ret;
 }
 
-int writeRaster(const std::vector<int>& data, const char *filename)
+int writeRaster(const Map<int>& datamap, const char *filename)
 {
     GDALAllRegister();
 
     GDALDataset* poDataset;
     poDataset = (GDALDataset*) GDALOpen(filename, GA_Update);
-    if ( !poDataset ) return 3;
+    if (!poDataset) return 3;
 
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand(1);
     int nXSize = poBand->GetXSize();
     int nYSize = poBand->GetYSize();
+    poBand->SetNoDataValue(datamap.nodata);
 
     int* pData;
     pData = (int*)CPLMalloc(sizeof(int)*nXSize*nYSize);
-    std::copy(data.begin(), data.end(), pData);
+    std::copy(datamap.begin(), datamap.end(), pData);
 
-    int ret = poBand->RasterIO( GF_Write,
+    int ret = poBand->RasterIO(GF_Write,
                 0, 0, nXSize, nYSize,
                 pData, nXSize, nYSize,
                 GDT_Int32, 0, 0);
@@ -174,24 +96,25 @@ int writeRaster(const std::vector<int>& data, const char *filename)
     return ret;
 }
 
-int writeRaster(const std::vector<double>& data, const char *filename)
+int writeRaster(const Map<double>& datamap, const char *filename)
 {
     GDALAllRegister();
 
     GDALDataset* poDataset;
     poDataset = (GDALDataset*) GDALOpen(filename, GA_Update);
-    if ( !poDataset ) return 3;
+    if (!poDataset) return 3;
 
     GDALRasterBand* poBand;
     poBand = poDataset->GetRasterBand(1);
     int nXSize = poBand->GetXSize();
     int nYSize = poBand->GetYSize();
+    poBand->SetNoDataValue(datamap.nodata);
 
     double* pData;
     pData = (double*)CPLMalloc(sizeof(double)*nXSize*nYSize);
-    std::copy(data.begin(), data.end(), pData);
+    std::copy(datamap.begin(), datamap.end(), pData);
 
-    int ret = poBand->RasterIO( GF_Write,
+    int ret = poBand->RasterIO(GF_Write,
                 0, 0, nXSize, nYSize,
                 pData, nXSize, nYSize,
                 GDT_Float64, 0, 0);

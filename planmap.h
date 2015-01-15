@@ -6,7 +6,7 @@
 #include "datamap.h"    // class Map<T>
 
 
-double calc_fitness(Map<int>& scheme);
+std::map<std::string, double> statistics(Map<int>& plan_map);
 
 class Cell;
 class PlanMap;
@@ -20,6 +20,7 @@ public:
         this->x = x;
         this->y = y;
         this->value = value;
+        this->type = 1;
     }
 
     ~Cell() {}
@@ -49,17 +50,17 @@ class PlanMap : public Map<Cell*>
 public:
     PlanMap() {}
 
-    PlanMap(int xsize, int ysize, int defaultValue) {
+    PlanMap(int xsize, int ysize, double nodata, int value) {
         this->xsize = xsize;
         this->ysize = ysize;
+        this->nodata = nodata;
         for (int y=0; y < ysize; ++y) {
             for (int x=0; x < xsize; ++x) {
-                Cell* cell = new Cell(x, y, defaultValue);
+                Cell* cell = new Cell(x, y, value);
                 cell->map = this;
                 this->push_back(cell);
             }
         }
-        this->fitness = 0.0;
     }
 
     ~PlanMap() {
@@ -69,29 +70,20 @@ public:
     }
 
     bool betterThan(PlanMap* other) {
-        return this->fitness > other->fitness;
+        return this->stats["fitness"] > other->stats["fitness"];
     }
 
-    void updateFitness() {
+    void updateStats() {
         Map<int> map = this->getDataMap();
-        this->fitness = calc_fitness( map );
-    }
-
-    Map<int> getDataMap() {
-        Map<int> map( xsize, ysize, 0 );
-        for (int i = 0; i < this->size(); ++i) {
-            map.at(i) = this->at(i)->value;
-        }
-
-        return map;
+        this->stats = statistics(map);
     }
 
     PlanMap* clone() {
         PlanMap* map = new PlanMap();
         map->xsize = this->xsize;
         map->ysize = this->ysize;
-        map->fitness = this->fitness;
-        map->counts = this->counts;
+        map->nodata = this->nodata;
+        map->stats = this->stats;
 
         for (int i = 0; i < this->size(); ++i) {
             Cell* cell = this->at(i)->clone();
@@ -102,23 +94,31 @@ public:
         return map;
     }
 
+    Map<int> getDataMap() {
+        Map<int> map(xsize, ysize, 0, this->nodata);
+        for (int i = 0; i < this->size(); ++i) {
+            map.at(i) = this->at(i)->value;
+        }
+
+        return map;
+    }
+
     void assignValue(PlanMap* other) {
-        this->fitness = other->fitness;
-        this->counts = other->counts;
+        this->stats = other->stats;
         for (int i = 0; i < this->size(); ++i) {
             this->at(i)->value = other->at(i)->value;
         }
     }
 
     void assignValue(Map<int>& other) {
-        this->fitness = calc_fitness(other);
+        this->stats = statistics(other);
         for (int i = 0; i < this->size(); ++i) {
             this->at(i)->value = other.at(i);
         }
     }
 
-    double fitness;
-    std::map<int, int> counts;
+
+    std::map<std::string, double> stats;
 };
 
 #endif
