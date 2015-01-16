@@ -52,5 +52,6 @@ void Particle::updateCurrent(PlanMap* gbest)
     }
 
     this->current->assignValue(temp);
+    this->current->updateStats();
     this->updatePbest();
 }
