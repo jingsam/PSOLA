@@ -4,7 +4,7 @@
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
 #include "option.h"
-#include "parameter.h"
+#include "stats.h"
 #include "output.h"
 #include "planmap.h"
 #include "pso.h"
