@@ -1,8 +1,8 @@
 #ifndef DATAMAP_H
 #define DATAMAP_H
 
-#include <cstdlib>
 #include <vector>
+
 
 template<class T>
 class Map : public std::vector<T>
@@ -10,7 +10,8 @@ class Map : public std::vector<T>
 public:
     Map() {}
 
-    Map(int xsize, int ysize, double nodata, const T& value) : std::vector<T>(xsize * ysize, value) {
+    Map(int xsize, int ysize, double nodata, const T& value)
+    : std::vector<T>(xsize * ysize, value) {
         this->xsize = xsize;
         this->ysize = ysize;
         this->nodata = nodata

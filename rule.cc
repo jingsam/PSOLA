@@ -4,39 +4,9 @@ void normalize(std::vector<double>& p);
 int roulette_wheel(std::vector<double>& p, Random* rnd);
 
 
-void init_cell(Cell* cell);
 void init_grain_for_green(Cell* cell);
 void init_soil_conservation(Cell* cell);
 
-void init_cell(Cell* cell)
-{
-    int land_use = g_land_use_map.atxy(cell->x, cell->y);
-    cell->value = land_use;
-    cell->type = 1;
-    cell->transP.assign(g_max, 1.0 / g_max);
-
-    if (land_use == g_nodata) {
-        cell->type = 0;
-        return;
-    }
-
-    switch (land_use) {
-        case 1:
-            init_grain_for_green(cell);
-            break;
-        case 3:
-            init_soil_conservation(cell);
-            break;
-        case 4:
-        case 5:
-        case 7:
-        case 8:
-        case 9:
-        case 10:
-            cell->type = 0;
-            break;
-    }
-}
 
 void init_grain_for_green(Cell* cell)
 {

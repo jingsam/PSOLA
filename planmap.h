@@ -20,16 +20,12 @@ public:
         this->x = x;
         this->y = y;
         this->value = value;
-        this->type = 1;
     }
 
     ~Cell() {}
 
     Cell* clone() {
-        Cell* cell = new Cell();
-        cell->x = this->x;
-        cell->y = this->y;
-        cell->value = this->value;
+        Cell* cell = new Cell(this->x, this->y, this->value);
         cell->type = this->type;
         cell->transP = this->transP;
 
@@ -57,6 +53,19 @@ public:
         for (int y=0; y < ysize; ++y) {
             for (int x=0; x < xsize; ++x) {
                 Cell* cell = new Cell(x, y, value);
+                cell->map = this;
+                this->push_back(cell);
+            }
+        }
+    }
+
+    PlanMap(Map<int datamap>) {
+        this->xsize = datamap.xsize;
+        this->ysize = datamap.ysize;
+        this->nodata = datamap.nodata;
+        for (int y=0; y < ysize; ++y) {
+            for (int x=0; x < xsize; ++x) {
+                Cell* cell = new Cell(x, y, datamap.atxy(x, y));
                 cell->map = this;
                 this->push_back(cell);
             }
@@ -95,12 +104,19 @@ public:
     }
 
     Map<int> getDataMap() {
-        Map<int> map(xsize, ysize, 0, this->nodata);
+        Map<int> datamap(xsize, ysize, this->nodata, 0);
         for (int i = 0; i < this->size(); ++i) {
-            map.at(i) = this->at(i)->value;
+            datamap.at(i) = this->at(i)->value;
         }
 
-        return map;
+        return datamap;
+    }
+
+    void setDataMap(Map<int>& datamap) {
+        this->nodata = datamap.nodata;
+        for (int i = 0; i < this->size(); ++i) {
+            this->at(i)->value = datamap.at(i);
+        }
     }
 
     void assignValue(PlanMap* other) {

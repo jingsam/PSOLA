@@ -3,20 +3,17 @@
 #include "option.h"
 
 
+
+
 PlanMap* init_map()
 {
-    int xsize = g_land_use_map.xsize;
-    int ysize = g_land_use_map.ysize;
     int max = std::stoi(g_option["max"]);
 
-    PlanMap* map = new PlanMap(xsize, ysize, 0);
-    for (int y = 0; y < ysize; ++y) {
-        for (int x = 0; x < xsize; ++x) {
-            Cell* cell = map->atxy(x, y);
-            cell->value = g_land_use_map.atxy(x, y);
-            cell->type = 1;
-            cell->transP.assign(max, 1.0 / max);
-        }
+    PlanMap* map = new PlanMap(g_land_use_map);
+    for (int i = 0; i < map.size(); ++i) {
+        Cell* cell = map->at(i);
+        cell->type = 1;
+        cell->transP.assign(max, 1.0 / max);
     }
     map->updateStats();
 

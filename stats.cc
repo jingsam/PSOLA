@@ -1,7 +1,6 @@
-#include <cstdlib>
-#include <cassert>
-#include <iostream>
 #include "stats.h"
+#include <string>   // stod()
+#include "option.h" // g_option, g_land_use_map
 
 
 double fitness(Map<int>& plan_map);
@@ -11,25 +10,22 @@ double core_area_index(Map<int>& plan_map);
 
 std::map<std::string, double> statistics(Map<int>& plan_map)
 {
-    std::map<std::string, double> stats;
+    double w1 = std::stod(g_option["social-benefit"]);
+    double w2 = std::stod(g_option["economic-benefit"]);
+    double w3 = std::stod(g_option["ecological-benefit"]);
 
-    stats["fitness"] = fitness(plan_map);
-    stats["social-benefit"] = compactness(plan_map);
-    stats["economic-benefit"] = cost(plan_map);
-    stats["ecological-benefit"] = core_area_index(plan_map);
+    double o1 = compactness(plan_map);
+    double o2 = cost(plan_map);
+    double o3 = core_area_index(plan_map);
+    double fitness = w1 * o1 + w2 * o2 + w3 *o3;
+
+    std::map<std::string, double> stats;
+    stats["social-benefit"] = o1;
+    stats["economic-benefit"] = o2;
+    stats["ecological-benefit"] = o3;
+    stats["fitness"] = fitness;
 
     return stats;
-}
-
-double fitness(Map<int>& plan_map)
-{
-    double suit = suitability(plan_map);
-    double prox = proximity(plan_map);
-    double unchange = unchange_ratio(plan_map);
-
-    return g_weight_suit * suit +
-            g_weight_prox * prox +
-            g_weight_unchange * unchange;
 }
 
 double compactness(Map<int>& plan_map)
@@ -40,7 +36,7 @@ double compactness(Map<int>& plan_map)
     for (int y = 0; y < plan_map.ysize; ++y) {
         for (int x = 0; x < plan_map.xsize; ++x) {
             int value = plan_map.atxy(x, y);
-            if (value == g_nodata) continue;
+            if (value == plan_map.nodata) continue;
 
             int cnt = 0;
             std::vector<int> neighbors = plan_map.neighbors(x, y, 1);
@@ -48,14 +44,14 @@ double compactness(Map<int>& plan_map)
                 if (neighbors.at(i) == value) cnt++;
             }
 
-            assert(neighbors.size() != 0);
-            sum += (double)cnt / neighbors.size();
+            if (neighbors.size() != 0) {
+                sum += (double)cnt / neighbors.size();
+            }
             count++;
         }
     }
 
-    assert(count != 0);
-    return sum / count;
+    return count != 0 ? sum / count : 0.0;
 }
 
 double cost(Map<int>& plan_map)
@@ -65,40 +61,17 @@ double cost(Map<int>& plan_map)
 
     for (int i = 0; i < plan_map.size(); ++i) {
         int value = plan_map.at(i);
-        if (value == g_nodata) continue;
+        if (value == plan_map.nodata) continue;
 
         int land_use = g_land_use_map.at(i);
         if (value == land_use) sum++;
         count++;
     }
 
-    assert(count != 0);
-    return (double)sum / count;
+    return count != 0 ? (double)sum / count : 0.0;
 }
 
 double core_area_index(Map<int>& plan_map)
 {
-
-}
-
-double suitability(Map<int>& plan_map)
-{
-    int count = 0;
-    double sum = 0.0;
-
-    for (int i = 0; i < plan_map.size(); ++i) {
-        int value = plan_map.at(i);
-        if (value == g_nodata) continue;
-
-        switch (value) {
-            case 1: sum += g_arable_suit_map.at(i);       count++; break;
-            case 2: sum += g_orchard_suit_map.at(i);      count++; break;
-            case 3: sum += g_forest_suit_map.at(i);       count++; break;
-            case 5:
-            case 6: sum += g_construction_suit_map.at(i); count++; break;
-        }
-    }
-
-    assert(count != 0);
-    return sum / count;
+    return 0.0;
 }

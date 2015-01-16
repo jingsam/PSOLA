@@ -1,11 +1,10 @@
-#ifndef FITNESS_H
-#define FITNESS_H
+#ifndef STATS_H
+#define STATS_H
 
 #include <map>
-#include <string>
-#include "datamap.h"
+#include "datamap.h"    // Map<T>
 
 
 std::map<std::string, double> statistics(Map<int>& plan_map);
 
-#endif // FITNESS_H
+#endif // STATS_H

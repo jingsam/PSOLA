@@ -9,7 +9,7 @@ LIBS = -lgdal
 objs = main.o option.o raster.o \
 	arg/arg_parser.o xml/tinyxml2.o \
 	pso.o stats.o rule.o \
-	init.o tool.o output.o parameter.o
+	init.o tool.o output.o
 
 
 $(program) : $(objs)

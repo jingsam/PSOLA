@@ -92,6 +92,26 @@ void parse_option(const int argc, const char * const argv[])
             case 'x': parse_xml(arg);                   break;
         }
     }
+
+
+}
+
+void set_default_option()
+{
+    g_option["population"] = "32";
+    g_option["max"] = "10";
+    g_option["momentum"] = "1.0";
+    g_option["c1"] = "2.0";
+    g_option["c2"] = "2.0";
+    g_option["r1"] = "100";
+    g_option["r2"] = "200";
+    g_option["seed"] = "0";
+    g_option["generation"] = "50";
+    g_option["interval"] = "10";
+    g_option["output"] = "result";
+    g_option["land-use-map"] = "";
+    g_option["mode"] = "async";
+
 }
 
 void show_help()
