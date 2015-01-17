@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
     }
     double t2 = MPI_Wtime();
 
+
     if (rank==0) {
         show_option();
         std::printf("\nAccomplished: %.2f S\n", t2 - t1);
@@ -42,16 +43,15 @@ int main(int argc, char *argv[])
     Swarm* swarm = init_swarm((population + size - 1) / size, rank);
     double t4 = MPI_Wtime();
 
+
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t4 - t3);
         std::printf("\n--------------Start optimization--------------\n");
     }
 
-
     double t5 = MPI_Wtime();
     MPI_Datatype ctype;
     new_type(&ctype);
-
     MPI_Op myop;
     new_op(&myop);
 
@@ -81,8 +81,10 @@ int main(int argc, char *argv[])
 
         if (rank==0) {
             if (g_interval != 0 && (i % g_interval) == 0) {
-                std::string file = g_option["output"] + std::to_string(i) + ".tif";
-                writeRaster(swarm->gbest->getDataMap(), (g_output + "/" + file).c_str());
+                std::string file = g_option["output"] + "/"
+                    + std::to_string(i) + ".tif";
+                writeRaster(swarm->gbest->getDataMap(), file.c_str(),
+                    g_option["land-use-map"].c_str());
             }
 
             logStats(swarm->gbest->stats);
@@ -92,24 +94,25 @@ int main(int argc, char *argv[])
     }
     double t6 = MPI_Wtime();
 
+
     if (rank==0) {
         std::printf("Accomplished: %.2f S\n", t6 - t5);
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
-        std::string log = g_output + "/log.xml";
-        if (doc->SaveFile(log.c_str())) {
-            std::printf("Failed save log to %s", log.c_str());
-        }
+        std::string log = g_output + "/log.csv";
+
 
         std::string output = g_output + "/result.tif";
-        outputImage(swarm->gbest->getDataMap(), output.c_str());
+        writeRaster(swarm->gbest->getDataMap(), output.c_str()
+            g_option["land-use-map"].c_str());
         double t8 = MPI_Wtime();
 
         std::printf("\nAccomplished: %.2f S\n", t8 - t7);
         std::printf("\n----------------------------------------------\n");
         std::printf("\nTotal: %.2f S\n", t8 - t1);
     }
+
 
     free(sendbuff);
     free(recvbuff);

@@ -1,7 +1,7 @@
 #ifndef RASTER_H
 #define RASTER_H
 
-#include "datamapmap.h" // class Map<T>
+#include "datamapmap.h" // Map<T>
 
 
 int readRaster(Map<int>& datamap, const char *filename);
@@ -11,6 +11,10 @@ int readRaster(Map<double>& datamap, const char *filename);
 int writeRaster(const Map<int>& datamap, const char *filename);
 
 int writeRaster(const Map<double>& datamap, const char *filename);
+
+typename T
+int writeRaster(const Map<T>& datamap, const char *filename,
+    const char *ref_file);
 
 int copyRaster(const char *oldfilename, const char *newfilename);
 

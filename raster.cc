@@ -125,7 +125,8 @@ int writeRaster(const Map<double>& datamap, const char *filename)
     return ret;
 }
 
-int writeRaster(const Map<int>& datamap, const char *filename,
+typename T
+int writeRaster(const Map<T>& datamap, const char *filename,
     const char *ref_file)
 {
     if (copyRaster(ref_file, filename)) return 3;
@@ -133,21 +134,6 @@ int writeRaster(const Map<int>& datamap, const char *filename,
     if (writeRaster(datamap, filename)) return 3;
 
     return 0;
-}
-
-int writeRaster(const Map<double>& datamap, const char *filename,
-    const char *file)
-{
-    if (copyRaster(land_use_map.c_str(), filename)) {
-        std::sprintf(stderr, "[ERROR]Failed copy %s to %s\n",
-            land_use_map.c_str(), filename);
-        std::exit(1);
-    }
-
-    if (writeRaster(datamap, filename)) {
-        std::printf("[ERROR]Failed write result to %s\n", filename);
-        std::exit(1);
-    }
 }
 
 int copyRaster(const char *oldfilename, const char *newfilename)
