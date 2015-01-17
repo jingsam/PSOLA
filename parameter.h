@@ -1,8 +1,6 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
 
-#include <string>
-#include <map>
 #include "tool.h"   // Random
 #include "datamap.h"    // Map<T>
 
@@ -16,6 +14,6 @@ extern Map<double> g_slope_map;
 extern Map<double> g_road_map;
 
 
-void set_parameter(std::map<std::string, std::string>& option);
+void set_parameter();
 
 #endif // PARAMETER_H

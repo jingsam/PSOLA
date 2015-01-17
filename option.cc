@@ -1,9 +1,9 @@
 #include "option.h"
+#include <cstdlib>  // exit()
 #include <cstdio>   // printf()
 #include <string>
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
-#include "parameter.h"  // set_parameter()
 
 
 std::map<std::string, std::string> g_option;
@@ -85,8 +85,6 @@ void parse_option(const int argc, const char * const argv[])
             case 'x': parse_xml(arg);                   break;
         }
     }
-
-    set_parameter(g_option);
 }
 
 void set_default_option()
@@ -105,8 +103,6 @@ void set_default_option()
     g_option["land-use-map"] = "";
     g_option["mode"] = "async";
 }
-
-
 
 void show_help()
 {
