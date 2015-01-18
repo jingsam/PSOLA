@@ -1,11 +1,10 @@
 #include "pso.h"
 #include <string>   // to_string()
 #include "option.h" // g_option
+#include "tool.h"   // normalize()
 
 
-void normalize(std::vector<double> &p);
 int transition(Cell* mycell);
-
 
 void Particle::updateCurrent(PlanMap* gbest)
 {

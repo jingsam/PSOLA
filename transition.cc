@@ -1,31 +1,8 @@
-#include "rule.h"
-
-void normalize(std::vector<double>& p);
-int roulette_wheel(std::vector<double>& p, Random* rnd);
-
-
-void init_grain_for_green(Cell* cell);
-void init_soil_conservation(Cell* cell);
-
-
-void init_grain_for_green(Cell* cell)
-{
-    double slope = g_slope_map.atxy(cell->x, cell->y);
-    if (slope >= 25.0) {
-        cell->value = 3;
-        cell->type = 0;
-    }
-}
-
-void init_soil_conservation(Cell* cell)
-{
-    std::vector<int> neighbors = g_land_use_map.neighbors(cell->x, cell->y, 2);
-    for (int i=0; i < neighbors.size(); ++i) {
-        if (neighbors.at(i) == 9) {
-            cell->type = 0;
-        }
-    }
-}
+#include "transition.h"
+#include <string>      // stoi(), stod()
+#include "tool.h"      // normalize(), roulette_wheel()
+#include "option.h"    // g_option
+#include "parameter.h" // g_land_use_map, g_XX_suit_map, g_slope_map, g_road_map
 
 
 int transition(Cell* cell);
@@ -40,6 +17,51 @@ bool rule_suitability(Cell* cell, int value, double min_suit);
 
 int transition(Cell* cell)
 {
+    int x = cell->x;
+    int y = cell->y;
+
+    if (cell->type == 0) return cell->value;
+
+    // undeveloped area
+    int land_use = g_land_use_map.atxy(x, y);
+    if (land_use == 4 || land_use == 5 || land_use > 6)
+    {
+        cell->type == 0;
+        return land_use;
+    }
+
+    // grain for green
+    if (land_use == 1)
+    {
+        double slope = g_slope_map.atxy(x, y);
+        if (slope >= 25.0)
+        {
+            cell->type == 0;
+            return 3;
+        }
+    }
+
+    // core-edge operator
+    int depth_of_edge = std::stoi(g_option["depth-of-edge"]);
+    double g_core = std::stod(g_option["core"]);
+    double g_edge = std::stod(g_option["edge"]);
+    bool is_core_cell = true;
+    std::vector<Cell*> neighbors = cell->map->neighbors(x, y, depth_of_edge);
+    for (int i=0; i < neighbors.size(); ++i) {
+        if (neighbors.at(i)->value != cell->value) {
+            is_edge_cell = false;
+            break;
+        }
+    }
+
+    double p = g_RND->nextDouble();
+    if (is_core_cell && p > g_core ||
+        !is_core_cell && p > g_edge) {
+        return cell->value;
+    }
+
+
+
     if (!rule_cell_type(cell)) return cell->value;
     if (!rule_edge_cell(cell)) return cell->value;
 
