@@ -6,8 +6,6 @@
 
 
 int transition(Cell* cell);
-bool rule_cell_type(Cell* cell);
-bool rule_edge_cell(Cell* cell);
 bool rule_quantity(Cell* cell, int value, int max);
 bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_soil_condition(Cell* cell);
@@ -60,49 +58,54 @@ int transition(Cell* cell)
         return cell->value;
     }
 
-
-
-    if (!rule_cell_type(cell)) return cell->value;
-    if (!rule_edge_cell(cell)) return cell->value;
-
-    bool is_rule_success = false;
+    // roulette_wheel
+    bool confirmed = false;
     int new_value = roulette_wheel(cell->transP, g_RND);
     switch (new_value) {
         case 1:
-            is_rule_success =
-                rule_quantity(cell, 1, g_arable) &&
+            confirmed =
+                rule_arable_quantity(cell) &&
                 rule_suitability(cell, 1, 0.3) &&
-                rule_soil_condition(cell) &&
                 rule_farming_radius(cell, 40);
             break;
         case 2:
-            is_rule_success =
-                rule_quantity(cell, 2, g_orchard) &&
+            confirmed =
                 rule_road_access(cell, 500.0);
             break;
         case 3:
-            is_rule_success =
+            confirmed =
                 rule_quantity(cell, 3, g_forest);
             break;
         case 5:
-            is_rule_success =
-                rule_quantity(cell, 5, g_urban) &&
+            confirmed =
+                rule_construction_quantity(cell) &&
                 rule_neighbors_has(cell, 1, 5);
             break;
         case 6:
-            is_rule_success =
-                rule_quantity(cell, 6, g_rural) &&
+            confirmed =
+                rule_construction_quantity(cell) &&
                 rule_neighbors_has(cell, 1, 6);
             break;
     }
 
-    return is_rule_success ? new_value : cell->value;
+    return confirmed ? new_value : cell->value;
 }
 
-bool rule_quantity(Cell* cell, int value, int max)
+bool rule_arable_quantity(Cell* cell)
 {
-    int count = cell->map->counts[value];
+    int max = std::stoi(g_option["arable"]);
+    int count = (int)cell->map->stats["1"];
     return count < max;
+}
+
+bool rule_construction_quantity(Cell* cell)
+{
+    int max = std::stoi(g_option["construction"]);
+    int urban = (int)cell->map->stats["5"];
+    int rural = (int)cell->map->stats["6"];
+    int mine = (int)cell->map->stats["7"];
+    int road = (int)cell->map->stats["8"];
+    return (urban + rural + mine + road) < max;
 }
 
 bool rule_neighbors_has(Cell* cell, int radius, int value)
@@ -113,40 +116,6 @@ bool rule_neighbors_has(Cell* cell, int radius, int value)
     }
 
     return false;
-}
-
-bool rule_cell_type(Cell* cell)
-{
-    return cell->type > 0;
-}
-
-bool rule_edge_cell(Cell* cell)
-{
-    bool is_edge_cell = false;
-    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, g_depth_of_edge);
-    for (int i=0; i < neighbors.size(); ++i) {
-        if (neighbors.at(i)->value != cell->value) {
-            is_edge_cell = true;
-            break;
-        }
-    }
-
-    double p = g_RND->nextDouble();
-    if (is_edge_cell) {
-        if (p <= g_edge) return true;
-    } else {
-        if (p <= g_core) return true;
-    }
-
-    return false;
-}
-
-bool rule_soil_condition(Cell* cell)
-{
-    double soil_depth = g_soil_depth_map.atxy(cell->x, cell->y);
-    double slope = g_slope_map.atxy(cell->x, cell->y);
-
-    return soil_depth >= 0.3 && slope < 25;
 }
 
 bool rule_farming_radius(Cell* cell, int radius)
@@ -182,5 +151,4 @@ bool rule_suitability(Cell* cell, int value, double min_suit)
     }
 
     return suit >= min_suit;
-
 }
