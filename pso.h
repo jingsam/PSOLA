@@ -55,7 +55,7 @@ public:
             }
         }
 
-        gbest->assignValue(best);
+        gbest->setDataMap(best);
     }
 
     void updateParticles() {

@@ -3,13 +3,12 @@
 
 #include <vector>
 #include <map>
-#include "datamap.h"    // class Map<T>
+#include "datamap.h"    // Map<T>
 
-
-std::map<std::string, double> statistics(Map<int>& plan_map);
 
 class Cell;
 class PlanMap;
+void statistics(PlanMap* plan_map);
 
 class Cell
 {
@@ -83,8 +82,7 @@ public:
     }
 
     void updateStats() {
-        Map<int> map = this->getDataMap();
-        this->stats = statistics(map);
+        statistics(this);
     }
 
     PlanMap* clone() {
@@ -113,24 +111,17 @@ public:
     }
 
     void setDataMap(Map<int>& datamap) {
-        this->nodata = datamap.nodata;
         for (int i = 0; i < this->size(); ++i) {
             this->at(i)->value = datamap.at(i);
         }
+        this->updateStats();
     }
 
-    void assignValue(PlanMap* other) {
-        this->stats = other->stats;
+    void setDataMap(PlanMap* datamap) {
         for (int i = 0; i < this->size(); ++i) {
-            this->at(i)->value = other->at(i)->value;
+            this->at(i)->value = datamap.at(i)->value;
         }
-    }
-
-    void assignValue(Map<int>& other) {
-        this->stats = statistics(other);
-        for (int i = 0; i < this->size(); ++i) {
-            this->at(i)->value = other.at(i);
-        }
+        this->stats = datamap->stats;
     }
 
 

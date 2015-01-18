@@ -1,6 +1,7 @@
 #include "pso.h"
+#include <string>   // to_string()
 #include "option.h" // g_option
-#include <iostream>
+
 
 void normalize(std::vector<double> &p);
 int transition(Cell* mycell);
@@ -20,6 +21,7 @@ void Particle::updateCurrent(PlanMap* gbest)
     double nodata = this->current->nodata;
 
     Map<int> temp(xsize, ysize, nodata, 0);
+    this->current->stats.clear();
 
     for (int i = 0; i < current->size(); ++i) {
         Cell* cell = current->at(i);
@@ -31,7 +33,6 @@ void Particle::updateCurrent(PlanMap* gbest)
         int gbest_value = gbest_cell->value;
 
         if (value == nodata) continue;
-        if (cell->type == 0) continue;
 
         // update velocity
         // v(i+1) = m*v(i) + c1*r1*(pbest-x(i)) + c2*r2*(gbest-x(i))
@@ -43,15 +44,13 @@ void Particle::updateCurrent(PlanMap* gbest)
         normalize(cell->transP);
 
         // update position
-        int value = transition(cell);
-        if (isAsync) {
-            cell->value = value;
-        } else {
-            temp.at(i) = value;
-        }
+        int new_value = transition(cell);
+        temp.at(i) = new_value;
+        if (isAsync) cell->value = new_value);
+
+        this->current->stats[std::to_string(new_value)] ++;
     }
 
-    this->current->assignValue(temp);
-    this->current->updateStats();
+    this->current->setDataMap(temp);
     this->updatePbest();
 }

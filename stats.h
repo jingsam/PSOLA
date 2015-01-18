@@ -1,10 +1,9 @@
 #ifndef STATS_H
 #define STATS_H
 
-#include <map>
-#include "datamap.h"    // Map<T>
+#include "planmap.h"    // PlanMap
 
 
-std::map<std::string, double> statistics(Map<int>& plan_map);
+void statistics(PlanMap* plan_map);
 
 #endif // STATS_H
