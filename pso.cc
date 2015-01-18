@@ -8,7 +8,7 @@ int transition(Cell* mycell);
 
 void Particle::updateCurrent(PlanMap* gbest)
 {
-    bool isAsync = g_option["mode"] == "async" ? true ：false;
+    bool isAsync = g_option["mode"] == "async" ? true : false;
 
     double m = this->swarm->momentum;
     double c1 = this->swarm->c1;
@@ -45,9 +45,9 @@ void Particle::updateCurrent(PlanMap* gbest)
         // update position
         int new_value = transition(cell);
         temp.at(i) = new_value;
-        if (isAsync) cell->value = new_value);
+        if (isAsync) cell->value = new_value;
 
-        this->current->stats[std::to_string(new_value)] ++;
+        this->current->stats[to_string(new_value)] ++;
     }
 
     this->current->setDataMap(temp);

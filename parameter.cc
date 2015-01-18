@@ -13,7 +13,7 @@ Map<double> g_road_map;
 
 void set_parameter()
 {
-    g_RND = new Random(std::stoi(g_option["seed"]));
+    g_RND = new Random(stoi(g_option["seed"]));
     readRaster(g_land_use_map, g_option["land-use-map"].c_str());
     readRaster(g_arable_suit_map, g_option["arable-suit-map"].c_str());
     readRaster(g_orchard_suit_map, g_option["orchard-suit-map"].c_str());

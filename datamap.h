@@ -1,6 +1,7 @@
 #ifndef DATAMAP_H
 #define DATAMAP_H
 
+#include <cstdlib>
 #include <vector>
 
 
@@ -14,7 +15,7 @@ public:
     : std::vector<T>(xsize * ysize, value) {
         this->xsize = xsize;
         this->ysize = ysize;
-        this->nodata = nodata
+        this->nodata = nodata;
     }
 
     virtual ~Map() {}

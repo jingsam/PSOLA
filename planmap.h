@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 #include "datamap.h"    // Map<T>
 
 
@@ -58,7 +59,7 @@ public:
         }
     }
 
-    PlanMap(Map<int datamap>) {
+    PlanMap(Map<int>& datamap) {
         this->xsize = datamap.xsize;
         this->ysize = datamap.ysize;
         this->nodata = datamap.nodata;
@@ -119,7 +120,7 @@ public:
 
     void setDataMap(PlanMap* datamap) {
         for (int i = 0; i < this->size(); ++i) {
-            this->at(i)->value = datamap.at(i)->value;
+            this->at(i)->value = datamap->at(i)->value;
         }
         this->stats = datamap->stats;
     }

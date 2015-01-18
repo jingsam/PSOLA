@@ -1,7 +1,7 @@
 #include <cstdlib>  // calloc(), free(), exit();
-#include <cstdio>   // printf(), sprintf, stderr, NULL
+#include <cstdio>   // printf(), NULL
 #include <cstring>  // memcpy()
-#include <string>   // to_string()
+#include <string>   // to_string(), stoi(), stod()
 #include <fstream>  // ofstream
 #include "mpi.h"
 #include "psola.h"
@@ -25,11 +25,19 @@ int main(int argc, char *argv[])
     double t1 = MPI_Wtime();
     parse_option(argc, argv);
     set_parameter();
+
+    int population = stoi(g_option["population"]);
+    int interval = stoi(g_option["interval"]);
+    int generation = stoi(g_option["generation"]);
+    std::string out_dir = g_option["output"];
+    std::string land_use_map = g_option["land-use-map"];
+    int map_size = g_land_use_map.size();
+
     std::ofstream ofs;
     if (rank==0) {
-        std::string cmd = "mkdir -p " + g_option["output"];
+        std::string cmd = "mkdir -p " + out_dir;
         system(cmd.c_str());
-        std::string log = g_option["output"] + "/log.csv";
+        std::string log = out_dir + "/log.csv";
         ofs.open(log.c_str(), std::ofstream::out | std::ofstream::trunc);
         ofs << "generation" << ","
             << "fitness" << ","
@@ -48,7 +56,6 @@ int main(int argc, char *argv[])
     }
 
     double t3 = MPI_Wtime();
-    int population = std::stoi(g_option["population"]);
     Swarm* swarm = init_swarm((population + size - 1) / size, rank);
     double t4 = MPI_Wtime();
 
@@ -64,16 +71,15 @@ int main(int argc, char *argv[])
     MPI_Op myop;
     new_op(&myop);
 
-    int map_size = g_land_use_map.size();
     void* sendbuff = calloc(1 + map_size, sizeof(int));
     void* recvbuff = calloc(1 + map_size, sizeof(int));
     if (sendbuff == NULL || recvbuff == NULL)
     {
-        std::sprintf(stderr, "[ERROR]Failed to allocate memory!");
+        std::printf("[ERROR]Failed to allocate memory!");
         std::exit(1);
     }
 
-    for (int i = 0; i <= g_generation; ++i) {
+    for (int i = 0; i <= generation; ++i) {
         swarm->updateParticles();
 
         ((float*)sendbuff)[0] = (float)swarm->gbest->stats["fitness"];
@@ -101,11 +107,9 @@ int main(int argc, char *argv[])
                 << stats["economic-benefit"] << ","
                 << stats["ecological-benefit"] << std::endl;
 
-            if (g_interval != 0 && (i % g_interval) == 0) {
-                std::string file = g_option["output"] + "/"
-                    + std::to_string(i) + ".tif";
-                writeRaster(swarm->gbest->getDataMap(), file.c_str(),
-                    g_option["land-use-map"].c_str());
+            if (interval != 0 && (i % interval) == 0) {
+                std::string file = out_dir + "/" + to_string(i) + ".tif";
+                writeRaster(swarm->gbest->getDataMap(), file.c_str(), land_use_map.c_str());
             }
         }
 
@@ -119,9 +123,8 @@ int main(int argc, char *argv[])
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
-        std::string output = g_output + "/result.tif";
-        writeRaster(swarm->gbest->getDataMap(), output.c_str(),
-            g_option["land-use-map"].c_str());
+        std::string output = out_dir + "/result.tif";
+        writeRaster(swarm->gbest->getDataMap(), output.c_str(), land_use_map.c_str());
         double t8 = MPI_Wtime();
 
         std::printf("\nAccomplished: %.2f S\n", t8 - t7);

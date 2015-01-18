@@ -6,10 +6,10 @@
 
 PlanMap* init_planmap()
 {
-    int max = std::stoi(g_option["max"]);
+    int max = stoi(g_option["max"]);
 
     PlanMap* planmap = new PlanMap(g_land_use_map);
-    for (int i = 0; i < planmap.size(); ++i) {
+    for (int i = 0; i < planmap->size(); ++i) {
         Cell* cell = planmap->at(i);
         cell->type = 1;
         cell->transP.assign(max, 1.0 / max);
@@ -30,12 +30,12 @@ Particle* init_particle()
 
 Swarm* init_swarm(int size, int id)
 {
-    double momentum = std::stod(g_option["momentum"]);
-    double c1 = std::stod(g_option["c1"]);
-    double c2 = std::stod(g_option["c2"]);
-    int r1 = std::stoi(g_option["r1"]);
-    int r2 = std::stoi(g_option["r2"]);
-    int seed = std::stoi(g_option["seed"]);
+    double momentum = stod(g_option["momentum"]);
+    double c1 = stod(g_option["c1"]);
+    double c2 = stod(g_option["c2"]);
+    int r1 = stoi(g_option["r1"]);
+    int r2 = stoi(g_option["r2"]);
+    int seed = stoi(g_option["seed"]);
 
     Swarm* swarm = new Swarm();
     swarm->momentum = momentum;

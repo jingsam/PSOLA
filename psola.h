@@ -7,10 +7,11 @@
 #include "datamap.h"
 #include "planmap.h"
 #include "stats.h"
-#include "rule.h"
+#include "transition.h"
 #include "init.h"
 #include "raster.h"
 #include "option.h"
 #include "parameter.h"
+#include "tool.h"
 
 #endif

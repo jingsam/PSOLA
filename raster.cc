@@ -125,8 +125,7 @@ int writeRaster(const Map<double>& datamap, const char *filename)
     return ret;
 }
 
-typename T
-int writeRaster(const Map<T>& datamap, const char *filename,
+int writeRaster(const Map<int>& datamap, const char *filename,
     const char *ref_file)
 {
     if (copyRaster(ref_file, filename)) return 3;

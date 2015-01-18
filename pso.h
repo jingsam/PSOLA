@@ -19,7 +19,7 @@ public:
 
     void updatePbest() {
         if (current->betterThan(pbest)) {
-            pbest->assignValue(current);
+            pbest->setDataMap(current);
         }
     }
 

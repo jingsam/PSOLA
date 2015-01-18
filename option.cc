@@ -163,11 +163,6 @@ void show_version()
     std::exit(0);
 }
 
-void set_land_use_map(const std::string& arg)
-{
-    readRaster(g_land_use_map, arg.c_str());
-}
-
 void parse_xml(const std::string& arg)
 {
     tinyxml2::XMLDocument doc;
