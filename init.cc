@@ -1,6 +1,6 @@
 #include "init.h"
 #include <string>   // stoi(), stod()
-#include "option.h"
+#include "option.h" // g_option, g_land_use_map
 
 
 
