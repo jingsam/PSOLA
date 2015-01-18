@@ -2,7 +2,7 @@
 #include <cstdio>   // printf(), sprintf, stderr, NULL
 #include <cstring>  // memcpy()
 #include <string>   // to_string()
-#include <sstream>  // ostringstream
+#include <fstream>  // ofstream
 #include "mpi.h"
 #include "psola.h"
 
@@ -25,9 +25,18 @@ int main(int argc, char *argv[])
     double t1 = MPI_Wtime();
     parse_option(argc, argv);
     set_parameter();
+    std::ofstream ofs;
     if (rank==0) {
         std::string cmd = "mkdir -p " + g_option["output"];
         system(cmd.c_str());
+        std::string log = g_option["output"] + "/log.csv";
+        ofs.open(log.c_str(), std::ofstream::out | std::ofstream::trunc);
+        ofs << "generation" << ","
+            << "fitness" << ","
+            << "social-benefit" << ","
+            << "economic-benefit" << ","
+            << "ecological-benefit" << std::endl;
+
     }
     double t2 = MPI_Wtime();
 
@@ -80,14 +89,24 @@ int main(int argc, char *argv[])
         }
 
         if (rank==0) {
+            std::map<std::string, double> stats = swarm->gbest->stats;
+            ofs << i << ","
+                << stats["fitness"] << ","
+                << stats["social-benefit"] << ","
+                << stats["economic-benefit"] << ","
+                << stats["ecological-benefit"] << std::endl;
+            std::cout << i << ","
+                << stats["fitness"] << ","
+                << stats["social-benefit"] << ","
+                << stats["economic-benefit"] << ","
+                << stats["ecological-benefit"] << std::endl;
+
             if (g_interval != 0 && (i % g_interval) == 0) {
                 std::string file = g_option["output"] + "/"
                     + std::to_string(i) + ".tif";
                 writeRaster(swarm->gbest->getDataMap(), file.c_str(),
                     g_option["land-use-map"].c_str());
             }
-
-            logStats(swarm->gbest->stats);
         }
 
         MPI_Barrier(MPI_COMM_WORLD);
@@ -100,11 +119,8 @@ int main(int argc, char *argv[])
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
-        std::string log = g_output + "/log.csv";
-
-
         std::string output = g_output + "/result.tif";
-        writeRaster(swarm->gbest->getDataMap(), output.c_str()
+        writeRaster(swarm->gbest->getDataMap(), output.c_str(),
             g_option["land-use-map"].c_str());
         double t8 = MPI_Wtime();
 
@@ -113,7 +129,7 @@ int main(int argc, char *argv[])
         std::printf("\nTotal: %.2f S\n", t8 - t1);
     }
 
-
+    ofs.close();
     free(sendbuff);
     free(recvbuff);
     MPI_Type_free(&ctype);
