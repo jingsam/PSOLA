@@ -11,7 +11,7 @@
     <entry key="generation">50</entry>
     <entry key="interval">10</entry>
     <entry key="output">result</entry>
-    <entry key="land-use">data/DLTB.tif</entry>
+    <entry key="land-use-map">data/DLTB.tif</entry>
 
     <entry key="core">0.0</entry>
     <entry key="edge">1.0</entry>
