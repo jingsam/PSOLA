@@ -1,6 +1,7 @@
 #include "stats.h"
 #include <string>   // stod()
-#include "option.h" // g_option, g_land_use_map
+#include "option.h" // g_option
+#include "parameter.h"  // g_land_use_map
 
 
 double fitness(Map<int>& plan_map);

@@ -1,5 +1,5 @@
-#include <cstdlib>  // calloc()
-#include <cstdio>   // printf()
+#include <cstdlib>  // calloc(), free(), exit();
+#include <cstdio>   // printf(), sprintf, stderr, NULL
 #include <cstring>  // memcpy()
 #include <string>   // to_string()
 #include <sstream>  // ostringstream
@@ -14,7 +14,6 @@ void new_op(MPI_Op* op);
 int main(int argc, char *argv[])
 {
     int size, rank;
-    // MPI_Status status;
     MPI_Init(&argc, &argv);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -25,7 +24,13 @@ int main(int argc, char *argv[])
 
     double t1 = MPI_Wtime();
     parse_option(argc, argv);
+    set_parameter();
+    if (rank==0) {
+        std::string cmd = "mkdir -p " + g_option["output"];
+        system(cmd.c_str());
+    }
     double t2 = MPI_Wtime();
+
 
     if (rank==0) {
         show_option();
@@ -34,73 +39,73 @@ int main(int argc, char *argv[])
     }
 
     double t3 = MPI_Wtime();
-    int population = std::stoi(g_option["population"])
+    int population = std::stoi(g_option["population"]);
     Swarm* swarm = init_swarm((population + size - 1) / size, rank);
-    if (rank==0) init_output();
     double t4 = MPI_Wtime();
+
 
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t4 - t3);
         std::printf("\n--------------Start optimization--------------\n");
     }
 
-
     double t5 = MPI_Wtime();
     MPI_Datatype ctype;
     new_type(&ctype);
-
     MPI_Op myop;
     new_op(&myop);
 
-    void* sendbuff = calloc(1 + g_xsize * g_ysize, sizeof(int));
-    void* recvbuff = calloc(1 + g_xsize * g_ysize, sizeof(int));
-    tinyxml2::XMLDocument* doc = createLogDocument();
+    int map_size = g_land_use_map.size();
+    void* sendbuff = calloc(1 + map_size, sizeof(int));
+    void* recvbuff = calloc(1 + map_size, sizeof(int));
+    if (sendbuff == NULL || recvbuff == NULL)
+    {
+        std::sprintf(stderr, "[ERROR]Failed to allocate memory!");
+        std::exit(1);
+    }
 
     for (int i = 0; i <= g_generation; ++i) {
         swarm->updateParticles();
 
-        ((float*)sendbuff)[0] = (float)swarm->gbest->fitness;
-        for (int j = 0; j < g_xsize * g_ysize; ++j) {
+        ((float*)sendbuff)[0] = (float)swarm->gbest->stats["fitness"];
+        for (int j = 0; j < map_size; ++j) {
             ((int*)sendbuff)[j+1] = (int)swarm->gbest->at(j)->value;
         }
 
         MPI_Allreduce(sendbuff, recvbuff, 1, ctype, myop, MPI_COMM_WORLD);
 
-        swarm->gbest->fitness = ((float*)recvbuff)[0];
-        for (int k = 0; k < g_xsize * g_ysize; ++k) {
+        swarm->gbest->stats["fitness"] = ((float*)recvbuff)[0];
+        for (int k = 0; k < map_size; ++k) {
             swarm->gbest->at(k)->value = ((int*)recvbuff)[k+1];
         }
 
         if (rank==0) {
-    	    std::printf("%d, %f\n", i, swarm->gbest->fitness);
-    	    // ouptut middle result
             if (g_interval != 0 && (i % g_interval) == 0) {
-                std::ostringstream oss;
-                oss << i << ".tif";
-                std::string file = oss.str();
-                outputImage(swarm->gbest->getDataMap(), (g_output + "/" + file).c_str());
-                logStatus(doc, i, swarm->gbest->fitness, file.c_str());
-            } else {
-                logStatus(doc, i, swarm->gbest->fitness);
+                std::string file = g_option["output"] + "/"
+                    + std::to_string(i) + ".tif";
+                writeRaster(swarm->gbest->getDataMap(), file.c_str(),
+                    g_option["land-use-map"].c_str());
             }
+
+            logStats(swarm->gbest->stats);
         }
 
         MPI_Barrier(MPI_COMM_WORLD);
     }
     double t6 = MPI_Wtime();
 
+
     if (rank==0) {
         std::printf("Accomplished: %.2f S\n", t6 - t5);
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
-        std::string log = g_output + "/log.xml";
-        if (doc->SaveFile(log.c_str())) {
-            std::printf("Failed save log to %s", log.c_str());
-        }
+        std::string log = g_output + "/log.csv";
+
 
         std::string output = g_output + "/result.tif";
-        outputImage(swarm->gbest->getDataMap(), output.c_str());
+        writeRaster(swarm->gbest->getDataMap(), output.c_str()
+            g_option["land-use-map"].c_str());
         double t8 = MPI_Wtime();
 
         std::printf("\nAccomplished: %.2f S\n", t8 - t7);
@@ -108,6 +113,9 @@ int main(int argc, char *argv[])
         std::printf("\nTotal: %.2f S\n", t8 - t1);
     }
 
+
+    free(sendbuff);
+    free(recvbuff);
     MPI_Type_free(&ctype);
     MPI_Op_free(&myop);
     MPI_Finalize();
@@ -116,8 +124,10 @@ int main(int argc, char *argv[])
 
 void new_type(MPI_Datatype* ctype)
 {
+    int map_size = g_land_use_map.size();
+
     const int count = 2;
-    int blockcounts[] = { 1, g_xsize * g_ysize };
+    int blockcounts[] = { 1, map_size };
     MPI_Aint offsets[] = { 0, sizeof(float) };
     MPI_Datatype oldtypes[] = { MPI_FLOAT, MPI_INT };
 
@@ -125,7 +135,7 @@ void new_type(MPI_Datatype* ctype)
     MPI_Type_commit(ctype);
 }
 
-void myOp(void* in, void* inout, int *len, MPI_Datatype* ctype)
+void myOp(void* in, void* inout, int* len, MPI_Datatype* ctype)
 {
     float fitness1 = ((float*)in)[0];
     float fitness2 = ((float*)inout)[0];

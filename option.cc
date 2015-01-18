@@ -1,19 +1,12 @@
-#include <cstdio>
-#include <cstdlib>
-#include <iostream>
+#include "option.h"
+#include <cstdlib>  // exit()
+#include <cstdio>   // printf()
 #include <string>
-#include <cstring>
-#include <ctime>
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
-#include "raster.h"
-#include "option.h"
 
 
 std::map<std::string, std::string> g_option;
-
-Random* g_RND;
-Map<int> g_land_use_map;
 
 const char * const program_name = "PSOLA";
 const char * const program_year = "2015";
@@ -43,12 +36,12 @@ const Arg_parser::Option options[] = {
     // end of options
     {   0, 0,                   Arg_parser::no  } };
 
+void set_default_option();
 void show_help();
 void show_option();
 void show_error(const char * const msg);
 void show_version();
 void parse_xml(const std::string& arg);
-void set_default_option();
 
 void parse_option(const int argc, const char * const argv[])
 {
@@ -92,8 +85,6 @@ void parse_option(const int argc, const char * const argv[])
             case 'x': parse_xml(arg);                   break;
         }
     }
-
-
 }
 
 void set_default_option()
@@ -111,7 +102,6 @@ void set_default_option()
     g_option["output"] = "result";
     g_option["land-use-map"] = "";
     g_option["mode"] = "async";
-
 }
 
 void show_help()

@@ -1,29 +1,28 @@
 #include "init.h"
 #include <string>   // stoi(), stod()
-#include "option.h" // g_option, g_land_use_map
+#include "option.h" // g_option
+#include "parameter.h"  // g_RND, g_land_use_map
 
 
-
-
-PlanMap* init_map()
+PlanMap* init_planmap()
 {
     int max = std::stoi(g_option["max"]);
 
-    PlanMap* map = new PlanMap(g_land_use_map);
-    for (int i = 0; i < map.size(); ++i) {
-        Cell* cell = map->at(i);
+    PlanMap* planmap = new PlanMap(g_land_use_map);
+    for (int i = 0; i < planmap.size(); ++i) {
+        Cell* cell = planmap->at(i);
         cell->type = 1;
         cell->transP.assign(max, 1.0 / max);
     }
-    map->updateStats();
+    planmap->updateStats();
 
-    return map;
+    return planmap;
 }
 
 Particle* init_particle()
 {
     Particle* particle = new Particle();
-    particle->current = init_map();
+    particle->current = init_planmap();
     particle->pbest = particle->current->clone();
 
     return particle;
@@ -44,7 +43,7 @@ Swarm* init_swarm(int size, int id)
     swarm->c2 = c2;
     swarm->r1 = new Random(r1 + id);
     swarm->r2 = new Random(r2 + id);
-    g_RND = new Random(seed + id);
+    g_RND->srand(seed + id);
 
     for (int i = 0; i < size; ++i) {
         Particle* particle = init_particle();
@@ -53,7 +52,6 @@ Swarm* init_swarm(int size, int id)
     }
 
     swarm->gbest = swarm->at(0)->current->clone();
-    swarm->updateGbest();
 
     return swarm;
 }

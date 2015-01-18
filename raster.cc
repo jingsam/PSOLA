@@ -125,6 +125,17 @@ int writeRaster(const Map<double>& datamap, const char *filename)
     return ret;
 }
 
+typename T
+int writeRaster(const Map<T>& datamap, const char *filename,
+    const char *ref_file)
+{
+    if (copyRaster(ref_file, filename)) return 3;
+
+    if (writeRaster(datamap, filename)) return 3;
+
+    return 0;
+}
+
 int copyRaster(const char *oldfilename, const char *newfilename)
 {
     GDALAllRegister();

@@ -43,7 +43,6 @@ public:
         }
         delete r1;
         delete r2;
-        delete RND;
         delete gbest;
     }
 
@@ -68,7 +67,7 @@ public:
     }
 
     double momentum, c1, c2;
-    Random *r1, *r2, *RND;
+    Random *r1, *r2;
     PlanMap* gbest;
 };
 

@@ -33,6 +33,5 @@
     <entry key="construction-suit-map">data/JSSYX.tif</entry>
     <entry key="slope-map">data/SLOPE.tif</entry>
     <entry key="road-map">data/ROAD.tif</entry>
-    <entry key="soil-depth-map">data/DEPTH.tif</entry>
 
 </psola>
