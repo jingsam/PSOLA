@@ -15,7 +15,7 @@ BIN_TARGET = ${DIR_BIN}/${program}
 
 CC_SRC =  $(shell find $(DIR_SRC) -name '*.cc')
 CPP_SRC = $(shell find $(DIR_SRC) -name '*.cpp')
-SRC = $(CC_SRC)
+SRC = $(CC_SRC) $(CPP_SRC)
 
 CC_OBJ = $(patsubst %.cc, ${DIR_OBJ}/%.o, $(notdir ${CC_SRC}))
 CPP_OBJ = $(patsubst %.cpp, ${DIR_OBJ}/%.o, $(notdir ${CPP_SRC}))
