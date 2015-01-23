@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
         std::exit(1);
     }
 
-    for (int i = 0; i <= generation; ++i) {
+    for (int i = 1; i <= generation; ++i) {
         swarm->updateParticles();
 
         ((float*)sendbuff)[0] = (float)swarm->gbest->stats["fitness"];

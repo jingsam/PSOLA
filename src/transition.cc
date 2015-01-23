@@ -6,8 +6,8 @@
 
 
 int transition(Cell* cell);
-bool rule_arable_quantity(Cell* cell);
-bool rule_construction_quantity(Cell* cell);
+bool rule_max_arable(Cell* cell);
+bool rule_max_construction(Cell* cell);
 bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_farming_radius(Cell* cell, int radius);
 bool rule_road_access(Cell* cell, double max_distance);
@@ -64,9 +64,9 @@ int transition(Cell* cell)
     switch (new_value) {
         case 1:
             confirmed =
-                rule_arable_quantity(cell) &&
+                rule_max_arable(cell) &&
                 rule_suitability(cell, 1, 0.6) &&
-                rule_farming_radius(cell, 40);
+                rule_neighbors_has(cell, 40, 6);
             break;
         case 2:
             confirmed =
@@ -79,12 +79,12 @@ int transition(Cell* cell)
             break;
         case 5:
             confirmed =
-                rule_construction_quantity(cell) &&
+                rule_max_construction(cell) &&
                 rule_neighbors_has(cell, 1, 5);
             break;
         case 6:
             confirmed =
-                rule_construction_quantity(cell) &&
+                rule_max_construction(cell) &&
                 rule_neighbors_has(cell, 1, 6);
             break;
     }
@@ -92,14 +92,14 @@ int transition(Cell* cell)
     return confirmed ? new_value : cell->value;
 }
 
-bool rule_arable_quantity(Cell* cell)
+bool rule_max_arable(Cell* cell)
 {
     int max = stoi(g_option["arable"]);
     int count = (int)cell->map->stats["1"];
     return count < max;
 }
 
-bool rule_construction_quantity(Cell* cell)
+bool rule_max_construction(Cell* cell)
 {
     int max = stoi(g_option["construction"]);
     int urban = (int)cell->map->stats["5"];
@@ -117,11 +117,6 @@ bool rule_neighbors_has(Cell* cell, int radius, int value)
     }
 
     return false;
-}
-
-bool rule_farming_radius(Cell* cell, int radius)
-{
-    return rule_neighbors_has(cell, radius, 6);
 }
 
 bool rule_road_access(Cell* cell, double max_distance)
