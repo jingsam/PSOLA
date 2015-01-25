@@ -4,6 +4,7 @@
 #include <string>
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
+#include "parameter.h"  // g_land_use_map
 
 
 std::map<std::string, std::string> g_option;
@@ -141,7 +142,8 @@ void show_option()
     std::printf("generation:    %s\n", g_option["generation"].c_str());
     std::printf("interval:      %s\n", g_option["interval"].c_str());
     std::printf("output:        %s\n", g_option["output"].c_str());
-    std::printf("land-use-map:  %s\n", g_option["land-use-map"].c_str());
+    std::printf("land-use-map:  %s (%d, %d)\n", g_option["land-use-map"].c_str(),
+        g_land_use_map.xsize, g_land_use_map.ysize);
     std::printf("mode:          %s\n", g_option["mode"].c_str());
 
     std::printf("\n");

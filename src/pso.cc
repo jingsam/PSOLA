@@ -19,7 +19,7 @@ void Particle::updateCurrent(PlanMap* gbest)
     int ysize = this->current->ysize;
     double nodata = this->current->nodata;
 
-    Map<int> temp(xsize, ysize, nodata, 0);
+    Map<int> temp(xsize, ysize, nodata, (int)nodata);
     this->current->stats.clear();
 
     for (int i = 0; i < current->size(); ++i) {

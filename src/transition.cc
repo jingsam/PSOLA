@@ -8,6 +8,7 @@
 int transition(Cell* cell);
 bool rule_max_arable(Cell* cell);
 bool rule_max_construction(Cell* cell);
+bool rule_conserve_arable(Cell* cell);
 bool rule_neighbors_has(Cell* cell, int radius, int value);
 bool rule_farming_radius(Cell* cell, int radius);
 bool rule_road_access(Cell* cell, double max_distance);
@@ -70,11 +71,13 @@ int transition(Cell* cell)
             break;
         case 2:
             confirmed =
+                rule_conserve_arable(cell) &&
                 rule_suitability(cell, 2, 0.3) &&
                 rule_road_access(cell, 500.0);
             break;
         case 3:
             confirmed =
+                rule_conserve_arable(cell) &&
                 rule_suitability(cell, 3, 0.3);
             break;
         case 5:
@@ -97,6 +100,12 @@ bool rule_max_arable(Cell* cell)
     int max = stoi(g_option["arable"]);
     int count = (int)cell->map->stats["1"];
     return count < max;
+}
+
+bool rule_conserve_arable(Cell* cell)
+{
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
+    return land_use != 1;
 }
 
 bool rule_max_construction(Cell* cell)

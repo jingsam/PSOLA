@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
-    <entry key="population">8</entry>
+    <entry key="population">4</entry>
     <entry key="max">10</entry>
     <entry key="momentum">1.0</entry>
     <entry key="c1">2.0</entry>
@@ -10,8 +10,9 @@
     <entry key="seed">0</entry>
     <entry key="generation">50</entry>
     <entry key="interval">10</entry>
-    <entry key="output">result</entry>
+    <entry key="output">../result</entry>
     <entry key="land-use-map">../data/DLTB.tif</entry>
+    <entry key="mode">sync</entry>
 
     <entry key="core">0.0</entry>
     <entry key="edge">1.0</entry>

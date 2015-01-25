@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t4 - t3);
         std::printf("\n--------------Start optimization--------------\n");
+        std::printf("\ngen  fitness   social    economic  ecological\n");
     }
 
     double t5 = MPI_Wtime();
@@ -101,11 +102,10 @@ int main(int argc, char *argv[])
                 << stats["social-benefit"] << ","
                 << stats["economic-benefit"] << ","
                 << stats["ecological-benefit"] << std::endl;
-            std::cout << i << ","
-                << stats["fitness"] << ","
-                << stats["social-benefit"] << ","
-                << stats["economic-benefit"] << ","
-                << stats["ecological-benefit"] << std::endl;
+
+            std::printf("%-3d  %.6f  %.6f  %.6f  %.6f\n", i,
+                stats["fitness"], stats["social-benefit"],
+                stats["economic-benefit"], stats["ecological-benefit"]);
 
             if (interval != 0 && (i % interval) == 0) {
                 std::string file = out_dir + "/" + to_string(i) + ".tif";
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
 
 
     if (rank==0) {
-        std::printf("Accomplished: %.2f S\n", t6 - t5);
+        std::printf("\nAccomplished: %.2f S\n", t6 - t5);
         std::printf("\n--------------Output final results------------\n");
 
         double t7 = MPI_Wtime();
