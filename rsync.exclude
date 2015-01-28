@@ -1,0 +1,4 @@
+*.o
+*.exe
+src/config.xml
+psola
