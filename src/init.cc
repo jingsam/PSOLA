@@ -4,6 +4,8 @@
 #include "parameter.h"  // g_RND, g_land_use_map
 
 
+int roulette_wheel(std::vector<double>& p, Random* rnd);
+
 PlanMap* init_planmap()
 {
     int max = stoi(g_option["max"]);
@@ -13,6 +15,7 @@ PlanMap* init_planmap()
         Cell* cell = planmap->at(i);
         cell->type = 1;
         cell->transP.assign(max, 1.0 / max);
+        //cell->value = roulette_wheel(cell->transP, g_RND);
     }
     planmap->updateStats();
 
