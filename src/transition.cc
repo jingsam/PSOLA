@@ -105,7 +105,9 @@ bool rule_max_arable(Cell* cell)
 bool rule_conserve_arable(Cell* cell)
 {
     int land_use = g_land_use_map.atxy(cell->x, cell->y);
-    return land_use != 1;
+    double suit = g_arable_suit_map.atxy(cell->x, cell->y);
+
+    return !(land_use == 1 && suit > 0.3);
 }
 
 bool rule_max_construction(Cell* cell)

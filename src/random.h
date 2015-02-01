@@ -4,6 +4,8 @@
 #include <vector>
 #include <ctime>
 
+typedef unsigned long ulong;
+
 class Random
 {
 public:
@@ -11,17 +13,17 @@ public:
         this->seed = 0;
     }
 
-    explicit Random(size_t seed) {
+    explicit Random(ulong seed) {
         this->seed = seed;
     }
 
     ~Random() {}
 
-    void srand(size_t seed) {
+    void srand(ulong seed) {
         this->seed = seed;
     }
 
-    size_t rand(){
+    ulong rand(){
         seed = (A * seed + C) % M;
         return seed;
     }
@@ -31,16 +33,16 @@ public:
     }
 
     // [0, max)
-    size_t nextInt(size_t max) {
+    ulong nextInt(ulong max) {
         return this->rand() % max;
     }
 
 private:
-    size_t seed;
+    ulong seed;
 
-    static const size_t M = 2147483647;
-    static const size_t A = 1103515245;
-    static const size_t C = 12345;
+    static const ulong M = 2147483648UL;
+    static const ulong A = 1103515245UL;
+    static const ulong C = 12345UL;
 };
 
 

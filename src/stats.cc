@@ -8,6 +8,9 @@
 double compactness(Map<int>& plan_map);
 double cost(Map<int>& plan_map);
 double core_area_index(Map<int>& plan_map);
+double suit(Map<int>& datamap);
+double GDP(Map<int>& datamap);
+
 
 void statistics(PlanMap* plan_map)
 {
@@ -17,8 +20,8 @@ void statistics(PlanMap* plan_map)
 
     Map<int> datamap = plan_map->getDataMap();
     double o1 = compactness(datamap);
-    double o2 = cost(datamap);
-    double o3 = core_area_index(datamap);
+    double o2 = GDP(datamap);
+    double o3 = suit(datamap);
     double fitness = w1 * o1 + w2 * o2 + w3 *o3;
 
     plan_map->stats["social-benefit"] = o1;
@@ -91,4 +94,48 @@ double core_area_index(Map<int>& datamap)
     }
 
     return count != 0 ? 1 - (double)sum / count : 0.0;
+}
+
+double suit(Map<int>& datamap)
+{
+    double sum = 0.0;
+    int count = 0;
+
+    for (int i = 0; i < datamap.size(); ++i)
+    {
+        int value = datamap.at(i);
+        if (value == datamap.nodata) continue;
+
+        switch (value) {
+            case 1: sum += g_arable_suit_map.at(i); count++; break;
+            case 2: sum += g_orchard_suit_map.at(i); count++; break;
+            case 3: sum += g_forest_suit_map.at(i); count++; break;
+            case 5:
+            case 6: sum += g_construction_suit_map.at(i); count++; break;
+        }
+    }
+
+    return count != 0 ? sum / count : 0.0;
+}
+
+double GDP(Map<int>& datamap)
+{
+    double sum = 0.0;
+    int count = 0;
+
+    for (int i = 0; i < datamap.size(); ++i)
+    {
+        int value = datamap.at(i);
+        if (value == datamap.nodata) continue;
+
+        switch (value) {
+            case 1: sum += 0.1; count++; break;
+            case 2: sum += 0.18; count++; break;
+            case 3: sum += 0.14; count++; break;
+            case 5: sum += 1.0; count++; break;
+            case 6: sum += 1.0; count++; break;
+        }
+    }
+
+    return count != 0 ? sum / count : 0.0;
 }

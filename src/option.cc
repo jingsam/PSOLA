@@ -145,8 +145,6 @@ void show_option()
     std::printf("land-use-map:  %s (%d, %d)\n", g_option["land-use-map"].c_str(),
         g_land_use_map.xsize, g_land_use_map.ysize);
     std::printf("mode:          %s\n", g_option["mode"].c_str());
-
-    std::printf("\n");
 }
 
 void show_error(const char * const msg)

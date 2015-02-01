@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
         for (int k = 0; k < map_size; ++k) {
             swarm->gbest->at(k)->value = ((int*)recvbuff)[k+1];
         }
+        swarm->gbest->updateStats();
 
         if (rank==0) {
             std::map<std::string, double> stats = swarm->gbest->stats;
