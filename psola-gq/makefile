@@ -6,8 +6,8 @@ LIBS = -lgdal
 
 TARGET = psola
 
-SRC_CC = $(shell find . -name '*.cc')
-SRC_CPP = $(shell find . -name '*.cpp')
+SRC_CC = $(shell find . -name '*.cc') $(shell find ../src -name '*.cc')
+SRC_CPP = $(shell find . -name '*.cpp') $(shell find ../src -name '*.cpp')
 SRC = $(SRC_CC) $(SRC_CPP)
 OBJ = $(addsuffix .o, $(basename $(SRC)))
 

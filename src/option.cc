@@ -4,10 +4,13 @@
 #include <string>
 #include "arg/arg_parser.h"
 #include "xml/tinyxml2.h"
-#include "parameter.h"  // g_land_use_map
+#include "raster.h" // readRaster()
+#include "tool.h"   // stoi()
 
 
 std::map<std::string, std::string> g_option;
+Random* g_rnd;
+Map<int> g_land_use_map;
 
 const char * const program_name = "PSOLA";
 const char * const program_year = "2015";
@@ -37,7 +40,7 @@ const Arg_parser::Option options[] = {
     // end of options
     {   0, 0,                   Arg_parser::no  } };
 
-void set_default_option();
+void set_option_default();
 void show_help();
 void show_option();
 void show_error(const char * const msg);
@@ -60,7 +63,7 @@ void parse_option(const int argc, const char * const argv[])
         std::exit(1);
     }
 
-    set_default_option();
+    set_option_default();
 
     for(int i = 0; i < parser.arguments(); ++i)
     {
@@ -86,9 +89,12 @@ void parse_option(const int argc, const char * const argv[])
             case 'x': parse_xml(arg);                   break;
         }
     }
+
+    g_rnd = new Random(stoi(g_option["seed"]));
+    readRaster(g_land_use_map, g_option["land-use-map"].c_str());
 }
 
-void set_default_option()
+void set_option_default()
 {
     g_option["population"] = "32";
     g_option["max"] = "10";
@@ -123,8 +129,8 @@ void show_help()
                 "  -g, --generation=<arg>       total number of iterations\n"
                 "  -i, --interval=<arg>         frequency of output\n"
                 "  -o, --output=<arg>           output directory\n"
-                "  -l, --land-use-map=<arg>     land use map\n"
-                "  -m, --mode=<sync|async>      sync or async land use change\n"
+                "  -l, --land-use-map=<arg>     land-use map\n"
+                "  -m, --mode=<sync|async>      synchronous or asynchronous land-use change\n"
                 "  -x, --xml=<arg>              xml file for configuration\n");
     std::exit(0);
 }

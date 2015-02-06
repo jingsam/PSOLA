@@ -17,18 +17,6 @@ void normalize(std::vector<double> &p)
     }
 }
 
-int roulette_wheel(std::vector<double> &p, Random* rnd)
-{
-    double r = rnd->nextDouble();
-    double sum = 0.0;
-    for (int i = 0; i < p.size(); ++i) {
-        sum += p[i];
-        if (sum >= r && p[i] != 0.0) return i + 1;
-    }
-
-    return 0;
-}
-
 int stoi(const std::string& str)
 {
     return atoi(str.c_str());

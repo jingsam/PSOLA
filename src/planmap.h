@@ -46,7 +46,7 @@ class PlanMap : public Map<Cell*>
 public:
     PlanMap() {}
 
-    PlanMap(int xsize, int ysize, double nodata, int value) {
+    PlanMap(int xsize, int ysize, int value, double nodata) {
         this->xsize = xsize;
         this->ysize = ysize;
         this->nodata = nodata;
@@ -103,7 +103,7 @@ public:
     }
 
     Map<int> getDataMap() {
-        Map<int> datamap(xsize, ysize, this->nodata, 0);
+        Map<int> datamap(xsize, ysize, 0, this->nodata);
         for (int i = 0; i < this->size(); ++i) {
             datamap.at(i) = this->at(i)->value;
         }

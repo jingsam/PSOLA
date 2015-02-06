@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<psola>
+    <entry key="population">8</entry>
+    <entry key="max">10</entry>
+    <entry key="momentum">1.0</entry>
+    <entry key="c1">2.0</entry>
+    <entry key="c2">2.0</entry>
+    <entry key="r1">100</entry>
+    <entry key="r2">200</entry>
+    <entry key="seed">0</entry>
+    <entry key="generation">50</entry>
+    <entry key="interval">1</entry>
+    <entry key="output">result</entry>
+    <entry key="land-use-map">../data/DLTB.tif</entry>
+    <entry key="mode">async</entry>
+
+    <entry key="core">0.0</entry>
+    <entry key="edge">1.0</entry>
+    <entry key="depth-of-edge">1</entry>
+
+    <entry key="arable">29600</entry>
+    <entry key="construction">8960</entry>
+
+    <entry key="social-benefit">0.3</entry>
+    <entry key="economic-benefit">0.4</entry>
+    <entry key="ecological-benefit">0.3</entry>
+
+    <entry key="arable-suit-map">../data/GDSYX.tif</entry>
+    <entry key="orchard-suit-map">../data/YDSYX.tif</entry>
+    <entry key="forest-suit-map">../data/LDSYX.tif</entry>
+    <entry key="construction-suit-map">../data/JSSYX.tif</entry>
+    <entry key="slope-map">../data/SLOPE.tif</entry>
+    <entry key="road-map">../data/ROAD.tif</entry>
+</psola>

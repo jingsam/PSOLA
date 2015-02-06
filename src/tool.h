@@ -1,15 +1,11 @@
 #ifndef TOOL_H
 #define TOOL_H
 
+#include <vector>
 #include <string>
-#include "random.h" // Random
-
 
 
 void normalize(std::vector<double>& p);
-
-// return (i + 1)
-int roulette_wheel(std::vector<double>& p, Random* rnd);
 
 int stoi(const std::string& str);
 

@@ -1,8 +1,6 @@
 #ifndef RANDOM_H
 #define RANDOM_H
 
-#include <vector>
-#include <ctime>
 
 typedef unsigned long ulong;
 
@@ -35,6 +33,17 @@ public:
     // [0, max)
     ulong nextInt(ulong max) {
         return this->rand() % max;
+    }
+
+    ulong rouletteWheel(std::vector<double>& p) {
+        double r = this->nextDouble();
+        double sum = 0.0;
+        for (int i = 0; i < p.size(); ++i) {
+            sum += p[i];
+            if (sum >= r && p[i] != 0.0) return i + 1;
+        }
+
+        return 0;
     }
 
 private:

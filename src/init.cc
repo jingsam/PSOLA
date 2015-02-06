@@ -1,10 +1,7 @@
 #include "init.h"
-#include <string>   // stoi(), stod()
-#include "option.h" // g_option
-#include "parameter.h"  // g_RND, g_land_use_map
+#include "option.h" // g_option, g_rnd, g_land_use_map
+#include "tool.h"   // roulette_wheel(), stoi(), stod()
 
-
-int roulette_wheel(std::vector<double>& p, Random* rnd);
 
 PlanMap* init_planmap()
 {
@@ -15,7 +12,6 @@ PlanMap* init_planmap()
         Cell* cell = planmap->at(i);
         cell->type = 1;
         cell->transP.assign(max, 1.0 / max);
-        //cell->value = roulette_wheel(cell->transP, g_RND);
     }
     planmap->updateStats();
 
@@ -46,7 +42,7 @@ Swarm* init_swarm(int size, int id)
     swarm->c2 = c2;
     swarm->r1 = new Random(r1 + id);
     swarm->r2 = new Random(r2 + id);
-    g_RND->srand(seed + id);
+    g_rnd->srand(seed + id);
 
     for (int i = 0; i < size; ++i) {
         Particle* particle = init_particle();
