@@ -1,6 +1,6 @@
 #include "init.h"
 #include "option.h" // g_option, g_rnd, g_land_use_map
-#include "tool.h"   // roulette_wheel(), stoi(), stod()
+#include "tool.h"   // stoi(), stod()
 
 
 PlanMap* init_planmap()
