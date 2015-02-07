@@ -1,5 +1,5 @@
 #include "transition.h"
-#include "parameter.h" // g_XX_suit_map, g_slope_map, g_road_map
+#include "parameter.h"
 
 
 int transition(Cell* cell);
