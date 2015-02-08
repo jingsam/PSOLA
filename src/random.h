@@ -21,6 +21,10 @@ public:
         this->seed = seed;
     }
 
+    void srand(int i) {
+        this->seed += i;
+    }
+
     ulong rand(){
         seed = (A * seed + C) % M;
         return seed;
@@ -35,12 +39,13 @@ public:
         return this->rand() % max;
     }
 
-    ulong rouletteWheel(std::vector<double>& p) {
+    // [0, p.size())
+    ulong nextInt(std::vector<double>& p) {
         double r = this->nextDouble();
         double sum = 0.0;
         for (int i = 0; i < p.size(); ++i) {
-            sum += p[i];
-            if (sum >= r && p[i] != 0.0) return i + 1;
+            sum += p.at(i);
+            if (sum >= r && p.at(i) != 0.0) return i;
         }
 
         return 0;

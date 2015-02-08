@@ -18,6 +18,12 @@ public:
         this->nodata = nodata;
     }
 
+    Map(const Map<T>& other) : std::vector<T>(other) {
+        this->xsize = other.xsize;
+        this->ysize = other.ysize;
+        this->nodata = other.nodata;
+    }
+
     virtual ~Map() {}
 
     T& atxy(int x, int y) {

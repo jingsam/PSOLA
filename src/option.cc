@@ -9,8 +9,7 @@
 
 
 std::map<std::string, std::string> g_option;
-Random* g_rnd;
-Map<int> g_land_use_map;
+
 
 const char * const program_name = "PSOLA";
 const char * const program_year = "2015";
@@ -29,11 +28,9 @@ const Arg_parser::Option options[] = {
     { 'C', "c2",                Arg_parser::yes },
     { 'r', "r1",                Arg_parser::yes },
     { 'R', "r2",                Arg_parser::yes },
-    { 's', "seed",              Arg_parser::yes },
     { 'g', "generation",        Arg_parser::yes },
     { 'i', "interval",          Arg_parser::yes },
     { 'o', "output",            Arg_parser::yes },
-    { 'l', "land-use-map",      Arg_parser::yes },
     { 'm', "mode",              Arg_parser::yes },
     { 'x', "xml",               Arg_parser::yes },
 
@@ -80,18 +77,13 @@ void parse_option(const int argc, const char * const argv[])
             case 'C': g_option["c2"] = arg;             break;
             case 'r': g_option["r1"] = arg;             break;
             case 'R': g_option["r2"] = arg;             break;
-            case 's': g_option["seed"] = arg;           break;
             case 'g': g_option["generation"] = arg;     break;
             case 'i': g_option["interval"] = arg;       break;
             case 'o': g_option["output"] = arg;         break;
-            case 'l': g_option["land-use-map"] = arg;   break;
             case 'm': g_option["mode"] = arg;           break;
             case 'x': parse_xml(arg);                   break;
         }
     }
-
-    g_rnd = new Random(stoi(g_option["seed"]));
-    readRaster(g_land_use_map, g_option["land-use-map"].c_str());
 }
 
 void set_option_default()
@@ -103,11 +95,9 @@ void set_option_default()
     g_option["c2"] = "2.0";
     g_option["r1"] = "100";
     g_option["r2"] = "200";
-    g_option["seed"] = "0";
     g_option["generation"] = "50";
-    g_option["interval"] = "10";
+    g_option["interval"] = "5";
     g_option["output"] = "result";
-    g_option["land-use-map"] = "";
     g_option["mode"] = "async";
 }
 
@@ -125,11 +115,9 @@ void show_help()
                 "  -C, --c2=<arg>               coefficient of move to Gbest\n"
                 "  -r, --r1=<arg>               random seed 1 of PSO\n"
                 "  -R, --r2=<arg>               random seed 2 of PSO\n"
-                "  -s, --seed=<arg>             general random seed\n"
                 "  -g, --generation=<arg>       total number of iterations\n"
                 "  -i, --interval=<arg>         frequency of output\n"
                 "  -o, --output=<arg>           output directory\n"
-                "  -l, --land-use-map=<arg>     land-use map\n"
                 "  -m, --mode=<sync|async>      synchronous or asynchronous land-use change\n"
                 "  -x, --xml=<arg>              xml file for configuration\n");
     std::exit(0);
@@ -144,12 +132,9 @@ void show_option()
     std::printf("c2:            %s\n", g_option["c2"].c_str());
     std::printf("r1:            %s\n", g_option["r1"].c_str());
     std::printf("r2:            %s\n", g_option["r2"].c_str());
-    std::printf("seed:          %s\n", g_option["seed"].c_str());
     std::printf("generation:    %s\n", g_option["generation"].c_str());
     std::printf("interval:      %s\n", g_option["interval"].c_str());
     std::printf("output:        %s\n", g_option["output"].c_str());
-    std::printf("land-use-map:  %s (%d, %d)\n", g_option["land-use-map"].c_str(),
-        g_land_use_map.xsize, g_land_use_map.ysize);
     std::printf("mode:          %s\n", g_option["mode"].c_str());
 }
 
