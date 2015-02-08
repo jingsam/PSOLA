@@ -3,6 +3,6 @@
 
 #include "pso.h"
 
-Swarm* init_swarm(int size, int id);
+Swarm* init_swarm(int size);
 
 #endif

@@ -10,5 +10,8 @@
 #include "raster.h"
 #include "option.h"
 #include "tool.h"
+#include "interface.h"
+#include "objective.h"
+#include "rule.h"
 
 #endif
