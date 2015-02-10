@@ -1,10 +1,13 @@
 #include "../../src/psola.h"
 #include "parameter.h"
+#include <cstdlib>   // abs()
 
 
 double cost(Map<int>& plan_map);
-double suit(Map<int>& datamap);
 double GDP(Map<int>& datamap);
+double GDP2(Map<int>& datamap);
+double suit(Map<int>& datamap);
+double PROX_MN2(Map<int>& datamap);
 
 void statistics(PlanMap* plan_map)
 {
@@ -13,8 +16,8 @@ void statistics(PlanMap* plan_map)
     double w3 = stod(g_option["ecological-benefit"]);
 
     Map<int> datamap = plan_map->getDataMap();
-    double o1 = PROX_MN(datamap);
-    double o2 = cost(datamap);
+    double o1 = PROX_MN2(datamap);
+    double o2 = GDP2(datamap);
     double o3 = suit(datamap);
     double fitness = w1 * o1 + w2 * o2 + w3 *o3;
 
@@ -41,6 +44,42 @@ double cost(Map<int>& datamap)
     return count != 0 ? (double)sum / count : 0.0;
 }
 
+double GDP(Map<int>& datamap)
+{
+    double sum = 0.0;
+    int count = 0;
+
+    for (int i = 0; i < datamap.size(); ++i)
+    {
+        int value = datamap.at(i);
+        if (value == datamap.nodata) continue;
+
+        switch (value) {
+            case 1: sum += 0.0502; count++; break;
+            case 2: sum += 0.0902; count++; break;
+            case 3: sum += 0.0708; count++; break;
+            case 5: sum += 0.5048; count++; break;
+            case 6: sum += 0.5048; count++; break;
+        }
+    }
+
+    return count != 0 ? sum / count : 0.0;
+}
+
+double GDP2(Map<int>& datamap)
+{
+    int max = stoi(g_option["urban"]);
+    int count = 0;
+
+    for (int i = 0; i < datamap.size(); ++i)
+    {
+        int value = datamap.at(i);
+        if (value == 5) count++;
+    }
+
+    return max > count ? (double)count / max : (double)max / count;
+}
+
 double suit(Map<int>& datamap)
 {
     double sum = 0.0;
@@ -63,22 +102,27 @@ double suit(Map<int>& datamap)
     return count != 0 ? sum / count : 0.0;
 }
 
-double GDP(Map<int>& datamap)
+double PROX_MN2(Map<int>& datamap)
 {
     double sum = 0.0;
     int count = 0;
 
-    for (int i = 0; i < datamap.size(); ++i)
-    {
-        int value = datamap.at(i);
-        if (value == datamap.nodata) continue;
+    for (int y = 0; y < datamap.ysize; ++y) {
+        for (int x = 0; x < datamap.xsize; ++x) {
+            int value = datamap.atxy(x, y);
+            if (value == datamap.nodata) continue;
+            if (value != 6) continue;
 
-        switch (value) {
-            case 1: sum += 0.05; count++; break;
-            case 2: sum += 0.14; count++; break;
-            case 3: sum += 0.13; count++; break;
-            case 5: sum += 1.00; count++; break;
-            case 6: sum += 0.00; count++; break;
+            int cnt = 0;
+            std::vector<int> neighbors = datamap.neighbors(x, y, 1);
+            for (int i = 0; i < neighbors.size(); ++i) {
+                if (neighbors.at(i) == value) cnt++;
+            }
+
+            if (neighbors.size() != 0) {
+                sum += (double)cnt / neighbors.size();
+            }
+            count++;
         }
     }
 

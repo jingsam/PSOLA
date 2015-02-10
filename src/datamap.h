@@ -34,12 +34,12 @@ public:
         return this->at(x + y * xsize);
     }
 
-    std::vector<T> neighbors(int x, int y, int level) {
+    std::vector<T> neighbors(int x, int y, int radius) {
         std::vector<T> neighbors;
-        for (int j = y - level; j <= y + level; ++j) {
+        for (int j = y - radius; j <= y + radius; ++j) {
             if (j < 0 || j >= ysize) continue;
 
-            for (int i = x - level; i <= x + level; ++i) {
+            for (int i = x - radius; i <= x + radius; ++i) {
                 if (i < 0 || i >= xsize) continue;
                 if (i == x && j == y) continue;
 
@@ -50,18 +50,18 @@ public:
         return neighbors;
     }
 
-    std::vector<T> neighbors4(int x, int y, int level) {
+    std::vector<T> neighbors4(int x, int y, int radius) {
         std::vector<T> neighbors;
-        for (int j = y - level; j <= y + level; ++j) {
+        for (int j = y - radius; j <= y + radius; ++j) {
             if (j < 0 || j >= ysize) continue;
 
-            for (int i = x - level; i <= x + level; ++i) {
+            for (int i = x - radius; i <= x + radius; ++i) {
                 if (i < 0 || i >= xsize) continue;
                 if (i == x && j == y) continue;
 
                 int dx = abs(i - x);
                 int dy = abs(j - y);
-                if ((dx + dy) <= level) {
+                if ((dx + dy) <= radius) {
                     neighbors.push_back(this->atxy(i,j));
                 }
             }

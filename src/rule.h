@@ -3,8 +3,10 @@
 
 #include "planmap.h"
 
-bool rule_neighbors_has(Cell* cell, int radius, int value);
+int neighbors_has(Cell* cell, int value, int radius);
 
-bool rule_core_edge(Cell* cell, double p);
+bool core_edge_operator(Cell* cell, double p);
+
+void neighbors_operator(Cell* cell, int level);
 
 #endif
