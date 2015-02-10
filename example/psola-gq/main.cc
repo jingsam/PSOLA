@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
         std::exit(1);
     }
 
-    for (int i = 0; i <= generation; ++i) {
+    for (int i = 1; i <= generation; ++i) {
         if (rank==0) {
             std::map<std::string, double> stats = swarm->gbest->stats;
             double fitness = stats["fitness"];
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
             std::printf("%3d  %.6f  %.6f  %.6f  %.6f\n",
                 i, fitness, social, economic, ecological);
 
-            if (interval != 0 && (i % interval) == 0) {
+            if (i == 1 || interval != 0 && (i % interval) == 0) {
                 std::string file = out_dir + "/" + to_string(i) + ".tif";
                 writeRaster(swarm->gbest->getDataMap(), file.c_str(), land_use_map.c_str());
             }

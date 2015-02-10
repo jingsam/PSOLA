@@ -3,17 +3,18 @@
 #include "tool.h"   // stoi(), stod()
 
 
-bool rule_neighbors_has(Cell* cell, int radius, int value)
+int neighbors_has(Cell* cell, int value, int radius)
 {
+    int count = 0;
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, radius);
     for (int i=0; i < neighbors.size(); ++i) {
-        if (neighbors.at(i)->value == value) return true;
+        if (neighbors.at(i)->value == value) count++;
     }
 
-    return false;
+    return count;
 }
 
-bool rule_core_edge(Cell* cell, double p)
+bool core_edge_operator(Cell* cell, double p)
 {
     int depth_of_edge = stoi(g_option["depth-of-edge"]);
     double g_core = stod(g_option["core"]);
@@ -34,4 +35,27 @@ bool rule_core_edge(Cell* cell, double p)
     }
 
     return false;
+}
+
+void neighbors_operator(Cell* cell, int level)
+{
+    int count = cell->transP.size();
+    std::vector<int> values(count, 0);
+
+    std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, level);
+    if (neighbors.size() == 0) return;
+
+    for (int i = 0; i < neighbors.size(); ++i) {
+        int value = neighbors.at(i)->value;
+        if (value == cell->map->nodata) continue;
+
+        values.at(value - 1)++;
+    }
+
+    for (int i = 0; i < values.size(); ++i)
+    {
+        cell->transP.at(i) += (double)values.at(i) / neighbors.size();
+    }
+
+    normalize(cell->transP);
 }

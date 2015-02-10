@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <psola>
-    <entry key="population">8</entry>
+    <entry key="population">16</entry>
     <entry key="max">10</entry>
     <entry key="momentum">1.0</entry>
     <entry key="c1">2.0</entry>
@@ -8,7 +8,7 @@
     <entry key="r1">100</entry>
     <entry key="r2">200</entry>
     <entry key="generation">50</entry>
-    <entry key="interval">5</entry>
+    <entry key="interval">1</entry>
     <entry key="output">result</entry>
     <entry key="mode">async</entry>
 
@@ -17,11 +17,14 @@
     <entry key="depth-of-edge">1</entry>
 
     <entry key="arable">29600</entry>
-    <entry key="construction">8960</entry>
+    <entry key="orchard">8960</entry>
+    <entry key="forest">10800</entry>
+    <entry key="urban">3280</entry>
+    <entry key="rural">11264</entry>
 
-    <entry key="social-benefit">0.3</entry>
-    <entry key="economic-benefit">0.4</entry>
-    <entry key="ecological-benefit">0.3</entry>
+    <entry key="social-benefit">0.33</entry>
+    <entry key="economic-benefit">0.33</entry>
+    <entry key="ecological-benefit">0.33</entry>
 
     <entry key="seed">0</entry>
     <entry key="land-use-map">data/DLTB.tif</entry>

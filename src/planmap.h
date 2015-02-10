@@ -2,6 +2,7 @@
 #define PLANMAP_H
 
 #include <vector>
+#include <algorithm>    // find()
 #include <map>
 #include <string>
 #include "datamap.h"    // Map<T>
@@ -123,6 +124,37 @@ public:
             this->at(i)->value = datamap->at(i)->value;
         }
         this->stats = datamap->stats;
+    }
+
+    std::vector<Cell*> getPatch(int x, int y, bool use_neighbors4) {
+        std::vector<Cell*> patch;
+        this->getPatch(x, y, use_neighbors4, patch);
+
+        return patch;
+    }
+
+    void getPatch(int x, int y, bool use_neighbors4, std::vector<Cell*>& patch) {
+        Cell* mycell = this->atxy(x, y);
+        patch.push_back(mycell);
+
+        std::vector<Cell*> myneighbors = use_neighbors4 ? neighbors4(x, y, 1) : neighbors(x, y, 1);
+
+        for (int i = 0; i < myneighbors.size(); ++i)
+        {
+            Cell* cell = myneighbors.at(i);
+            if (cell->value != mycell->value) continue;
+            if (this->inPatch(cell, patch)) continue;
+
+            this->getPatch(cell->x, cell->y, use_neighbors4, patch);
+        }
+    }
+
+    bool inPatch(Cell* cell, std::vector<Cell*>& patch) {
+        std::vector<Cell*>::iterator iter;
+        iter = std::find(patch.begin(), patch.end(), cell);
+        if (iter != patch.end()) return true;
+
+        return false;
     }
 
 

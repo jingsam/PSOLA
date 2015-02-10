@@ -3,11 +3,13 @@
 
 
 bool rule_max_arable(Cell* cell);
-bool rule_max_construction(Cell* cell);
+bool rule_max_urban(Cell* cell);
 bool rule_conserve_arable(Cell* cell);
 bool rule_farming_radius(Cell* cell, int radius);
 bool rule_road_access(Cell* cell, double max_distance);
 bool rule_suitability(Cell* cell, int value, double min_suit);
+bool rule_max_slope(Cell* cell, double max);
+bool rule_village_size(Cell* cell, int size);
 
 int transition(Cell* cell)
 {
@@ -35,43 +37,42 @@ int transition(Cell* cell)
         }
     }
 
+    neighbors_operator(cell, 1);
+
     // core-edge operator
-    //double p = g_rnd->nextDouble();
-    //if (!rule_core_edge(cell, p)) return cell->value;
+    // double p = g_rnd->nextDouble();
+    // if (!core_edge_operator(cell, p)) return cell->value;
 
     // roulette_wheel
     bool confirmed = false;
     int new_value = g_rnd->nextInt(cell->transP) + 1;
-    if (new_value < 7 && new_value != 4) confirmed = true;
-    /*switch (new_value) {
+    switch (new_value) {
         case 1:
-            confirmed =
-                rule_max_arable(cell) &&
-                rule_suitability(cell, 1, 0.6) &&
-                rule_neighbors_has(cell, 40, 6);
+            confirmed = true ||
+                neighbors_has(cell, 6, 40) > 0;
             break;
         case 2:
-            confirmed =
+            confirmed = true ||
                 rule_conserve_arable(cell) &&
-                rule_suitability(cell, 2, 0.3) &&
+                rule_suitability(cell, 2, 0.6) &&
                 rule_road_access(cell, 500.0);
             break;
         case 3:
-            confirmed =
+            confirmed = true ||
                 rule_conserve_arable(cell) &&
-                rule_suitability(cell, 3, 0.3);
+                rule_suitability(cell, 3, 0.6);
             break;
         case 5:
             confirmed =
-                rule_max_construction(cell) &&
-                rule_neighbors_has(cell, 1, 5);
+                rule_max_urban(cell) &&
+                rule_max_slope(cell, 8.0);
             break;
         case 6:
-            confirmed =
-                rule_max_construction(cell) &&
-                rule_neighbors_has(cell, 1, 6);
+            confirmed = true ||
+                neighbors_has(cell, 6, 1) > 0 &&
+                rule_village_size(cell, 16);
             break;
-    }*/
+    }
 
     return confirmed ? new_value : cell->value;
 }
@@ -80,6 +81,7 @@ bool rule_max_arable(Cell* cell)
 {
     int max = stoi(g_option["arable"]);
     int count = (int)cell->map->stats["1"];
+
     return count < max;
 }
 
@@ -89,16 +91,6 @@ bool rule_conserve_arable(Cell* cell)
     double suit = g_arable_suit_map.atxy(cell->x, cell->y);
 
     return !(land_use == 1 && suit > 0.3);
-}
-
-bool rule_max_construction(Cell* cell)
-{
-    int max = stoi(g_option["construction"]);
-    int urban = (int)cell->map->stats["5"];
-    int rural = (int)cell->map->stats["6"];
-    int mine = (int)cell->map->stats["7"];
-    int road = (int)cell->map->stats["8"];
-    return (urban + rural + mine + road) < max;
 }
 
 bool rule_road_access(Cell* cell, double max_distance)
@@ -129,4 +121,26 @@ bool rule_suitability(Cell* cell, int value, double min_suit)
     }
 
     return suit >= min_suit;
+}
+
+bool rule_max_urban(Cell* cell)
+{
+    int max = stoi(g_option["urban"]);
+    int count = (int)cell->map->stats["5"];
+
+    return count < max;
+}
+
+bool rule_max_slope(Cell* cell, double max)
+{
+    int slope = g_slope_map.atxy(cell->x, cell->y);
+
+    return slope <= max;
+}
+
+bool rule_village_size(Cell* cell, int size)
+{return true;
+    std::vector<Cell*> patch = cell->map->getPatch(cell->x, cell->y, false);
+
+    return patch.size() >= size;
 }
