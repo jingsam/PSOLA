@@ -10,7 +10,7 @@
 
 class Cell;
 class PlanMap;
-void statistics(PlanMap* plan_map);
+void fitness(PlanMap* plan_map);
 
 class Cell
 {
@@ -83,8 +83,8 @@ public:
         return this->stats["fitness"] > other->stats["fitness"];
     }
 
-    void updateStats() {
-        statistics(this);
+    void updateFitness() {
+        fitness(this);
     }
 
     PlanMap* clone() {
@@ -116,7 +116,7 @@ public:
         for (int i = 0; i < this->size(); ++i) {
             this->at(i)->value = datamap.at(i);
         }
-        this->updateStats();
+        this->updateFitness();
     }
 
     void setDataMap(PlanMap* datamap) {
