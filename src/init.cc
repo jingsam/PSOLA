@@ -15,7 +15,7 @@ PlanMap* init_planmap()
         cell->type = 1;
         cell->transP.assign(max, 1.0 / max);
     }
-    planmap->updateStats();
+    planmap->updateFitness();
 
     return planmap;
 }

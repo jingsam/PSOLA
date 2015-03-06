@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
         for (int k = 0; k < map_size; ++k) {
             swarm->gbest->at(k)->value = ((int*)recvbuff)[k+1];
         }
-        swarm->gbest->updateStats();
+        swarm->gbest->updateFitness();
 
         MPI_Barrier(MPI_COMM_WORLD);
     }

@@ -10,8 +10,12 @@
 #include "raster.h"
 #include "option.h"
 #include "tool.h"
-#include "interface.h"
-#include "objective.h"
+#include "stats.h"
 #include "rule.h"
+
+// functions must be implemented by users
+Map<int> init_map();
+void fitness(PlanMap* plan_map);
+int transition(Cell* cell);
 
 #endif
