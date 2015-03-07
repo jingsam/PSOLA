@@ -3,7 +3,6 @@
 
 
 bool rule_max_arable(Cell* cell);
-bool rule_max_urban(Cell* cell);
 bool rule_conserve_arable(Cell* cell);
 bool rule_farming_radius(Cell* cell, int radius);
 bool rule_road_access(Cell* cell, double max_distance);
@@ -37,7 +36,7 @@ int transition(Cell* cell)
         }
     }
 
-    neighbors_operator(cell, 1);
+    //neighbors_operator(cell, 1);
 
     // core-edge operator
     // double p = g_rnd->nextDouble();
@@ -45,32 +44,23 @@ int transition(Cell* cell)
 
     // roulette_wheel
     bool confirmed = false;
-    int new_value = g_rnd->nextInt(cell->transP) + 1;
+    int new_value = roulette_wheel(cell, g_rnd);
     switch (new_value) {
         case 1:
-            confirmed = true ||
-                neighbors_has(cell, 6, 40) > 0;
+            confirmed = true;
             break;
         case 2:
-            confirmed = true ||
-                rule_conserve_arable(cell) &&
-                rule_suitability(cell, 2, 0.6) &&
-                rule_road_access(cell, 500.0);
+            confirmed = true;
             break;
         case 3:
-            confirmed = true ||
-                rule_conserve_arable(cell) &&
-                rule_suitability(cell, 3, 0.6);
+            confirmed = true;
             break;
         case 5:
-            confirmed =
-                rule_max_urban(cell) &&
-                rule_max_slope(cell, 8.0);
+            confirmed = true &&
+                neighbors_has(cell, 5, 1);
             break;
         case 6:
-            confirmed = true ||
-                neighbors_has(cell, 6, 1) > 0 &&
-                rule_village_size(cell, 16);
+            confirmed = true;
             break;
     }
 
@@ -123,14 +113,6 @@ bool rule_suitability(Cell* cell, int value, double min_suit)
     return suit >= min_suit;
 }
 
-bool rule_max_urban(Cell* cell)
-{
-    int max = stoi(g_option["urban"]);
-    int count = (int)cell->map->stats["5"];
-
-    return count < max;
-}
-
 bool rule_max_slope(Cell* cell, double max)
 {
     int slope = g_slope_map.atxy(cell->x, cell->y);
@@ -139,8 +121,8 @@ bool rule_max_slope(Cell* cell, double max)
 }
 
 bool rule_village_size(Cell* cell, int size)
-{return true;
-    std::vector<Cell*> patch = cell->map->getPatch(cell->x, cell->y, false);
+{
+    std::vector<Cell*> patch = cell->map->getPatch(cell->x, cell->y, true);
 
     return patch.size() >= size;
 }

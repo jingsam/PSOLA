@@ -137,7 +137,8 @@ public:
         Cell* mycell = this->atxy(x, y);
         patch.push_back(mycell);
 
-        std::vector<Cell*> myneighbors = use_neighbors4 ? neighbors4(x, y, 1) : neighbors(x, y, 1);
+        std::vector<Cell*> myneighbors
+            = use_neighbors4 ? neighbors4(x, y, 1) : neighbors(x, y, 1);
 
         for (int i = 0; i < myneighbors.size(); ++i)
         {

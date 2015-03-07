@@ -75,10 +75,9 @@ double change_ratio(Map<int>& datamap, Map<int>& land_use_map)
     return count != 0 ? (double)sum / count : 0.0;
 }
 
-double GDP_MN(Map<int>& datamap, std::map<int, double>& benefits)
+double GDP(Map<int>& datamap, std::map<int, double>& benefits)
 {
     double sum = 0.0;
-    int count = 0;
 
     for (int i = 0; i < datamap.size(); ++i)
     {
@@ -86,8 +85,7 @@ double GDP_MN(Map<int>& datamap, std::map<int, double>& benefits)
         if (value == datamap.nodata) continue;
 
         sum += benefits[value];
-        count++;
     }
 
-    return count != 0 ? sum / count : 0.0;
+    return sum;
 }
