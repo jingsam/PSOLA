@@ -50,13 +50,14 @@ int transition(Cell* cell)
             confirmed = true;
             break;
         case 2:
-            confirmed = true;
+            confirmed =
+                rule_road_access(cell, 1000.0);
             break;
         case 3:
             confirmed = true;
             break;
         case 5:
-            confirmed = true &&
+            confirmed =
                 neighbors_has(cell, 5, 1);
             break;
         case 6:
