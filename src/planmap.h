@@ -126,19 +126,18 @@ public:
         this->stats = datamap->stats;
     }
 
-    std::vector<Cell*> getPatch(int x, int y, bool use_neighbors4) {
+    std::vector<Cell*> getPatch(int x, int y) {
         std::vector<Cell*> patch;
-        this->getPatch(x, y, use_neighbors4, patch);
+        this->getPatch(x, y, patch);
 
         return patch;
     }
 
-    void getPatch(int x, int y, bool use_neighbors4, std::vector<Cell*>& patch) {
+    void getPatch(int x, int y, std::vector<Cell*>& patch) {
         Cell* mycell = this->atxy(x, y);
         patch.push_back(mycell);
 
-        std::vector<Cell*> myneighbors
-            = use_neighbors4 ? neighbors4(x, y, 1) : neighbors(x, y, 1);
+        std::vector<Cell*> myneighbors = neighbors(x, y, 1);
 
         for (int i = 0; i < myneighbors.size(); ++i)
         {
@@ -146,7 +145,7 @@ public:
             if (cell->value != mycell->value) continue;
             if (this->inPatch(cell, patch)) continue;
 
-            this->getPatch(cell->x, cell->y, use_neighbors4, patch);
+            this->getPatch(cell->x, cell->y, patch);
         }
     }
 

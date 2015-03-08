@@ -123,7 +123,7 @@ bool rule_max_slope(Cell* cell, double max)
 
 bool rule_village_size(Cell* cell, int size)
 {
-    std::vector<Cell*> patch = cell->map->getPatch(cell->x, cell->y, true);
+    std::vector<Cell*> patch = cell->map->getPatch(cell->x, cell->y);
 
     return patch.size() >= size;
 }
