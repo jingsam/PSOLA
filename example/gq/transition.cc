@@ -7,6 +7,7 @@ bool max_slope(Cell* cell, double threshold);
 bool min_road_access(Cell* cell, double threshold);
 bool min_patch_size(Cell* cell, int value, int threshold);
 bool min_suit(Cell* cell, int value, double threshold);
+bool in_urban(Cell* cell);
 
 int transition(Cell* cell)
 {
@@ -40,8 +41,10 @@ int transition(Cell* cell)
 
     // check current use
 
-
-    neighbors_operator(cell, 1);
+    if (in_urban(cell) && neighbors_has(cell, 5, 1))
+    {
+        return 5;
+    }
 
 
     // roulette_wheel
@@ -55,27 +58,27 @@ bool suit_for_use(Cell* cell, int value) {
     bool suit = false;
     switch (value) {
         case 1:
-            suit = true &&
+            suit = true ||
                 min_suit(cell, 1, 0.6) &&
                 max_slope(cell, 25.0) &&
                 neighbors_has(cell, 6, 40);
             break;
         case 2:
-            suit = true &&
+            suit = true ||
                 min_suit(cell, 2, 0.6) &&
                 min_road_access(cell, 1000.0);
             break;
         case 3:
-            suit = true &&
+            suit = true ||
                 min_suit(cell, 3, 0.6);
             break;
         case 5:
             suit = true &&
-                min_suit(cell, 5, 0.6) &&
-                neighbors_has(cell, 5, 1);
+                neighbors_has(cell, 5, 1) &&
+                in_urban(cell);
             break;
         case 6:
-            suit = true &&
+            suit = true ||
                 min_suit(cell, 6, 0.6) &&
                 neighbors_has(cell, 6, 1);
             break;
@@ -123,4 +126,11 @@ bool min_suit(Cell* cell, int value, double threshold)
     }
 
     return suit >= threshold;
+}
+
+bool in_urban(Cell* cell)
+{
+    int value = g_urban_map.atxy(cell->x, cell->y);
+
+    return value == 1;
 }

@@ -9,6 +9,7 @@ Map<double> g_forest_suit_map;
 Map<double> g_construction_suit_map;
 Map<double> g_slope_map;
 Map<double> g_road_map;
+Map<int> g_urban_map;
 
 void set_parameter()
 {
@@ -20,4 +21,5 @@ void set_parameter()
     readRaster(g_construction_suit_map, g_option["construction-suit-map"].c_str());
     readRaster(g_slope_map, g_option["slope-map"].c_str());
     readRaster(g_road_map, g_option["road-map"].c_str());
+    readRaster(g_urban_map, g_option["urban-map"].c_str());
 }

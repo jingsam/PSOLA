@@ -37,14 +37,12 @@ bool core_edge_operator(Cell* cell, double p)
     return false;
 }
 
-void neighbors_operator(Cell* cell, int level)
+std::vector<double> neighbor_effects(Cell* cell, int level)
 {
     int count = cell->transP.size();
     std::vector<int> values(count, 0);
 
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, level);
-    if (neighbors.size() == 0) return;
-
     for (int i = 0; i < neighbors.size(); ++i) {
         int value = neighbors.at(i)->value;
         if (value == cell->map->nodata) continue;
@@ -52,12 +50,13 @@ void neighbors_operator(Cell* cell, int level)
         values.at(value - 1)++;
     }
 
-    for (int i = 0; i < values.size(); ++i)
+    std::vector<double> effects(count, 0.0);
+    for (int i = 0; i < effects.size(); ++i)
     {
-        cell->transP.at(i) += (double)values.at(i) / neighbors.size();
+        effects.at(i) = (double)values.at(i) / neighbors.size();
     }
 
-    normalize(cell->transP);
+    return effects;
 }
 
 int roulette_wheel(Cell* cell, Random* rnd)
