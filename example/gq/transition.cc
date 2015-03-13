@@ -8,11 +8,14 @@ bool min_road_access(Cell* cell, double threshold);
 bool min_patch_size(Cell* cell, int value, int threshold);
 bool min_suit(Cell* cell, int value, double threshold);
 bool in_urban(Cell* cell);
+void urbanization(Cell* cell);
 
 int transition(Cell* cell)
 {
     int x = cell->x;
     int y = cell->y;
+    int value = cell->value;
+    std::vector<double> transP = cell->transP;
 
     if (cell->type == 0) return cell->value;
 
@@ -35,22 +38,13 @@ int transition(Cell* cell)
         }
     }
 
-    // core-edge operator
-    // double p = g_rnd->nextDouble();
-    // if (!core_edge_operator(cell, p)) return cell->value;
-
-    // check current use
-
-    if (in_urban(cell) && neighbors_has(cell, 5, 1))
-    {
-        return 5;
-    }
-
-
-    // roulette_wheel
+    neighbor_effects(cell, 1);
+    urbanization(cell);
     int new_value = roulette_wheel(cell, g_rnd);
-    bool suit = suit_for_use(cell, new_value);
-    return suit ? new_value : cell->value;
+
+    cell->transP = transP;
+
+    return suit_for_use(cell, new_value) ? new_value : value;
 }
 
 
@@ -74,8 +68,7 @@ bool suit_for_use(Cell* cell, int value) {
             break;
         case 5:
             suit = true &&
-                neighbors_has(cell, 5, 1) &&
-                in_urban(cell);
+                neighbors_has(cell, 5, 1);
             break;
         case 6:
             suit = true ||
@@ -126,6 +119,15 @@ bool min_suit(Cell* cell, int value, double threshold)
     }
 
     return suit >= threshold;
+}
+
+void urbanization(Cell* cell)
+{
+    if (neighbors_has(cell, 5, 1) > 0)
+    {
+        cell->transP.at(5) += 1.0;
+        normalize(cell->transP);
+    }
 }
 
 bool in_urban(Cell* cell)

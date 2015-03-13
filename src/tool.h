@@ -7,6 +7,8 @@
 
 void normalize(std::vector<double>& p);
 
+void normalize(std::vector<double> &p1, std::vector<double> &p2);
+
 int stoi(const std::string& str);
 
 double stod(const std::string& str);

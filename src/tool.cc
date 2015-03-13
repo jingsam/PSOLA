@@ -17,6 +17,16 @@ void normalize(std::vector<double> &p)
     }
 }
 
+void normalize(std::vector<double> &p1, std::vector<double> &p2)
+{
+    for (int i = 0; i < p1.size(); ++i)
+    {
+        p1.at(i) += p2.at(i);
+    }
+
+    normalize(p1);
+}
+
 int stoi(const std::string& str)
 {
     return atoi(str.c_str());
