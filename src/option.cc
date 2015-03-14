@@ -109,7 +109,7 @@ void show_help()
                 "  -v, --version                display version information and exit\n\n"
 
                 "  -N, --population=<arg>       number of particles in a deme\n"
-                "  -M, --max=<arg>              value range [1, max]\n"
+                "  -M, --max=<arg>              value range [0, max)\n"
                 "  -w, --momentum=<arg>         coefficient of keep current status\n"
                 "  -c, --c1=<arg>               coefficient of move to Pbest\n"
                 "  -C, --c2=<arg>               coefficient of move to Gbest\n"

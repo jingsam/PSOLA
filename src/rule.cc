@@ -57,8 +57,3 @@ void neighbor_effects(Cell* cell, int level)
 
     normalize(cell->transP);
 }
-
-int roulette_wheel(Cell* cell, Random* rnd)
-{
-    return rnd->nextInt(cell->transP) + 1;
-}

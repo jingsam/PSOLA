@@ -10,6 +10,4 @@ bool core_edge_operator(Cell* cell, double p);
 
 void neighbor_effects(Cell* cell, int level);
 
-int roulette_wheel(Cell* cell, Random* rnd);
-
 #endif
