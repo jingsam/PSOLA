@@ -39,7 +39,7 @@ int transition(Cell* cell)
     }
 
     neighbor_effects(cell, 1);
-    urbanization(cell);
+    // urbanization(cell);
     int new_value = g_rnd->nextInt(cell->transP);
 
     cell->transP = transP;
@@ -70,6 +70,7 @@ bool suit_for_use(Cell* cell, int value) {
             suit = true &&
                 neighbors_has(cell, 4, 1) &&
                 in_urban(cell);
+                if (suit) cell->type = 0;
             break;
         case 5:
             suit = true ||
@@ -126,7 +127,7 @@ void urbanization(Cell* cell)
 {
     if (neighbors_has(cell, 4, 1) > 0)
     {
-        cell->transP.at(4) += 1.0;
+        cell->transP.at(4) += 2.0;
         normalize(cell->transP);
     }
 }

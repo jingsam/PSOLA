@@ -47,7 +47,7 @@ void neighbor_effects(Cell* cell, int level)
         int value = neighbors.at(i)->value;
         if (value == cell->map->nodata) continue;
 
-        values.at(value - 1)++;
+        values.at(value)++;
     }
 
     for (int i = 0; i < cell->transP.size(); ++i)
