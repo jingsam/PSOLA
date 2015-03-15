@@ -50,8 +50,7 @@ void neighbor_effects(Cell* cell, int level)
         values.at(value)++;
     }
 
-    for (int i = 0; i < cell->transP.size(); ++i)
-    {
+    for (int i = 0; i < cell->transP.size(); ++i) {
         cell->transP.at(i) += (double)values.at(i) / neighbors.size();
     }
 

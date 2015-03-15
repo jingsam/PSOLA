@@ -12,36 +12,45 @@ void urbanization(Cell* cell);
 
 int transition(Cell* cell)
 {
+    if (cell->type == 0) return cell->value;
+
     int x = cell->x;
     int y = cell->y;
     int value = cell->value;
     std::vector<double> transP = cell->transP;
-
-    if (cell->type == 0) return cell->value;
+    int land_use = g_land_use_map.atxy(x, y);
 
     // undeveloped area
-    int land_use = g_land_use_map.atxy(x, y);
-    if (land_use == 3 || land_use == 4 || land_use >= 6)
-    {
+    if (land_use == 3 || land_use == 4 || land_use >= 6) {
         cell->type = 0;
         return land_use;
     }
 
     // grain for green
-    if (land_use == 0)
-    {
-        double slope = g_slope_map.atxy(x, y);
-        if (slope >= 25.0)
-        {
+    if (land_use == 0) {
+        if (g_slope_map.atxy(x, y) >= 25.0) {
             cell->type = 0;
             return 2;
         }
     }
 
-    neighbor_effects(cell, 1);
-    // urbanization(cell);
-    int new_value = g_rnd->nextInt(cell->transP);
+    // conserve big villages
+    if (land_use == 5) {
+        std::vector<Cell*> patch = cell->map->getPatch(x, y);
+        if (patch.size() >= 16) {
+            for (int i = 0; i < patch.size(); ++i) {
+                patch.at(i)->type = 0;
+                patch.at(i)->value = 5;
+            }
+            cell->type = 0;
+            return 5;
+        }
+    }
+    
 
+    neighbor_effects(cell, 1);
+
+    int new_value = g_rnd->nextInt(cell->transP);
     cell->transP = transP;
 
     return suit_for_use(cell, new_value) ? new_value : value;
@@ -125,9 +134,8 @@ bool min_suit(Cell* cell, int value, double threshold)
 
 void urbanization(Cell* cell)
 {
-    if (neighbors_has(cell, 4, 1) > 0)
-    {
-        cell->transP.at(4) += 2.0;
+    if (neighbors_has(cell, 4, 1) > 0) {
+        cell->transP.at(4) += 1.0;
         normalize(cell->transP);
     }
 }
