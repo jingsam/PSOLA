@@ -9,7 +9,7 @@ bool min_road_access(Cell* cell, double threshold);
 bool min_patch_size(Cell* cell, int value, int threshold);
 bool min_suit(Cell* cell, int value, double threshold);
 bool in_urban(Cell* cell);
-void urbanization(Cell* cell);
+void suit_effects(Cell* cell);
 
 int transition(Cell* cell)
 {
@@ -36,6 +36,7 @@ int transition(Cell* cell)
     }
 
     neighbor_effects(cell, 1);
+    suit_effects(cell);
 
     int new_value = g_rnd->nextInt(cell->transP);
     cell->transP = transP;
@@ -71,8 +72,7 @@ bool suit_for_use(Cell* cell, int value) {
             break;
         case 5:
             suit = true &&
-                neighbors_has(cell, 5, 1) &&
-                min_patch_size(cell, 5, 16);
+                neighbors_has(cell, 5, 1);
             break;
     }
 
@@ -139,17 +139,29 @@ bool min_suit(Cell* cell, int value, double threshold)
     return suit >= threshold;
 }
 
-void urbanization(Cell* cell)
-{
-    if (neighbors_has(cell, 4, 1) > 0) {
-        cell->transP.at(4) += 1.0;
-        normalize(cell->transP);
-    }
-}
-
 bool in_urban(Cell* cell)
 {
     int value = g_urban_map.atxy(cell->x, cell->y);
 
     return value == 1;
+}
+
+void suit_effects(Cell* cell)
+{
+    int x = cell->x;
+    int y = cell->y;
+
+    double suit0 = g_arable_suit_map.atxy(x, y);
+    double suit1 = g_orchard_suit_map.atxy(x, y);
+    double suit2 = g_forest_suit_map.atxy(x, y);
+    double suit4 = g_construction_suit_map.atxy(x, y);
+    double suit5 = g_construction_suit_map.atxy(x, y);
+
+    cell->transP.at(0) += suit0;
+    cell->transP.at(1) += suit1;
+    cell->transP.at(2) += suit2;
+    cell->transP.at(4) += suit4;
+    cell->transP.at(5) += suit5;
+
+    normalize(cell->transP);
 }
