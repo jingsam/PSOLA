@@ -3,6 +3,7 @@
 
 
 bool suit_for_use(Cell* cell, int value);
+bool conv_for_use(Cell* cell, int value);
 bool max_slope(Cell* cell, double threshold);
 bool min_road_access(Cell* cell, double threshold);
 bool min_patch_size(Cell* cell, int value, int threshold);
@@ -34,26 +35,13 @@ int transition(Cell* cell)
         }
     }
 
-    // conserve big villages
-    if (land_use == 5) {
-        std::vector<Cell*> patch = cell->map->getPatch(x, y);
-        if (patch.size() >= 16) {
-            for (int i = 0; i < patch.size(); ++i) {
-                patch.at(i)->type = 0;
-                patch.at(i)->value = 5;
-            }
-            cell->type = 0;
-            return 5;
-        }
-    }
-    
-
     neighbor_effects(cell, 1);
 
     int new_value = g_rnd->nextInt(cell->transP);
     cell->transP = transP;
 
-    return suit_for_use(cell, new_value) ? new_value : value;
+    return conv_for_use(cell, new_value) && suit_for_use(cell, new_value)
+        ? new_value : value;
 }
 
 
@@ -82,13 +70,32 @@ bool suit_for_use(Cell* cell, int value) {
                 if (suit) cell->type = 0;
             break;
         case 5:
-            suit = true ||
-                min_suit(cell, 5, 0.6) &&
-                neighbors_has(cell, 5, 1);
+            suit = true &&
+                neighbors_has(cell, 5, 1) &&
+                min_patch_size(cell, 5, 16);
             break;
     }
 
     return suit;
+}
+
+bool conv_for_use(Cell* cell, int value)
+{
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
+    switch (land_use) {
+        case 0:
+            return value == 0 || value == 4 || value == 5;
+        case 1:
+        case 2:
+            return value == 0 || value == 1 || value == 2 ||
+                   value == 4 || value == 5;
+        case 4:
+            return value == 4;
+        case 5:
+            return value ==0 || value == 4 || value == 5;
+    }
+
+    return true;
 }
 
 bool max_slope(Cell* cell, double threshold)
