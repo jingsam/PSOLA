@@ -41,28 +41,27 @@ int transition(Cell* cell)
     int new_value = g_rnd->nextInt(cell->transP);
     cell->transP = transP;
 
-    return conv_for_use(cell, new_value) && suit_for_use(cell, new_value)
-        ? new_value : value;
+    return suit_for_use(cell, new_value) ? new_value : value;
 }
 
 
 bool suit_for_use(Cell* cell, int value) {
+    if (value == 3 || value >= 6) return false;
+    if (!conv_for_use(cell, value)) return false;
+
     bool suit = false;
     switch (value) {
         case 0:
-            suit = true ||
-                min_suit(cell, 0, 0.6) &&
-                max_slope(cell, 25.0) &&
-                neighbors_has(cell, 5, 40);
+            suit = true &&
+                neighbors_has(cell, 0, 1);
             break;
         case 1:
-            suit = true ||
-                min_suit(cell, 1, 0.6) &&
-                min_road_access(cell, 1000.0);
+            suit = true &&
+                neighbors_has(cell, 1, 1);
             break;
         case 2:
-            suit = true ||
-                min_suit(cell, 2, 0.6);
+            suit = true &&
+                neighbors_has(cell, 2, 1);
             break;
         case 4:
             suit = true &&
