@@ -27,7 +27,7 @@ void fitness(PlanMap* plan_map)
 double PROX_MN_rural(Map<int>& datamap)
 {
     std::vector<int> values;
-    values.push_back(6);
+    values.push_back(5);
 
     return PROX_MN(datamap, values);
 }
@@ -40,7 +40,7 @@ double urban(Map<int>& datamap)
     for (int i = 0; i < datamap.size(); ++i)
     {
         int value = datamap.at(i);
-        if (value == 5) count++;
+        if (value == 4) count++;
     }
 
     return max > count ? (double)count / max : (double)max / count;
@@ -57,11 +57,11 @@ double suit(Map<int>& datamap)
         if (value == datamap.nodata) continue;
 
         switch (value) {
-            case 1: sum += g_arable_suit_map.at(i); count++; break;
-            case 2: sum += g_orchard_suit_map.at(i); count++; break;
-            case 3: sum += g_forest_suit_map.at(i); count++; break;
-            case 5:
-            case 6: sum += g_construction_suit_map.at(i); count++; break;
+            case 0: sum += g_arable_suit_map.at(i); count++; break;
+            case 1: sum += g_orchard_suit_map.at(i); count++; break;
+            case 2: sum += g_forest_suit_map.at(i); count++; break;
+            case 4:
+            case 5: sum += g_construction_suit_map.at(i); count++; break;
         }
     }
 
