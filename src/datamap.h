@@ -26,6 +26,15 @@ public:
 
     virtual ~Map() {}
 
+    Map& operator=(const Map<T>& other) {
+        this->std::vector<T>::operator=(other);
+        this->xsize = other.xsize;
+        this->ysize = other.ysize;
+        this->nodata = other.nodata;
+
+        return *this;
+    }
+
     T& atxy(int x, int y) {
         return this->at(x + y * xsize);
     }
