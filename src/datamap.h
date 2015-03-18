@@ -11,6 +11,8 @@ class Map : public std::vector<T>
 public:
     Map() {}
 
+    virtual ~Map() {}
+
     Map(int xsize, int ysize, const T& value, double nodata)
     : std::vector<T>(xsize * ysize, value) {
         this->xsize = xsize;
@@ -24,8 +26,6 @@ public:
         this->nodata = other.nodata;
     }
 
-    virtual ~Map() {}
-
     Map& operator=(const Map<T>& other) {
         this->std::vector<T>::operator=(other);
         this->xsize = other.xsize;
@@ -34,6 +34,7 @@ public:
 
         return *this;
     }
+
 
     T& atxy(int x, int y) {
         return this->at(x + y * xsize);
