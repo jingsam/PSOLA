@@ -17,13 +17,14 @@ class Cell
 public:
     Cell() {}
 
+    ~Cell() {}
+
     Cell(int x, int y, int value) {
         this->x = x;
         this->y = y;
         this->value = value;
     }
 
-    ~Cell() {}
 
     Cell* clone() {
         Cell* cell = new Cell(this->x, this->y, this->value);
@@ -46,6 +47,12 @@ class PlanMap : public Map<Cell*>
 {
 public:
     PlanMap() {}
+
+    ~PlanMap() {
+        for (int i = 0; i < this->size(); ++i) {
+            delete this->at(i);
+        }
+    }
 
     PlanMap(int xsize, int ysize, int value, double nodata) {
         this->xsize = xsize;
@@ -73,11 +80,6 @@ public:
         }
     }
 
-    ~PlanMap() {
-        for (int i = 0; i < this->size(); ++i) {
-            delete this->at(i);
-        }
-    }
 
     bool betterThan(PlanMap* other) {
         return this->stats["fitness"] > other->stats["fitness"];

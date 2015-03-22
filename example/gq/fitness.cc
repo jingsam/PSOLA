@@ -3,8 +3,8 @@
 #include <cstdlib>   // abs()
 
 double PROX_MN_rural(Map<int>& datamap);
-double suit(Map<int>& datamap);
 double urban(Map<int>& datamap);
+double suit_MN(Map<int>& datamap);
 
 void fitness(PlanMap* plan_map)
 {
@@ -15,7 +15,7 @@ void fitness(PlanMap* plan_map)
     Map<int> datamap = plan_map->getDataMap();
     double o1 = PROX_MN_rural(datamap);
     double o2 = urban(datamap);
-    double o3 = suit(datamap);
+    double o3 = suit_MN(datamap);
     double fitness = w1 * o1 + w2 * o2 + w3 *o3;
 
     plan_map->stats["social-benefit"] = o1;
@@ -46,7 +46,7 @@ double urban(Map<int>& datamap)
     return max > count ? (double)count / max : (double)max / count;
 }
 
-double suit(Map<int>& datamap)
+double suit_MN(Map<int>& datamap)
 {
     double sum = 0.0;
     int count = 0;
@@ -57,11 +57,11 @@ double suit(Map<int>& datamap)
         if (value == datamap.nodata) continue;
 
         switch (value) {
-            case 0: sum += g_arable_suit_map.at(i); count++; break;
-            case 1: sum += g_orchard_suit_map.at(i); count++; break;
+            // case 0: sum += g_arable_suit_map.at(i); count++; break;
+            // case 1: sum += g_orchard_suit_map.at(i); count++; break;
             case 2: sum += g_forest_suit_map.at(i); count++; break;
-            case 4:
-            case 5: sum += g_construction_suit_map.at(i); count++; break;
+            // case 4:
+            // case 5: sum += g_construction_suit_map.at(i); count++; break;
         }
     }
 

@@ -4,7 +4,7 @@
 #include "planmap.h" // Cell
 #include "random.h"  // Random
 
-int neighbors_has(Cell* cell, int value, int radius);
+int neighbors_count(Cell* cell, int value, int radius);
 
 bool core_edge_operator(Cell* cell, double p);
 
