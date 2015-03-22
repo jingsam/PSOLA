@@ -3,7 +3,7 @@
 #include "tool.h"   // stoi(), stod()
 
 
-int neighbors_has(Cell* cell, int value, int radius)
+int neighbors_count(Cell* cell, int value, int radius)
 {
     int count = 0;
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, radius);
