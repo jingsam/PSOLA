@@ -47,12 +47,13 @@ bool suit_for_use(Cell* cell, int value) {
 
     switch (value) {
         case 0:
-            return suit(cell, value) >= 0.0 &&
+            return suit(cell, value) >= 0.3 &&
                 g_slope_map.atxy(x, y) < 25.0 &&
                 neighbors_count(cell, value, 1) >= 3 &&
                 neighbors_count(cell, 5, 40) >= 1;
         case 1:
             return suit(cell, value) >= 0.6 &&
+                g_road_map.atxy(x, y) <= 1000.0 &&
                 neighbors_count(cell, value, 1) >= 4;
         case 2:
             return suit(cell, value) >= 0.6 &&
