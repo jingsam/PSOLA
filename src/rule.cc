@@ -1,6 +1,6 @@
 #include "rule.h"
 #include "option.h" // g_option.h
-#include "tool.h"   // stoi(), stod()
+#include "tool.h"   // stoi(), stod(), routtle_wheel()
 
 
 int neighbors_count(Cell* cell, int value, int radius)
@@ -14,11 +14,14 @@ int neighbors_count(Cell* cell, int value, int radius)
     return count;
 }
 
-bool core_edge_operator(Cell* cell, double p)
+int core_edge_operator(Cell* cell, Random* rnd)
 {
     int depth_of_edge = stoi(g_option["depth-of-edge"]);
     double g_core = stod(g_option["core"]);
     double g_edge = stod(g_option["edge"]);
+
+    double r = rnd->nextDouble();
+    int value = routtle_wheel(cell->transP, r);
 
     bool is_core_cell = true;
     std::vector<Cell*> neighbors = cell->map->neighbors(cell->x, cell->y, depth_of_edge);
@@ -29,12 +32,11 @@ bool core_edge_operator(Cell* cell, double p)
         }
     }
 
-    if ((is_core_cell && p >= g_core) ||
-        (!is_core_cell && p >= g_edge)) {
-        return true;
-    }
+    if (is_core_cell && g_core >= r ||
+        !is_core_cell && g_edge >=r)
+        return value;
 
-    return false;
+    return cell->value;
 }
 
 void neighbor_effects(Cell* cell, int level)
