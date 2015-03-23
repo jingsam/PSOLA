@@ -21,4 +21,5 @@
 *.app
 
 *.lock
+*.tif.xml
 result/
