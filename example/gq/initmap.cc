@@ -4,6 +4,7 @@
 
 void undevelop_area(Cell* cell);
 void keep_big_village(Cell* cell);
+void forest_conservation(Cell* cell);
 
 PlanMap* init_planmap()
 {
@@ -17,6 +18,7 @@ PlanMap* init_planmap()
 
         undevelop_area(cell);
         keep_big_village(cell);
+        forest_conservation(cell);
     }
 
     planmap->updateFitness();
@@ -48,4 +50,16 @@ void keep_big_village(Cell* cell)
                 mycell->type = 0;
             }
         }
+}
+
+void forest_conservation(Cell* cell)
+{
+    int land_use = g_land_use_map.atxy(cell->x, cell->y);
+
+    if (land_use == 2) {
+        if (neighbors_count(cell, 8, 2) >= 1) {
+            cell->value = 2;
+            cell->type = 0;
+        }
+    }
 }
