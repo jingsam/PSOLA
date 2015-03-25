@@ -2,19 +2,14 @@
 #include "stats.h"
 
 
-double PROX_MN(Map<int>& datamap, std::vector<int>& values)
+double PROX_MN(Map<int>& datamap, int value)
 {
     double sum = 0.0;
     int count = 0;
 
     for (int y = 0; y < datamap.ysize; ++y) {
         for (int x = 0; x < datamap.xsize; ++x) {
-            int value = datamap.atxy(x, y);
-            if (value == datamap.nodata) continue;
-
-            std::vector<int>::iterator iter;
-            iter = std::find(values.begin(), values.end(), value);
-            if (iter == values.end()) continue;
+            if (datamap.atxy(x, y) != value) continue;
 
             int cnt = 0;
             std::vector<int> neighbors = datamap.neighbors(x, y, 1);
@@ -32,21 +27,16 @@ double PROX_MN(Map<int>& datamap, std::vector<int>& values)
     return count != 0 ? sum / count : 0.0;
 }
 
-double CAI_MN(Map<int>& datamap, std::vector<int>& values)
+double CAI_MN(Map<int>& datamap, int value, int depth)
 {
     int sum = 0;
     int count = 0;
 
     for (int y = 0; y < datamap.ysize; ++y) {
         for (int x = 0; x < datamap.xsize; ++x) {
-            int value = datamap.atxy(x, y);
-            if (value == datamap.nodata) continue;
+            if (datamap.atxy(x, y) != value) continue;
 
-            std::vector<int>::iterator iter;
-            iter = std::find(values.begin(), values.end(), value);
-            if (iter == values.end()) continue;
-
-            std::vector<int> neighbors = datamap.neighbors(x, y, 4);
+            std::vector<int> neighbors = datamap.neighbors(x, y, depth);
             for (int i = 0; i < neighbors.size(); ++i) {
                 if (neighbors.at(i) != value) sum++;
                 break;
