@@ -13,23 +13,15 @@ void fitness(PlanMap* plan_map)
     double w3 = stod(g_option["ecological-benefit"]);
 
     Map<int> datamap = plan_map->getDataMap();
-    double o1 = PROX_MN_rural(datamap);
+    double o1 = PROX_MN(datamap, 5);
     double o2 = urban(datamap);
-    double o3 = suit_MN(datamap);
+    double o3 = CAI_MN(datamap, 2, 4);
     double fitness = w1 * o1 + w2 * o2 + w3 *o3;
 
     plan_map->stats["social-benefit"] = o1;
     plan_map->stats["economic-benefit"] = o2;
     plan_map->stats["ecological-benefit"] = o3;
     plan_map->stats["fitness"] = fitness;
-}
-
-double PROX_MN_rural(Map<int>& datamap)
-{
-    std::vector<int> values;
-    values.push_back(5);
-
-    return PROX_MN(datamap, values);
 }
 
 double urban(Map<int>& datamap)
