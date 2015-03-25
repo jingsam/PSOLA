@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
 
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t6 - t5);
-        std::printf("\n--------------Output final results------------\n");
+        std::printf("\n--------------Output results------------------\n");
 
         double t7 = MPI_Wtime();
         std::string output = out_dir + "/result.tif";
