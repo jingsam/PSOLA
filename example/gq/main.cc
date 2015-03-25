@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     double t3 = MPI_Wtime();
     Swarm* swarm = init_swarm((population + size - 1) / size);
     swarm->r1->srand(rank);
-    swarm->r1->srand(rank);
+    swarm->r2->srand(rank);
     g_rnd->srand(rank);
     double t4 = MPI_Wtime();
 
