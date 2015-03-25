@@ -30,6 +30,7 @@ int transition(Cell* cell)
     suit_effects(cell);
 
     int new_value = g_rnd->nextInt(cell->transP);
+    // int new_value = core_edge_operator(cell, g_rnd);
     cell->transP = transP;
 
     bool suit = suit_for_use(cell, new_value);
