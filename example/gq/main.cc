@@ -151,9 +151,9 @@ int main(int argc, char *argv[])
 
 void func(int *in, int *inout, int *len, MPI_Datatype *ctype)
 {
-    int length = 1 + g_land_use_map.size();
     int size;
     MPI_Type_size(*ctype, &size);
+    int length = size / sizeof(int);
 
     for (int i = 0; i < *len; ++i) {
         float fitness1 = ((float*)in)[0];
