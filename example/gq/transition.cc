@@ -7,6 +7,7 @@ bool conv_for_use(Cell* cell, int value);
 double suit(Cell* cell, int value);
 void suit_effects(Cell* cell);
 int neighbors_count_big_village(Cell* cell, int radius);
+bool max_area(Cell* cell, int value);
 
 int transition(Cell* cell)
 {
@@ -29,8 +30,8 @@ int transition(Cell* cell)
     neighbor_effects(cell, 1);
     suit_effects(cell);
 
-    int new_value = g_rnd->nextInt(cell->transP);
-    // int new_value = core_edge_operator(cell, g_rnd);
+    // int new_value = g_rnd->nextInt(cell->transP);
+    int new_value = core_edge_operator(cell, g_rnd);
     cell->transP = transP;
 
     bool suit = suit_for_use(cell, new_value);
@@ -45,6 +46,7 @@ bool suit_for_use(Cell* cell, int value) {
     int y = cell->y;
 
     if (!conv_for_use(cell, value)) return false;
+    if (!max_area(cell, value)) return false;
 
     switch (value) {
         case 0:
@@ -55,7 +57,7 @@ bool suit_for_use(Cell* cell, int value) {
         case 1:
             return suit(cell, value) >= 0.6 &&
                 g_road_map.atxy(x, y) <= 1000.0 &&
-                neighbors_count(cell, value, 1) >= 4;
+                neighbors_count(cell, value, 1) >= 2;
         case 2:
             return suit(cell, value) >= 0.6 &&
                 neighbors_count(cell, value, 1) >= 4;
@@ -123,4 +125,25 @@ int neighbors_count_big_village(Cell* cell, int radius)
     }
 
     return count;
+}
+
+bool max_area(Cell* cell, int value)
+{
+    int arable = stoi(g_option["arable"]);
+    int orchard = stoi(g_option["orchard"]);
+    int forest = stoi(g_option["forest"]);
+    int urban = stoi(g_option["urban"]);
+    int rural = stoi(g_option["rural"]);
+
+    double count = cell->map->stats[to_string(value)];
+
+    switch (value) {
+        case 0: return count <= arable;
+        case 1: return count <= orchard;
+        case 2: return count <= forest;
+        case 4: return count <= urban;
+        case 5: return count <= rural;
+    }
+
+    return true;
 }
