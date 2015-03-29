@@ -28,7 +28,7 @@ int transition(Cell* cell)
     }
 
     neighbor_effects(cell, 1);
-    suit_effects(cell);
+    // suit_effects(cell);
 
     // int new_value = g_rnd->nextInt(cell->transP);
     int new_value = core_edge_operator(cell, g_rnd);
@@ -46,7 +46,7 @@ bool suit_for_use(Cell* cell, int value) {
     int y = cell->y;
 
     if (!conv_for_use(cell, value)) return false;
-    if (!max_area(cell, value)) return false;
+    // if (!max_area(cell, value)) return false;
 
     switch (value) {
         case 0:
@@ -57,10 +57,10 @@ bool suit_for_use(Cell* cell, int value) {
         case 1:
             return suit(cell, value) >= 0.6 &&
                 g_road_map.atxy(x, y) <= 1000.0 &&
-                neighbors_count(cell, value, 1) >= 2;
+                neighbors_count(cell, value, 1) >= 3;
         case 2:
             return suit(cell, value) >= 0.6 &&
-                neighbors_count(cell, value, 1) >= 4;
+                neighbors_count(cell, value, 1) >= 5;
         case 4:
             return g_urban_map.atxy(x, y) == 1 &&
                 neighbors_count(cell, value, 1) >= 1;
