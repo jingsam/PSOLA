@@ -27,6 +27,17 @@ void normalize(std::vector<double> &p1, std::vector<double> &p2)
     normalize(p1);
 }
 
+int routtle_wheel(std::vector<double> p, double r)
+{
+    double sum = 0.0;
+    for (int i = 0; i < p.size(); ++i) {
+        sum += p.at(i);
+        if (sum >= r && p.at(i) != 0.0) return i;
+    }
+
+    return 0;
+}
+
 int stoi(const std::string& str)
 {
     return atoi(str.c_str());

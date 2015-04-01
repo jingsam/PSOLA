@@ -8,10 +8,7 @@
 #include "parameter.h"
 
 
-void new_type(MPI_Datatype* ctype);
-void myOp(void* in, void* inout, int *len, MPI_Datatype* ctype);
-void new_op(MPI_Op* op);
-
+void func(int *in, int *inout, int *len, MPI_Datatype *ctype);
 
 int main(int argc, char *argv[])
 {
@@ -60,7 +57,7 @@ int main(int argc, char *argv[])
     double t3 = MPI_Wtime();
     Swarm* swarm = init_swarm((population + size - 1) / size);
     swarm->r1->srand(rank);
-    swarm->r1->srand(rank);
+    swarm->r2->srand(rank);
     g_rnd->srand(rank);
     double t4 = MPI_Wtime();
 
@@ -73,9 +70,10 @@ int main(int argc, char *argv[])
 
     double t5 = MPI_Wtime();
     MPI_Datatype ctype;
-    new_type(&ctype);
-    MPI_Op myop;
-    new_op(&myop);
+    MPI_Type_contiguous(1 + map_size, MPI_INT, &ctype);
+    MPI_Type_commit(&ctype);
+    MPI_Op op;
+    MPI_Op_create((MPI_User_function*)func, 1, &op);
 
     void* sendbuff = calloc(1 + map_size, sizeof(int));
     void* recvbuff = calloc(1 + map_size, sizeof(int));
@@ -115,7 +113,7 @@ int main(int argc, char *argv[])
             ((int*)sendbuff)[j+1] = (int)swarm->gbest->at(j)->value;
         }
 
-        MPI_Allreduce(sendbuff, recvbuff, 1, ctype, myop, MPI_COMM_WORLD);
+        MPI_Allreduce(sendbuff, recvbuff, 1, ctype, op, MPI_COMM_WORLD);
 
         swarm->gbest->stats["fitness"] = ((float*)recvbuff)[0];
         for (int k = 0; k < map_size; ++k) {
@@ -130,7 +128,7 @@ int main(int argc, char *argv[])
 
     if (rank==0) {
         std::printf("\nAccomplished: %.2f S\n", t6 - t5);
-        std::printf("\n--------------Output final results------------\n");
+        std::printf("\n--------------Output results------------------\n");
 
         double t7 = MPI_Wtime();
         std::string output = out_dir + "/result.tif";
@@ -146,38 +144,23 @@ int main(int argc, char *argv[])
     free(sendbuff);
     free(recvbuff);
     MPI_Type_free(&ctype);
-    MPI_Op_free(&myop);
+    MPI_Op_free(&op);
     MPI_Finalize();
     return 0;
 }
 
-void new_type(MPI_Datatype* ctype)
+void func(int *in, int *inout, int *len, MPI_Datatype *ctype)
 {
-    int map_size = g_land_use_map.size();
+    int size;
+    MPI_Type_size(*ctype, &size);
+    int length = size / sizeof(int);
 
-    const int count = 2;
-    int blockcounts[] = { 1, map_size };
-    MPI_Aint offsets[] = { 0, sizeof(float) };
-    MPI_Datatype oldtypes[] = { MPI_FLOAT, MPI_INT };
+    for (int i = 0; i < *len; ++i) {
+        float fitness1 = ((float*)in)[0];
+        float fitness2 = ((float*)inout)[0];
+        if (fitness1 > fitness2) memcpy(inout, in, size);
 
-    MPI_Type_create_struct(count, blockcounts, offsets, oldtypes, ctype);
-    MPI_Type_commit(ctype);
-}
-
-void myOp(void* in, void* inout, int* len, MPI_Datatype* ctype)
-{
-    float fitness1 = ((float*)in)[0];
-    float fitness2 = ((float*)inout)[0];
-
-    if (fitness1 > fitness2) {
-        memcpy(inout, in, *len);
+        in += length;
+        inout += length;
     }
-}
-
-void new_op(MPI_Op* op)
-{
-    MPI_User_function* func = (MPI_User_function*)myOp;
-    int commute = 1;
-
-    MPI_Op_create(func, commute, op);
 }

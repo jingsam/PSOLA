@@ -2,23 +2,8 @@
 #include "option.h" // g_option, g_rnd, g_land_use_map
 #include "tool.h"   // stoi(), stod()
 
-Map<int> init_map();
 
-PlanMap* init_planmap()
-{
-    int max = stoi(g_option["max"]);
-    Map<int> map = init_map();
-
-    PlanMap* planmap = new PlanMap(map);
-    for (int i = 0; i < planmap->size(); ++i) {
-        Cell* cell = planmap->at(i);
-        cell->type = 1;
-        cell->transP.assign(max, 1.0 / max);
-    }
-    planmap->updateFitness();
-
-    return planmap;
-}
+PlanMap* init_planmap();
 
 Particle* init_particle()
 {
