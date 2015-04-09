@@ -38,6 +38,26 @@ make
 mpiexec -np 4 ./psola --xml=config.xml</pre></div>
 
 <h3>
+<a id="options" class="anchor" href="#options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Options</h3>
+
+<div class="highlight highlight-bash"><pre>Usage: ./psola [options]
+  -h, --help                   display this <span class="pl-c1">help</span> and <span class="pl-c1">exit</span>
+  -v, --version                display version information and <span class="pl-c1">exit</span>
+
+  -N, --population=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>       number of particles <span class="pl-k">in</span> a deme
+  -M, --max=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>              value range [0, max)
+  -w, --momentum=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>         coefficient of keep current status
+  -c, --c1=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>               coefficient of move to Pbest
+  -C, --c2=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>               coefficient of move to Gbest
+  -r, --r1=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>               random seed 1 of PSO
+  -R, --r2=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>               random seed 2 of PSO
+  -g, --generation=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>       total number of iterations
+  -i, --interval=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>         frequency of output
+  -o, --output=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>           output directory
+  -m, --mode=<span class="pl-k">&lt;</span>sync<span class="pl-k">|</span>async<span class="pl-k">&gt;</span>      synchronous or asynchronous land-use change
+  -x, --xml=<span class="pl-k">&lt;</span>arg<span class="pl-k">&gt;</span>              xml file <span class="pl-k">for</span> <span class="pl-smi">configuration</span></pre></div>
+
+<h3>
 <a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h3>
 
       <footer class="site-footer">
