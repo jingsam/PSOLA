@@ -31,18 +31,11 @@
 </ul>
 
 <h3>
-<a id="build-from-source" class="anchor" href="#build-from-source" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build from source</h3>
-
-<ul>
-<li><p>Linux or Mac OS<br>
-Just <code>make</code> it!</p></li>
-<li><p>Windows</p></li>
-</ul>
-
-<h3>
 <a id="how-to-use-it" class="anchor" href="#how-to-use-it" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use it</h3>
 
-<div class="highlight highlight-bash"><pre>mpiexec -np 4 ./psola --xml=config.xml</pre></div>
+<div class="highlight highlight-bash"><pre><span class="pl-c1">cd</span> PSOLA/example/gq
+make
+mpiexec -np 4 ./psola --xml=config.xml</pre></div>
 
 <h3>
 <a id="development" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development</h3>
