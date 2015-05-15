@@ -5,10 +5,10 @@
 #include "datamap.h"    // Map<T>
 
 // proximity
-double PROX_MN(Map<int>& datamap, std::vector<int>& values);
+double PROX_MN(Map<int>& datamap, int value);
 
 // core aera index
-double CAI_MN(Map<int>& datamap, std::vector<int>& values);
+double CAI_MN(Map<int>& datamap, int value, int depth);
 
 double change_ratio(Map<int>& datamap, Map<int>& land_use_map);
 

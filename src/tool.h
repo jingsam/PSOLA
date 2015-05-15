@@ -9,6 +9,8 @@ void normalize(std::vector<double>& p);
 
 void normalize(std::vector<double> &p1, std::vector<double> &p2);
 
+int routtle_wheel(std::vector<double> p, double r);
+
 int stoi(const std::string& str);
 
 double stod(const std::string& str);

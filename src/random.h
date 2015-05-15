@@ -11,11 +11,12 @@ public:
         this->seed = 0;
     }
 
+    ~Random() {}
+
     explicit Random(ulong seed) {
         this->seed = seed;
     }
 
-    ~Random() {}
 
     void srand(ulong seed) {
         this->seed = seed;
